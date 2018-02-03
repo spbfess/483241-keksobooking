@@ -106,11 +106,11 @@ var getAdvert = function () {
   return advertTemplate;
 };
 
-var switchMapMode = function (map, fade) {
-  if (fade === true) {
-    map.classList.add('map--faded');
-  } else if (fade === false) {
+var switchMapMode = function (map, active) {
+  if (active === true) {
     map.classList.remove('map--faded');
+  } else if (active === false) {
+    map.classList.add('map--faded');
   }
 };
 
@@ -147,7 +147,7 @@ var createMapPinDomObject = function (map, pinData) {
 var mapDomObject = document.querySelector('section.map');
 var mapPinsDomObject = mapDomObject.querySelector('.map__pins');
 var fragment = document.createDocumentFragment();
-switchMapMode(mapDomObject, false);
+switchMapMode(mapDomObject, true);
 
 var advert;
 var pin;
