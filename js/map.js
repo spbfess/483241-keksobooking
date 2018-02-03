@@ -62,8 +62,10 @@ var getAdvert = function () {
   var randomPrice = getRandomInteger(1000, 1000000, true);
   var randomRoomsNumber = getRandomInteger(1, 5, true);
   var randomGuestsNumber = getRandomInteger(1, 10, true);
-  var randomLocationX = getRandomInteger(300, 900, true);
-  var randomLocationY = getRandomInteger(150, 500, true);
+  var randomLocation = {
+    'x': getRandomInteger(300, 900, true),
+    'y': getRandomInteger(150, 500, true)
+  };
 
   if (typeof randomAvatarNumber === 'undefined') {
     return null;
@@ -71,11 +73,11 @@ var getAdvert = function () {
 
   var advertTemplate = {
     'author': {
-      'avatar': 'img/avatars/user{{' + randomAvatarNumber + '}}.png'
+      'avatar': 'img/avatars/user' + randomAvatarNumber + '.png'
     },
     'offer': {
       'title': randomTitle,
-      'address': '{{location.x}}, {{location.y}}',
+      'address': randomLocation.x + ', ' + randomLocation.y,
       'price': randomPrice,
       'type': randomApartmentType,
       'rooms': randomRoomsNumber,
@@ -84,11 +86,11 @@ var getAdvert = function () {
       'checkout': randomCheckoutTime,
       'features': randomFeatures,
       'description': '',
-      'photos': randomPhotos
+      'photos': randomPhotos,
     },
     'location': {
-      'x': randomLocationX,
-      'y': randomLocationY
+      'x': randomLocation.x,
+      'y': randomLocation.y
     }
   };
 
@@ -105,4 +107,3 @@ for (var _ = 0; _ < 20; _++) {
   getAdvert();
   console.log('-------------------------------');
 }
-
