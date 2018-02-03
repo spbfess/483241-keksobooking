@@ -19,6 +19,9 @@ var PHOTOS = [
   'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
 ];
+var ADEVRTS_NUMBER = 8;
+var PIN_WIDTH = 40;
+var PIN_HEIGHT = 40;
 
 var getRandomInteger = function (min, max, isMaxIncluded) {
   var randomInteger = isMaxIncluded ? Math.round(Math.random() * (max - min)) + min : Math.floor(Math.random() * (max - min)) + min;
@@ -94,16 +97,71 @@ var getAdvert = function () {
     }
   };
 
-  for (var property in advertTemplate) {
-    if (advertTemplate.hasOwnProperty(property)) {
-      console.log(advertTemplate[property]);
-    }
-  }
+  // for (var property in advertTemplate) {
+  //   if (advertTemplate.hasOwnProperty(property)) {
+  //     console.log(advertTemplate[property]);
+  //   }
+  // }
 
   return advertTemplate;
 };
 
-for (var _ = 0; _ < 20; _++) {
-  getAdvert();
-  console.log('-------------------------------');
+var switchMapMode = function (map, fade) {
+  if (fade === true) {
+    map.classList.add('map--faded');
+  } else if (fade === false) {
+    map.classList.remove('map--faded');
+  }
+};
+
+var createMapPinDomObject = function (map, pinData) {
+  var button = document.createElement('button');
+  var img = document.createElement('img');
+
+  button.style.left = pinData.location.x + 'px';
+  button.style.top = pinData.location.y + 'px';
+  button.classList.add('map__pin');
+  img.src = pinData.author.avatar;
+  img.width = PIN_WIDTH;
+  img.height = PIN_HEIGHT;
+  img.draggable = false;
+
+  button.appendChild(img);
+  console.log(button);
+  return button;
+};
+
+// var addMapPinsToDom = function (map, pins) {
+//   var fragment = document.createDocumentFragment();
+
+//   for (var pinIndex = 0; pinIndex < pins.length; i++) {
+//     fragment.appendChild(pins[pinIndex]);
+//   }
+
+//   var mapPinsDomObject = map.querySelector('.map__pins');
+//   console.log(mapPinsDomObject);
+
+// }
+// -------------------------------------------------------
+
+var mapDomObject = document.querySelector('section.map');
+var mapPinsDomObject = mapDomObject.querySelector('.map__pins');
+var fragment = document.createDocumentFragment();
+switchMapMode(mapDomObject, false);
+
+var advert;
+var pin;
+
+for (var index = 0; index < ADEVRTS_NUMBER; index++) {
+  advert = getAdvert();
+  pin = createMapPinDomObject(mapDomObject, advert);
+  fragment.appendChild(pin);
 }
+
+mapPinsDomObject.appendChild(fragment);
+console.log(fragment);
+
+// for (var _ = 0; _ < 20; _++) {
+//   getAdvert();
+//   console.log('-------------------------------');
+// }
