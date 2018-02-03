@@ -114,54 +114,39 @@ var switchMapMode = function (map, active) {
   }
 };
 
-var createMapPinDomObject = function (map, pinData) {
-  var button = document.createElement('button');
-  var img = document.createElement('img');
+var createMapPinDomObject = function (advertData) {
+  var pinButton = document.createElement('button');
+  var pinImg = document.createElement('img');
+  // FIXME: correct coordinates, taking into account element size with its sharp tail
+  pinButton.style.left = advertData.location.x + 'px';
+  pinButton.style.top = advertData.location.y + 'px';
+  pinButton.classList.add('map__pin');
+  pinImg.src = advertData.author.avatar;
+  pinImg.width = PIN_WIDTH;
+  pinImg.height = PIN_HEIGHT;
+  pinImg.draggable = false;
 
-  button.style.left = pinData.location.x + 'px';
-  button.style.top = pinData.location.y + 'px';
-  button.classList.add('map__pin');
-  img.src = pinData.author.avatar;
-  img.width = PIN_WIDTH;
-  img.height = PIN_HEIGHT;
-  img.draggable = false;
-
-  button.appendChild(img);
-  console.log(button);
-  return button;
+  pinButton.appendChild(pinImg);
+  // console.log(pinButton);
+  return pinButton;
 };
 
-// var addMapPinsToDom = function (map, pins) {
-//   var fragment = document.createDocumentFragment();
+var addPinsToMap = function (map) {
+  var mapPinsDomObject = map.querySelector('.map__pins');
+  var fragment = document.createDocumentFragment();
 
-//   for (var pinIndex = 0; pinIndex < pins.length; i++) {
-//     fragment.appendChild(pins[pinIndex]);
-//   }
+  for (var index = 0, advert, pin; index < ADEVRTS_NUMBER; index++) {
+    advert = getAdvert();
+    pin = createMapPinDomObject(advert);
+    fragment.appendChild(pin);
+  }
 
-//   var mapPinsDomObject = map.querySelector('.map__pins');
-//   console.log(mapPinsDomObject);
+  mapPinsDomObject.appendChild(fragment);
+};
 
-// }
 // -------------------------------------------------------
 
 var mapDomObject = document.querySelector('section.map');
-var mapPinsDomObject = mapDomObject.querySelector('.map__pins');
-var fragment = document.createDocumentFragment();
 switchMapMode(mapDomObject, true);
+addPinsToMap(mapDomObject);
 
-var advert;
-var pin;
-
-for (var index = 0; index < ADEVRTS_NUMBER; index++) {
-  advert = getAdvert();
-  pin = createMapPinDomObject(mapDomObject, advert);
-  fragment.appendChild(pin);
-}
-
-mapPinsDomObject.appendChild(fragment);
-console.log(fragment);
-
-// for (var _ = 0; _ < 20; _++) {
-//   getAdvert();
-//   console.log('-------------------------------');
-// }
