@@ -32,15 +32,16 @@ var ADEVRTS_NUMBER = 1;
 var PIN_WIDTH = 40;
 var PIN_HEIGHT = 40;
 var RANGE_PIN_COORDINATES = {
+  // 'X': [300, 900],
+  // 'Y': [150, 500]
   'X': [300, 900],
-  'Y': [150, 500]
+  'Y': [0, 0]
 };
+var PIN_OFFSET_Y = 35;
 
 
 var getRandomInteger = function (min, max, isMaxIncluded) {
-  var randomInteger = isMaxIncluded ? Math.round(Math.random() * (max - min)) + min : Math.floor(Math.random() * (max - min)) + min;
-
-  return randomInteger;
+  return isMaxIncluded ? Math.round(Math.random() * (max - min)) + min : Math.floor(Math.random() * (max - min)) + min;
 };
 
 var getRandomElement = function (elements, removeFromObject) {
@@ -57,12 +58,12 @@ var getRandomElement = function (elements, removeFromObject) {
 };
 
 var getShuffledArray = function (elements) {
-  var copiedElements = elements.slice();
+  var elements = elements.slice();
   var elementsLength = elements.length;
   var shuffledArray = [];
 
   for (var index = 0; index < elementsLength; index++) {
-    shuffledArray.push(getRandomElement(copiedElements, true));
+    shuffledArray.push(getRandomElement(elements, true));
   }
 
   return shuffledArray;
@@ -74,7 +75,7 @@ var getShuffledAndSlicedArray = function (elements, sliceLength) {
   return shuffledArray.splice(0, sliceLength);
 }
 
-var getAdvert = function () {
+var getRandomAdvert = function () {
   var randomAvatarNumber = getRandomElement(AVATAR_NUMBERS, true);
   var randomTitle = getRandomElement(TITLES, true);
   var randomApartmentType = getRandomElement(APARTMENT_TYPES, false);
@@ -87,20 +88,16 @@ var getAdvert = function () {
   var randomGuestsNumber = getRandomInteger(RANGE_GUESTS[0], RANGE_GUESTS[1], true);
   var randomLocation = {
     'x': getRandomInteger(RANGE_PIN_COORDINATES.X[0], RANGE_PIN_COORDINATES.X[1], true),
-    'y': getRandomInteger(RANGE_PIN_COORDINATES.Y[0], RANGE_PIN_COORDINATES.Y[1], true)
+    'y': getRandomInteger(RANGE_PIN_COORDINATES.Y[0], RANGE_PIN_COORDINATES.Y[1], true) - PIN_OFFSET_Y
   };
 
-  // if (typeof randomAvatarNumber === 'undefined') {
-  //   return null;
-  // }
-
-  var advertTemplate = {
+  var advert = {
     'author': {
       'avatar': 'img/avatars/user' + randomAvatarNumber + '.png'
     },
     'offer': {
       'title': randomTitle,
-      'address': randomLocation.x + ', ' + randomLocation.y,
+      'address': randomLocation.x.toString() + ', ' + randomLocation.y.toString(),
       'price': randomPrice,
       'type': randomApartmentType,
       'rooms': randomRoomsNumber,
@@ -117,22 +114,7 @@ var getAdvert = function () {
     }
   };
 
-  // console.log(advertTemplate);
-  // console.log(advertTemplate.author.avatar);
-  // console.log(advertTemplate.offer.title);
-  // console.log(advertTemplate.offer.address);
-  // console.log(advertTemplate.offer.price);
-  // console.log(advertTemplate.offer.type);
-  // console.log(advertTemplate.offer.rooms);
-  // console.log(advertTemplate.offer.guests);
-  // console.log(advertTemplate.offer.checkin);
-  // console.log(advertTemplate.offer.checkout);
-  // console.log(advertTemplate.offer.features);
-  // console.log(advertTemplate.offer.photos);
-  // console.log(advertTemplate.location);
-  // console.log('----------------------------');
-
-  return advertTemplate;
+  return advert;
 };
 
 var switchMapMode = function (map, active) {
@@ -143,21 +125,20 @@ var switchMapMode = function (map, active) {
   }
 };
 
-var createMapPinDomObject = function (advertData) {
-  var pinButton = document.createElement('button');
-  var pinImg = document.createElement('img');
+var createMapPinDomObject = function (ad) {
+  var pinButtonDomObject = document.createElement('button');
+  var pinImgDomObject = document.createElement('img');
   // FIXME: correct coordinates, taking into account element size with its sharp tail
-  pinButton.style.left = advertData.location.x + 'px';
-  pinButton.style.top = advertData.location.y + 'px';
-  pinButton.classList.add('map__pin');
-  pinImg.src = advertData.author.avatar;
-  // FIXME: check and correct types for button coordinates, img dimmensions
-  pinImg.width = PIN_WIDTH;
-  pinImg.height = PIN_HEIGHT;
-  pinImg.draggable = false;
-  pinButton.appendChild(pinImg);
+  pinButtonDomObject.style.left = ad.location.x.toString() + 'px';
+  pinButtonDomObject.style.top = ad.location.y.toString() + 'px';
+  pinButtonDomObject.classList.add('map__pin');
+  pinImgDomObject.src = ad.author.avatar;
+  pinImgDomObject.width = PIN_WIDTH.toString();
+  pinImgDomObject.height = PIN_HEIGHT.toString();
+  pinImgDomObject.draggable = false;
+  pinButtonDomObject.appendChild(pinImgDomObject);
 
-  return pinButton;
+  return pinButtonDomObject;
 };
 
 var addAdvertPinsToMap = function (mapPinsObject, ads) {
@@ -220,10 +201,9 @@ var addAdvertToMap = function(ad, map, template) {
   picturesDomObject.removeChild(picturesDomObject.firstElementChild);
   console.dir(picturesDomObject);
   for (var i = 0; i < pictures.length; i++) {
-    console.log("!!!!!!!! " + pictures[i]);
     pictureDomObject = templatePictureDomObject.cloneNode(true);
     pictureDomObject.firstElementChild.src = pictures[i];
-    pictureDomObject.firstElementChild.width = PHOTO_WIDTH;
+    pictureDomObject.firstElementChild.width = PHOTO_WIDTH.toString();
     picturesDomObject.appendChild(pictureDomObject);
   }
 
@@ -237,7 +217,7 @@ var adverts = [];
 var advert;
 
 for (var index = 0; index < ADEVRTS_NUMBER; index++) {
-  advert = getAdvert();
+  advert = getRandomAdvert();
   adverts.push(advert);
 }
 
