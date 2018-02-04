@@ -150,8 +150,9 @@ var createMapPinDomObject = function (ad) {
 var addAdvertPinsToMap = function (mapPinsObject, ads) {
   var fragmentDomObject = document.createDocumentFragment();
   var mapPinDomObject;
+  var adsLength = ads.length;
 
-  for (var i = 0; i < ads.length; i++) {
+  for (var i = 0; i < adsLength; i++) {
     mapPinDomObject = createMapPinDomObject(ads[i]);
     fragmentDomObject.appendChild(mapPinDomObject);
   }
@@ -162,7 +163,9 @@ var addAdvertPinsToMap = function (mapPinsObject, ads) {
 var addAdvertToMap = function (ad, map, template) {
   var advertDomObject = template.cloneNode(true);
   var features = ad.offer.features;
+  var featuresLength = features.length;
   var pictures = ad.offer.photos;
+  var picturesLength = pictures.length;
   var roomsNumber = ad.offer.rooms;
   var roomsAvailable;
 
@@ -192,7 +195,7 @@ var addAdvertToMap = function (ad, map, template) {
 
   featuresDomObject.classList.add('popup__features');
 
-  for (var i = 0; i < features.length; i++) {
+  for (var i = 0; i < featuresLength; i++) {
     featureDomObject = document.createElement('li');
     featureDomObject.classList.add('feature', 'feature--' + features[i]);
     featuresDomObject.appendChild(featureDomObject);
@@ -205,7 +208,8 @@ var addAdvertToMap = function (ad, map, template) {
   var pictureDomObject;
 
   picturesDomObject.removeChild(picturesDomObject.firstElementChild);
-  for (i = 0; i < pictures.length; i++) {
+
+  for (i = 0; i < picturesLength; i++) {
     pictureDomObject = templatePictureDomObject.cloneNode(true);
     pictureDomObject.firstElementChild.src = pictures[i];
     pictureDomObject.firstElementChild.width = PHOTO_WIDTH.toString();
