@@ -60,7 +60,7 @@ var getShuffledArray = function (elements) {
   var elementsLength = elements.length;
   var shuffledArray = [];
 
-  for (var index = 0; index < elementsLength; index++) {
+  for (var i = 0; i < elementsLength; i++) {
     shuffledArray.push(getRandomElement(elements, true));
   }
 
