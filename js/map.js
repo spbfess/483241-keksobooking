@@ -32,6 +32,7 @@ var RANGE_PIN_COORDINATES = {
 
 var getRandomInteger = function (min, max, isMaxIncluded) {
   var randomInteger = isMaxIncluded ? Math.round(Math.random() * (max - min)) + min : Math.floor(Math.random() * (max - min)) + min;
+
   return randomInteger;
 };
 
@@ -49,7 +50,7 @@ var getRandomElement = function (elements, removeFromObject) {
   return element;
 };
 
-var getShuffledArray = function (elements, sliceLength) {
+var getShuffledArray = function (elements) {
   var copiedElements = elements.slice();
   var elementsLength = elements.length;
   var shuffledArray = [];
@@ -58,8 +59,14 @@ var getShuffledArray = function (elements, sliceLength) {
     shuffledArray.push(getRandomElement(copiedElements, true));
   }
 
-  return sliceLength ? shuffledArray.splice(0, sliceLength) : shuffledArray;
+  return shuffledArray;
 };
+
+var getShuffledAndSlicedArray = function (elements, sliceLength) {
+  var shuffledArray = getShuffledArray(elements);
+
+  return shuffledArray.splice(0, sliceLength);
+}
 
 var getAdvert = function () {
   var randomAvatarNumber = getRandomElement(AVATAR_NUMBERS, true);
@@ -67,7 +74,7 @@ var getAdvert = function () {
   var randomApartmentType = getRandomElement(APARTMENT_TYPES, false);
   var randomCheckinTime = getRandomElement(CHECKIN_TIMES, false);
   var randomCheckoutTime = getRandomElement(CHECKOUT_TIMES, false);
-  var randomFeatures = getShuffledArray(FEATURES, getRandomInteger(FEATURES.length, true));
+  var randomFeatures = getShuffledAndSlicedArray(FEATURES, getRandomInteger(FEATURES.length, true));
   var randomPhotos = getShuffledArray(PHOTOS);
   var randomPrice = getRandomInteger(RANGE_PRICES[0], RANGE_PRICES[1], true);
   var randomRoomsNumber = getRandomInteger(RANGE_ROOMS[0], RANGE_ROOMS[1], true);
@@ -143,7 +150,7 @@ var createMapPinDomObject = function (advertData) {
   pinButton.style.top = advertData.location.y + 'px';
   pinButton.classList.add('map__pin');
   pinImg.src = advertData.author.avatar;
-  // FIXME: check anf correct types for button coordinates, img dimmensions
+  // FIXME: check and correct types for button coordinates, img dimmensions
   pinImg.width = PIN_WIDTH;
   pinImg.height = PIN_HEIGHT;
   pinImg.draggable = false;
@@ -153,22 +160,32 @@ var createMapPinDomObject = function (advertData) {
   return pinButton;
 };
 
-var addPinsToMap = function (map) {
-  var mapPinsDomObject = map.querySelector('.map__pins');
+var addAdvertPinsToMap = function (mapPinsObject, ads) {
   var fragment = document.createDocumentFragment();
+  var pin;
 
-  for (var index = 0, advert, pin; index < ADEVRTS_NUMBER; index++) {
-    advert = getAdvert();
-    pin = createMapPinDomObject(advert);
+  for (var i = 0; i < ads.length; i++) {
+    pin = createMapPinDomObject(ads[i]);
     fragment.appendChild(pin);
   }
 
-  mapPinsDomObject.appendChild(fragment);
-};
+  mapPinsObject.appendChild(fragment);
+}
 
 // -------------------------------------------------------
 
 var mapDomObject = document.querySelector('section.map');
+var mapPinsDomObject = mapDomObject.querySelector('.map__pins');
+var adverts = [];
+var advert;
+
 switchMapMode(mapDomObject, true);
-addPinsToMap(mapDomObject);
+
+for (var index = 0; index < ADEVRTS_NUMBER; index++) {
+  advert = getAdvert();
+  adverts.push(advert);
+}
+
+addAdvertPinsToMap(mapPinsDomObject, adverts);
+
 
