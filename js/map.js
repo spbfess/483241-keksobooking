@@ -58,7 +58,7 @@ var getShuffledArray = function (elements, sliceLength) {
     shuffledArray.push(getRandomElement(copiedElements, true));
   }
 
-  return sliceLength >= 0 ? shuffledArray.splice(0, sliceLength) : shuffledArray;
+  return sliceLength ? shuffledArray.splice(0, sliceLength) : shuffledArray;
 };
 
 var getAdvert = function () {
@@ -68,7 +68,7 @@ var getAdvert = function () {
   var randomCheckinTime = getRandomElement(CHECKIN_TIMES, false);
   var randomCheckoutTime = getRandomElement(CHECKOUT_TIMES, false);
   var randomFeatures = getShuffledArray(FEATURES, getRandomInteger(FEATURES.length, true));
-  var randomPhotos = getShuffledArray(PHOTOS, -1);
+  var randomPhotos = getShuffledArray(PHOTOS);
   var randomPrice = getRandomInteger(RANGE_PRICES[0], RANGE_PRICES[1], true);
   var randomRoomsNumber = getRandomInteger(RANGE_ROOMS[0], RANGE_ROOMS[1], true);
   var randomGuestsNumber = getRandomInteger(RANGE_GUESTS[0], RANGE_GUESTS[1], true);
