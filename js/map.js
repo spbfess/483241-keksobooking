@@ -36,17 +36,17 @@ var getRandomInteger = function (min, max, isMaxIncluded) {
 };
 
 var getRandomElement = function (elements, removeFromObject) {
-  var randomElement;
-  var randomIndex;
+  var element;
+  var index;
   var elementsLength = elements.length;
 
   if (elementsLength !== 0) {
     // console.log('elements = ' + elements);
-    randomIndex = getRandomInteger(0, elementsLength, false);
-    randomElement = removeFromObject ? elements.splice(randomIndex, 1)[0] : elements.slice(randomIndex, randomIndex + 1)[0];
+    index = getRandomInteger(0, elementsLength, false);
+    element = removeFromObject ? elements.splice(index, 1)[0] : elements.slice(index, index + 1)[0];
   }
 
-  return randomElement;
+  return element;
 };
 
 var getShuffledArray = function (elements, sliceLength) {
@@ -109,20 +109,20 @@ var getAdvert = function () {
   //     console.log(advertTemplate[property]);
   //   }
   // }
-  // console.log(advertTemplate);
-  // console.log(advertTemplate.author.avatar);
-  // console.log(advertTemplate.offer.title);
-  // console.log(advertTemplate.offer.address);
-  // console.log(advertTemplate.offer.price);
-  // console.log(advertTemplate.offer.type);
-  // console.log(advertTemplate.offer.rooms);
-  // console.log(advertTemplate.offer.guests);
-  // console.log(advertTemplate.offer.checkin);
-  // console.log(advertTemplate.offer.checkout);
-  // console.log(advertTemplate.offer.features);
-  // console.log(advertTemplate.offer.photos);
-  // console.log(advertTemplate.location);
-  // console.log('----------------------------');
+  console.log(advertTemplate);
+  console.log(advertTemplate.author.avatar);
+  console.log(advertTemplate.offer.title);
+  console.log(advertTemplate.offer.address);
+  console.log(advertTemplate.offer.price);
+  console.log(advertTemplate.offer.type);
+  console.log(advertTemplate.offer.rooms);
+  console.log(advertTemplate.offer.guests);
+  console.log(advertTemplate.offer.checkin);
+  console.log(advertTemplate.offer.checkout);
+  console.log(advertTemplate.offer.features);
+  console.log(advertTemplate.offer.photos);
+  console.log(advertTemplate.location);
+  console.log('----------------------------');
 
   return advertTemplate;
 };
