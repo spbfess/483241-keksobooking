@@ -19,9 +19,16 @@ var PHOTOS = [
   'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
 ];
+var RANGE_PRICES = [1000, 1000000];
+var RANGE_ROOMS = [1, 5];
+var RANGE_GUESTS = [1, 10];
 var ADEVRTS_NUMBER = 8;
 var PIN_WIDTH = 40;
 var PIN_HEIGHT = 40;
+var RANGE_PIN_COORDINATES = {
+  'X': [300, 900],
+  'Y': [150, 500]
+};
 
 var getRandomInteger = function (min, max, isMaxIncluded) {
   var randomInteger = isMaxIncluded ? Math.round(Math.random() * (max - min)) + min : Math.floor(Math.random() * (max - min)) + min;
@@ -62,17 +69,17 @@ var getAdvert = function () {
   var randomCheckoutTime = getRandomElement(CHECKOUT_TIMES, false);
   var randomFeatures = getShuffledArray(FEATURES, getRandomInteger(FEATURES.length, true));
   var randomPhotos = getShuffledArray(PHOTOS, -1);
-  var randomPrice = getRandomInteger(1000, 1000000, true);
-  var randomRoomsNumber = getRandomInteger(1, 5, true);
-  var randomGuestsNumber = getRandomInteger(1, 10, true);
+  var randomPrice = getRandomInteger(RANGE_PRICES[0], RANGE_PRICES[1], true);
+  var randomRoomsNumber = getRandomInteger(RANGE_ROOMS[0], RANGE_ROOMS[1], true);
+  var randomGuestsNumber = getRandomInteger(RANGE_GUESTS[0], RANGE_GUESTS[1], true);
   var randomLocation = {
-    'x': getRandomInteger(300, 900, true),
-    'y': getRandomInteger(150, 500, true)
+    'x': getRandomInteger(RANGE_PIN_COORDINATES.X[0], RANGE_PIN_COORDINATES.X[1], true),
+    'y': getRandomInteger(RANGE_PIN_COORDINATES.Y[0], RANGE_PIN_COORDINATES.Y[1], true)
   };
 
-  if (typeof randomAvatarNumber === 'undefined') {
-    return null;
-  }
+  // if (typeof randomAvatarNumber === 'undefined') {
+  //   return null;
+  // }
 
   var advertTemplate = {
     'author': {
@@ -102,6 +109,20 @@ var getAdvert = function () {
   //     console.log(advertTemplate[property]);
   //   }
   // }
+  // console.log(advertTemplate);
+  // console.log(advertTemplate.author.avatar);
+  // console.log(advertTemplate.offer.title);
+  // console.log(advertTemplate.offer.address);
+  // console.log(advertTemplate.offer.price);
+  // console.log(advertTemplate.offer.type);
+  // console.log(advertTemplate.offer.rooms);
+  // console.log(advertTemplate.offer.guests);
+  // console.log(advertTemplate.offer.checkin);
+  // console.log(advertTemplate.offer.checkout);
+  // console.log(advertTemplate.offer.features);
+  // console.log(advertTemplate.offer.photos);
+  // console.log(advertTemplate.location);
+  // console.log('----------------------------');
 
   return advertTemplate;
 };
@@ -122,6 +143,7 @@ var createMapPinDomObject = function (advertData) {
   pinButton.style.top = advertData.location.y + 'px';
   pinButton.classList.add('map__pin');
   pinImg.src = advertData.author.avatar;
+  // FIXME: check anf correct types for button coordinates, img dimmensions
   pinImg.width = PIN_WIDTH;
   pinImg.height = PIN_HEIGHT;
   pinImg.draggable = false;
