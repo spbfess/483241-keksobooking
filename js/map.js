@@ -28,7 +28,7 @@ var PHOTO_WIDTH = 100;
 var RANGE_PRICES = [1000, 1000000];
 var RANGE_ROOMS = [1, 5];
 var RANGE_GUESTS = [1, 10];
-var ADEVRTS_NUMBER = 8;
+var ADVERTS_NUMBER = 8;
 var PIN_WIDTH = 40;
 var PIN_HEIGHT = 40;
 var RANGE_PIN_COORDINATES = {
@@ -43,16 +43,16 @@ var getRandomInteger = function (min, max, isMaxIncluded) {
 };
 
 var getRandomElement = function (elements, removeFromObject) {
-  var element;
-  var index;
+  var randomElement;
+  var randomIndex;
   var elementsLength = elements.length;
 
   if (elementsLength !== 0) {
-    index = getRandomInteger(0, elementsLength, false);
-    element = removeFromObject ? elements.splice(index, 1)[0] : elements.slice(index, index + 1)[0];
+    randomIndex = getRandomInteger(0, elementsLength, false);
+    randomElement = removeFromObject ? elements.splice(randomIndex, 1)[0] : elements.slice(randomIndex, randomIndex + 1)[0];
   }
 
-  return element;
+  return randomElement;
 };
 
 var getShuffledArray = function (elements) {
@@ -140,19 +140,19 @@ var createMapPinDomObject = function (ad) {
 };
 
 var addAdvertPinsToMap = function (mapPinsObject, ads) {
-  var fragment = document.createDocumentFragment();
-  var pin;
+  var fragmentDomObject = document.createDocumentFragment();
+  var mapPinDomObject;
 
   for (var i = 0; i < ads.length; i++) {
-    pin = createMapPinDomObject(ads[i]);
-    fragment.appendChild(pin);
+    mapPinDomObject = createMapPinDomObject(ads[i]);
+    fragmentDomObject.appendChild(mapPinDomObject);
   }
 
-  mapPinsObject.appendChild(fragment);
+  mapPinsObject.appendChild(fragmentDomObject);
 };
 
 var addAdvertToMap = function (ad, map, template) {
-  var adObject = template.cloneNode(true);
+  var advertDomObject = template.cloneNode(true);
   var features = ad.offer.features;
   var pictures = ad.offer.photos;
   var roomsNumber = ad.offer.rooms;
@@ -169,16 +169,16 @@ var addAdvertToMap = function (ad, map, template) {
   var guestsNumber = ad.offer.guests.toString();
   var guestsAvailable = guestsNumber === '1' ? guestsNumber + ' гостя' : guestsNumber + ' гостей';
 
-  adObject.querySelector('h3').textContent = ad.offer.title;
-  adObject.querySelector('p').children[0].textContent = ad.offer.address;
-  adObject.querySelector('.popup__price').textContent = ad.offer.price.toString() + '₽/ночь';
-  adObject.querySelector('h4').textContent = APPARTMENTS_MAP[ad.offer.type];
-  adObject.querySelector('h4 + p').textContent = roomsAvailable + ' для ' + guestsAvailable;
-  adObject.querySelector('p:nth-of-type(4)').textContent = 'Заезд после ' + ad.offer.checkin + ', выезд до ' + ad.offer.checkout;
-  adObject.querySelector('p:last-of-type').textContent = ad.offer.description;
-  adObject.querySelector('.popup__avatar').src = ad.author.avatar;
+  advertDomObject.querySelector('h3').textContent = ad.offer.title;
+  advertDomObject.querySelector('p').children[0].textContent = ad.offer.address;
+  advertDomObject.querySelector('.popup__price').textContent = ad.offer.price.toString() + '₽/ночь';
+  advertDomObject.querySelector('h4').textContent = APPARTMENTS_MAP[ad.offer.type];
+  advertDomObject.querySelector('h4 + p').textContent = roomsAvailable + ' для ' + guestsAvailable;
+  advertDomObject.querySelector('p:nth-of-type(4)').textContent = 'Заезд после ' + ad.offer.checkin + ', выезд до ' + ad.offer.checkout;
+  advertDomObject.querySelector('p:last-of-type').textContent = ad.offer.description;
+  advertDomObject.querySelector('.popup__avatar').src = ad.author.avatar;
 
-  var templateFeaturesDomObject = adObject.querySelector('.popup__features');
+  var templateFeaturesDomObject = advertDomObject.querySelector('.popup__features');
   var featuresDomObject = document.createElement('ul');
   var featureDomObject;
 
@@ -190,9 +190,9 @@ var addAdvertToMap = function (ad, map, template) {
     featuresDomObject.appendChild(featureDomObject);
   }
 
-  adObject.replaceChild(featuresDomObject, templateFeaturesDomObject);
+  advertDomObject.replaceChild(featuresDomObject, templateFeaturesDomObject);
 
-  var picturesDomObject = adObject.querySelector('.popup__pictures');
+  var picturesDomObject = advertDomObject.querySelector('.popup__pictures');
   var templatePictureDomObject = picturesDomObject.firstElementChild.cloneNode(true);
   var pictureDomObject;
 
@@ -204,7 +204,7 @@ var addAdvertToMap = function (ad, map, template) {
     picturesDomObject.appendChild(pictureDomObject);
   }
 
-  map.insertBefore(adObject, map.children[1]);
+  map.insertBefore(advertDomObject, map.children[1]);
 };
 
 var mapCardTemplate = document.querySelector('template').content.querySelector('.map__card');
@@ -213,7 +213,7 @@ var mapPinsDomObject = mapDomObject.querySelector('.map__pins');
 var adverts = [];
 var advert;
 
-for (var index = 0; index < ADEVRTS_NUMBER; index++) {
+for (var index = 0; index < ADVERTS_NUMBER; index++) {
   advert = getRandomAdvert();
   adverts.push(advert);
 }
