@@ -126,7 +126,7 @@ var switchMapMode = function (map, active) {
 var createMapPinDomObject = function (ad) {
   var pinButtonDomObject = document.createElement('button');
   var pinImgDomObject = document.createElement('img');
-  // FIXME: correct coordinates, taking into account element size with its sharp tail
+
   pinButtonDomObject.style.left = ad.location.x.toString() + 'px';
   pinButtonDomObject.style.top = ad.location.y.toString() + 'px';
   pinButtonDomObject.classList.add('map__pin');
