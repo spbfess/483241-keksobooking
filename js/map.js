@@ -115,12 +115,20 @@ var getRandomAdvert = function () {
   return advert;
 };
 
-var switchMapMode = function (map, active) {
-  if (active === true) {
-    map.classList.remove('map--faded');
-  } else if (active === false) {
-    map.classList.add('map--faded');
+var generateAdverts = function () {
+  var adverts = [];
+  var advert;
+
+  for (var i = 0; i < ADVERTS_NUMBER; i++) {
+    advert = getRandomAdvert();
+    adverts.push(advert);
   }
+
+  return adverts;
+};
+
+var activateMap = function (map) {
+  map.classList.remove('map--faded');
 };
 
 var createMapPinDomObject = function (ad) {
@@ -210,14 +218,8 @@ var addAdvertToMap = function (ad, map, template) {
 var mapCardTemplate = document.querySelector('template').content.querySelector('.map__card');
 var mapDomObject = document.querySelector('section.map');
 var mapPinsDomObject = mapDomObject.querySelector('.map__pins');
-var adverts = [];
-var advert;
+var advertisements = generateAdverts();
 
-for (var index = 0; index < ADVERTS_NUMBER; index++) {
-  advert = getRandomAdvert();
-  adverts.push(advert);
-}
-
-switchMapMode(mapDomObject, true);
-addAdvertPinsToMap(mapPinsDomObject, adverts);
-addAdvertToMap(adverts[0], mapDomObject, mapCardTemplate);
+activateMap(mapDomObject);
+addAdvertPinsToMap(mapPinsDomObject, advertisements);
+addAdvertToMap(advertisements[0], mapDomObject, mapCardTemplate);
