@@ -11,7 +11,7 @@ var TITLES = [
   'Уютное бунгало далеко от моря',
   'Неуютное бунгало по колено в воде'];
 var APARTMENT_TYPES = ['flat', 'house', 'bungalo'];
-var APPARTMENTS_MAP =  {
+var APPARTMENTS_MAP = {
   'flat': 'Квартира',
   'bungalo': 'Бунгало',
   'house': 'Дом'
@@ -28,14 +28,12 @@ var PHOTO_WIDTH = 100;
 var RANGE_PRICES = [1000, 1000000];
 var RANGE_ROOMS = [1, 5];
 var RANGE_GUESTS = [1, 10];
-var ADEVRTS_NUMBER = 1;
+var ADEVRTS_NUMBER = 8;
 var PIN_WIDTH = 40;
 var PIN_HEIGHT = 40;
 var RANGE_PIN_COORDINATES = {
-  // 'X': [300, 900],
-  // 'Y': [150, 500]
   'X': [300, 900],
-  'Y': [0, 0]
+  'Y': [150, 500]
 };
 var PIN_OFFSET_Y = 35;
 
@@ -58,7 +56,7 @@ var getRandomElement = function (elements, removeFromObject) {
 };
 
 var getShuffledArray = function (elements) {
-  var elements = elements.slice();
+  elements = elements.slice();
   var elementsLength = elements.length;
   var shuffledArray = [];
 
@@ -73,7 +71,7 @@ var getShuffledAndSlicedArray = function (elements, sliceLength) {
   var shuffledArray = getShuffledArray(elements);
 
   return shuffledArray.splice(0, sliceLength);
-}
+};
 
 var getRandomAdvert = function () {
   var randomAvatarNumber = getRandomElement(AVATAR_NUMBERS, true);
@@ -151,9 +149,9 @@ var addAdvertPinsToMap = function (mapPinsObject, ads) {
   }
 
   mapPinsObject.appendChild(fragment);
-}
+};
 
-var addAdvertToMap = function(ad, map, template) {
+var addAdvertToMap = function (ad, map, template) {
   var adObject = template.cloneNode(true);
   var features = ad.offer.features;
   var pictures = ad.offer.photos;
@@ -169,7 +167,7 @@ var addAdvertToMap = function(ad, map, template) {
   }
 
   var guestsNumber = ad.offer.guests.toString();
-  var guestsAvailable = guestsNumber === '1' ? guestsNumber + ' гостя' : guestsNumber +  ' гостей';
+  var guestsAvailable = guestsNumber === '1' ? guestsNumber + ' гостя' : guestsNumber + ' гостей';
 
   adObject.querySelector('h3').textContent = ad.offer.title;
   adObject.querySelector('p').children[0].textContent = ad.offer.address;
@@ -199,8 +197,7 @@ var addAdvertToMap = function(ad, map, template) {
   var pictureDomObject;
 
   picturesDomObject.removeChild(picturesDomObject.firstElementChild);
-  console.dir(picturesDomObject);
-  for (var i = 0; i < pictures.length; i++) {
+  for (i = 0; i < pictures.length; i++) {
     pictureDomObject = templatePictureDomObject.cloneNode(true);
     pictureDomObject.firstElementChild.src = pictures[i];
     pictureDomObject.firstElementChild.width = PHOTO_WIDTH.toString();
