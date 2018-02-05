@@ -160,12 +160,41 @@ var addAdvertPinsToMap = function (mapPinsObject, ads) {
   mapPinsObject.appendChild(fragmentDomObject);
 };
 
+var createFeaturesDomObject = function (advert) {
+  var features = advert.offer.features;
+  var featuresLength = features.length;
+  var featuresDomObject = document.createElement('ul');
+  var featureDomObject;
+
+  for (var i = 0; i < featuresLength; i++) {
+    featureDomObject = document.createElement('li');
+    featureDomObject.classList.add('feature', 'feature--' + features[i]);
+    featuresDomObject.appendChild(featureDomObject);
+  }
+
+  featuresDomObject.classList.add('popup__features');
+
+  return featuresDomObject;
+};
+
+var fillPicturesDomObjectWithData = function (picturesDomObject, advert) {
+  var pictures = advert.offer.photos;
+  var picturesLength = pictures.length;
+  var templatePictureDomObject = picturesDomObject.firstElementChild.cloneNode(true);
+  var pictureDomObject;
+
+  picturesDomObject.removeChild(picturesDomObject.firstElementChild);
+
+  for (var i = 0; i < picturesLength; i++) {
+    pictureDomObject = templatePictureDomObject.cloneNode(true);
+    pictureDomObject.firstElementChild.src = pictures[i];
+    pictureDomObject.firstElementChild.width = PHOTO_WIDTH.toString();
+    picturesDomObject.appendChild(pictureDomObject);
+  }
+};
+
 var addAdvertToMap = function (ad, map, template) {
   var advertDomObject = template.cloneNode(true);
-  var features = ad.offer.features;
-  var featuresLength = features.length;
-  var pictures = ad.offer.photos;
-  var picturesLength = pictures.length;
   var roomsNumber = ad.offer.rooms;
   var roomsAvailable;
 
@@ -190,32 +219,11 @@ var addAdvertToMap = function (ad, map, template) {
   advertDomObject.querySelector('.popup__avatar').src = ad.author.avatar;
 
   var templateFeaturesDomObject = advertDomObject.querySelector('.popup__features');
-  var featuresDomObject = document.createElement('ul');
-  var featureDomObject;
-
-  featuresDomObject.classList.add('popup__features');
-
-  for (var i = 0; i < featuresLength; i++) {
-    featureDomObject = document.createElement('li');
-    featureDomObject.classList.add('feature', 'feature--' + features[i]);
-    featuresDomObject.appendChild(featureDomObject);
-  }
+  var featuresDomObject = createFeaturesDomObject(ad);
+  var picturesDomObject = advertDomObject.querySelector('.popup__pictures');
 
   advertDomObject.replaceChild(featuresDomObject, templateFeaturesDomObject);
-
-  var picturesDomObject = advertDomObject.querySelector('.popup__pictures');
-  var templatePictureDomObject = picturesDomObject.firstElementChild.cloneNode(true);
-  var pictureDomObject;
-
-  picturesDomObject.removeChild(picturesDomObject.firstElementChild);
-
-  for (i = 0; i < picturesLength; i++) {
-    pictureDomObject = templatePictureDomObject.cloneNode(true);
-    pictureDomObject.firstElementChild.src = pictures[i];
-    pictureDomObject.firstElementChild.width = PHOTO_WIDTH.toString();
-    picturesDomObject.appendChild(pictureDomObject);
-  }
-
+  fillPicturesDomObjectWithData(picturesDomObject, ad);
   map.insertBefore(advertDomObject, map.children[1]);
 };
 
