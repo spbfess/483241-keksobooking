@@ -177,13 +177,14 @@ var createFeaturesDomObject = function (advert) {
   return featuresDomObject;
 };
 
-var fillPicturesDomObjectWithData = function (picturesDomObject, advert) {
+var createPicturesDomObject = function (advert) {
   var pictures = advert.offer.photos;
   var picturesLength = pictures.length;
-  var templatePictureDomObject = picturesDomObject.firstElementChild.cloneNode(true);
+  var picturesDomObject = document.createElement('ul');
   var pictureDomObject;
+  var templatePictureDomObject = document.createElement('li');
 
-  picturesDomObject.removeChild(picturesDomObject.firstElementChild);
+  templatePictureDomObject.appendChild(document.createElement('img'))
 
   for (var i = 0; i < picturesLength; i++) {
     pictureDomObject = templatePictureDomObject.cloneNode(true);
@@ -191,6 +192,10 @@ var fillPicturesDomObjectWithData = function (picturesDomObject, advert) {
     pictureDomObject.firstElementChild.width = PHOTO_WIDTH;
     picturesDomObject.appendChild(pictureDomObject);
   }
+
+  picturesDomObject.classList.add('popup__pictures');
+
+  return picturesDomObject;
 };
 
 var addAdvertToMap = function (ad, map, template) {
@@ -219,12 +224,15 @@ var addAdvertToMap = function (ad, map, template) {
   advertDomObject.querySelector('.popup__avatar').src = ad.author.avatar;
 
   var templateFeaturesDomObject = advertDomObject.querySelector('.popup__features');
+  var templatePicturesDomObject = advertDomObject.querySelector('.popup__pictures');
+
   var featuresDomObject = createFeaturesDomObject(ad);
-  var picturesDomObject = advertDomObject.querySelector('.popup__pictures');
+  var picturesDomObject = createPicturesDomObject(ad);
 
   advertDomObject.replaceChild(featuresDomObject, templateFeaturesDomObject);
-  fillPicturesDomObjectWithData(picturesDomObject, ad);
+  advertDomObject.replaceChild(picturesDomObject, templatePicturesDomObject);
   map.insertBefore(advertDomObject, map.children[1]);
+
 };
 
 var mapCardTemplate = document.querySelector('template').content.querySelector('.map__card');
