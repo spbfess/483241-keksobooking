@@ -95,7 +95,7 @@ var getRandomAdvert = function () {
     },
     'offer': {
       'title': randomTitle,
-      'address': randomLocation.x.toString() + ', ' + randomLocation.y.toString(),
+      'address': randomLocation.x + ', ' + randomLocation.y,
       'price': randomPrice,
       'type': randomApartmentType,
       'rooms': randomRoomsNumber,
@@ -135,12 +135,12 @@ var createMapPinDomObject = function (ad) {
   var pinButtonDomObject = document.createElement('button');
   var pinImgDomObject = document.createElement('img');
 
-  pinButtonDomObject.style.left = ad.location.x.toString() + 'px';
-  pinButtonDomObject.style.top = ad.location.y.toString() + 'px';
+  pinButtonDomObject.style.left = ad.location.x + 'px';
+  pinButtonDomObject.style.top = ad.location.y + 'px';
   pinButtonDomObject.classList.add('map__pin');
   pinImgDomObject.src = ad.author.avatar;
-  pinImgDomObject.width = PIN_WIDTH.toString();
-  pinImgDomObject.height = PIN_HEIGHT.toString();
+  pinImgDomObject.width = PIN_WIDTH;
+  pinImgDomObject.height = PIN_HEIGHT;
   pinImgDomObject.draggable = false;
   pinButtonDomObject.appendChild(pinImgDomObject);
 
@@ -188,7 +188,7 @@ var fillPicturesDomObjectWithData = function (picturesDomObject, advert) {
   for (var i = 0; i < picturesLength; i++) {
     pictureDomObject = templatePictureDomObject.cloneNode(true);
     pictureDomObject.firstElementChild.src = pictures[i];
-    pictureDomObject.firstElementChild.width = PHOTO_WIDTH.toString();
+    pictureDomObject.firstElementChild.width = PHOTO_WIDTH;
     picturesDomObject.appendChild(pictureDomObject);
   }
 };
@@ -199,19 +199,19 @@ var addAdvertToMap = function (ad, map, template) {
   var roomsAvailable;
 
   if (roomsNumber === 1) {
-    roomsAvailable = roomsNumber.toString() + ' комната';
+    roomsAvailable = roomsNumber + ' комната';
   } else if (roomsNumber > 1 && roomsNumber < 5) {
-    roomsAvailable = roomsNumber.toString() + ' комнаты';
+    roomsAvailable = roomsNumber + ' комнаты';
   } else {
-    roomsAvailable = roomsNumber.toString() + ' комнат';
+    roomsAvailable = roomsNumber + ' комнат';
   }
 
-  var guestsNumber = ad.offer.guests.toString();
+  var guestsNumber = ad.offer.guests;
   var guestsAvailable = guestsNumber === '1' ? guestsNumber + ' гостя' : guestsNumber + ' гостей';
 
   advertDomObject.querySelector('h3').textContent = ad.offer.title;
   advertDomObject.querySelector('p').children[0].textContent = ad.offer.address;
-  advertDomObject.querySelector('.popup__price').textContent = ad.offer.price.toString() + '₽/ночь';
+  advertDomObject.querySelector('.popup__price').textContent = ad.offer.price + '₽/ночь';
   advertDomObject.querySelector('h4').textContent = APPARTMENTS_MAP[ad.offer.type];
   advertDomObject.querySelector('h4 + p').textContent = roomsAvailable + ' для ' + guestsAvailable;
   advertDomObject.querySelector('p:nth-of-type(4)').textContent = 'Заезд после ' + ad.offer.checkin + ', выезд до ' + ad.offer.checkout;
