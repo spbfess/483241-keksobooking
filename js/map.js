@@ -37,6 +37,9 @@ var RANGE_PIN_COORDINATES = {
 };
 var PIN_OFFSET_Y = 35;
 
+var mapCardTemplate = document.querySelector('template').content.querySelector('.map__card');
+var mapDomObject = document.querySelector('section.map');
+var mapPinsDomObject = mapDomObject.querySelector('.map__pins');
 
 var getRandomInteger = function (min, max, isMaxIncluded) {
   return isMaxIncluded ? Math.round(Math.random() * (max - min)) + min : Math.floor(Math.random() * (max - min)) + min;
@@ -160,8 +163,7 @@ var addAdvertPinsToMap = function (mapPinsObject, ads) {
   mapPinsObject.appendChild(fragmentDomObject);
 };
 
-var createFeaturesDomObject = function (advert) {
-  var features = advert.offer.features;
+var createFeaturesDomObject = function (features) {
   var featuresLength = features.length;
   var featuresDomObject = document.createElement('ul');
   var featureDomObject;
@@ -177,14 +179,13 @@ var createFeaturesDomObject = function (advert) {
   return featuresDomObject;
 };
 
-var createPicturesDomObject = function (advert) {
-  var pictures = advert.offer.photos;
+var createPicturesDomObject = function (pictures) {
   var picturesLength = pictures.length;
   var picturesDomObject = document.createElement('ul');
   var pictureDomObject;
   var templatePictureDomObject = document.createElement('li');
 
-  templatePictureDomObject.appendChild(document.createElement('img'))
+  templatePictureDomObject.appendChild(document.createElement('img'));
 
   for (var i = 0; i < picturesLength; i++) {
     pictureDomObject = templatePictureDomObject.cloneNode(true);
@@ -226,8 +227,8 @@ var addAdvertToMap = function (ad, map, template) {
   var templateFeaturesDomObject = advertDomObject.querySelector('.popup__features');
   var templatePicturesDomObject = advertDomObject.querySelector('.popup__pictures');
 
-  var featuresDomObject = createFeaturesDomObject(ad);
-  var picturesDomObject = createPicturesDomObject(ad);
+  var featuresDomObject = createFeaturesDomObject(ad.offer.features);
+  var picturesDomObject = createPicturesDomObject(ad.offer.photos);
 
   advertDomObject.replaceChild(featuresDomObject, templateFeaturesDomObject);
   advertDomObject.replaceChild(picturesDomObject, templatePicturesDomObject);
@@ -235,11 +236,8 @@ var addAdvertToMap = function (ad, map, template) {
 
 };
 
-var mapCardTemplate = document.querySelector('template').content.querySelector('.map__card');
-var mapDomObject = document.querySelector('section.map');
-var mapPinsDomObject = mapDomObject.querySelector('.map__pins');
-var advertisements = generateAdverts();
+var adverts = generateAdverts();
 
 activateMap(mapDomObject);
-addAdvertPinsToMap(mapPinsDomObject, advertisements);
-addAdvertToMap(advertisements[0], mapDomObject, mapCardTemplate);
+addAdvertPinsToMap(mapPinsDomObject, adverts);
+addAdvertToMap(adverts[0], mapDomObject, mapCardTemplate);
