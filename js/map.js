@@ -138,45 +138,6 @@ var generateAdverts = function () {
   return adverts;
 };
 
-// --------------------------------------------
-
-
-var addOpenAdvertInfoHandler = function (pinButton, ad) {
-  pinButton.addEventListener('click', function () {
-    addAdvertToMap(ad);
-  });
-}
-
-var createMapPinDomObject = function (ad) {
-  var pinButtonDomObject = document.createElement('button');
-  var pinImgDomObject = document.createElement('img');
-
-  pinButtonDomObject.style.left = ad.location.x + 'px';
-  pinButtonDomObject.style.top = ad.location.y + 'px';
-  pinButtonDomObject.classList.add('map__pin');
-  pinImgDomObject.src = ad.author.avatar;
-  pinImgDomObject.width = PIN_WIDTH;
-  pinImgDomObject.height = PIN_HEIGHT;
-  pinImgDomObject.draggable = false;
-  pinButtonDomObject.appendChild(pinImgDomObject);
-
-  return pinButtonDomObject;
-};
-
-var addAdvertPinsToMap = function (ads) {
-  var fragmentDomObject = document.createDocumentFragment();
-  var mapPinDomObject;
-  var adsLength = ads.length;
-
-  for (var i = 0; i < adsLength; i++) {
-    mapPinDomObject = createMapPinDomObject(ads[i]);
-    addOpenAdvertInfoHandler(mapPinDomObject, ads[i]);
-    fragmentDomObject.appendChild(mapPinDomObject);
-  }
-
-  mapPinsDomObject.appendChild(fragmentDomObject);
-};
-
 var createFeaturesDomObject = function (features) {
   var featuresLength = features.length;
   var featuresDomObject = document.createElement('ul');
@@ -213,17 +174,17 @@ var createPicturesDomObject = function (pictures) {
   return picturesDomObject;
 };
 
-var onAdvertInfoCloseButtonKeydown = function (evt) {
-  if (evt.keyCode === ESC_CODE) {
-    closeAdvertInfo();
-  }
-};
-
 var closeAdvertInfo = function () {
   var advertInfoDomObject = mapDomObject.querySelector('article.map__card');
 
   advertInfoDomObject.remove();
   document.removeEventListener('keydown', onAdvertInfoCloseButtonKeydown);
+};
+
+var onAdvertInfoCloseButtonKeydown = function (evt) {
+  if (evt.keyCode === ESC_CODE) {
+    closeAdvertInfo();
+  }
 };
 
 var addCloseAdvertInfoHandlers = function (advertInfo) {
@@ -233,9 +194,9 @@ var addCloseAdvertInfoHandlers = function (advertInfo) {
     closeAdvertInfo();
   });
   document.addEventListener('keydown', onAdvertInfoCloseButtonKeydown);
-}
+};
 
-var addAdvertToMap = function (ad) {
+var renderAdvertInfo = function (ad) {
   var advertDomObject = mapCardTemplate.cloneNode(true);
   var roomsNumber = ad.offer.rooms;
   var roomsAvailable;
@@ -277,6 +238,42 @@ var addAdvertToMap = function (ad) {
   }
 
   mapDomObject.insertBefore(advertDomObject, mapFiltersContainerDomObject);
+};
+
+var createMapPinDomObject = function (ad) {
+  var pinButtonDomObject = document.createElement('button');
+  var pinImgDomObject = document.createElement('img');
+
+  pinButtonDomObject.style.left = ad.location.x + 'px';
+  pinButtonDomObject.style.top = ad.location.y + 'px';
+  pinButtonDomObject.classList.add('map__pin');
+  pinImgDomObject.src = ad.author.avatar;
+  pinImgDomObject.width = PIN_WIDTH;
+  pinImgDomObject.height = PIN_HEIGHT;
+  pinImgDomObject.draggable = false;
+  pinButtonDomObject.appendChild(pinImgDomObject);
+
+  return pinButtonDomObject;
+};
+
+var addRenderAdvertInfoHandler = function (pinButton, ad) {
+  pinButton.addEventListener('click', function () {
+    renderAdvertInfo(ad);
+  });
+};
+
+var renderAdvertPins = function (ads) {
+  var fragmentDomObject = document.createDocumentFragment();
+  var mapPinDomObject;
+  var adsLength = ads.length;
+
+  for (var i = 0; i < adsLength; i++) {
+    mapPinDomObject = createMapPinDomObject(ads[i]);
+    addRenderAdvertInfoHandler(mapPinDomObject, ads[i]);
+    fragmentDomObject.appendChild(mapPinDomObject);
+  }
+
+  mapPinsDomObject.appendChild(fragmentDomObject);
 };
 
 var disableAdvertForm = function () {
@@ -323,7 +320,7 @@ var activateMap = function () {
   if (!MAP_IS_ACTIVE) {
     mapDomObject.classList.remove('map--faded');
     enableAdvertForm();
-    addAdvertPinsToMap(adverts);
+    renderAdvertPins(adverts);
     MAP_IS_ACTIVE = true;
   }
 };
