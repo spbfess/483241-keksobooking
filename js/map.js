@@ -138,6 +138,15 @@ var generateAdverts = function () {
   return adverts;
 };
 
+// --------------------------------------------
+
+
+var addOpenAdvertInfoHandler = function (pinButton, ad) {
+  pinButton.addEventListener('click', function () {
+    addAdvertToMap(ad);
+  });
+}
+
 var createMapPinDomObject = function (ad) {
   var pinButtonDomObject = document.createElement('button');
   var pinImgDomObject = document.createElement('img');
@@ -151,9 +160,6 @@ var createMapPinDomObject = function (ad) {
   pinImgDomObject.draggable = false;
   pinButtonDomObject.appendChild(pinImgDomObject);
 
-  pinButtonDomObject.addEventListener('click', function () {
-    addAdvertToMap(ad);
-  });
   return pinButtonDomObject;
 };
 
@@ -164,6 +170,7 @@ var addAdvertPinsToMap = function (ads) {
 
   for (var i = 0; i < adsLength; i++) {
     mapPinDomObject = createMapPinDomObject(ads[i]);
+    addOpenAdvertInfoHandler(mapPinDomObject, ads[i]);
     fragmentDomObject.appendChild(mapPinDomObject);
   }
 
@@ -219,6 +226,15 @@ var closeAdvertInfo = function () {
   document.removeEventListener('keydown', onAdvertInfoCloseButtonKeydown);
 };
 
+var addCloseAdvertInfoHandlers = function (advertInfo) {
+  var closeAdvertInfoButton = advertInfo.querySelector('button.popup__close');
+
+  closeAdvertInfoButton.addEventListener('click', function () {
+    closeAdvertInfo();
+  });
+  document.addEventListener('keydown', onAdvertInfoCloseButtonKeydown);
+}
+
 var addAdvertToMap = function (ad) {
   var advertDomObject = mapCardTemplate.cloneNode(true);
   var roomsNumber = ad.offer.rooms;
@@ -252,6 +268,7 @@ var addAdvertToMap = function (ad) {
 
   advertDomObject.replaceChild(featuresDomObject, templateFeaturesDomObject);
   advertDomObject.replaceChild(picturesDomObject, templatePicturesDomObject);
+  addCloseAdvertInfoHandlers(advertDomObject);
 
   var mapCard = mapDomObject.querySelector('article.map__card');
 
@@ -259,25 +276,7 @@ var addAdvertToMap = function (ad) {
     mapCard.remove();
   }
 
-  var closeAdvertInfoButton = advertDomObject.querySelector('button.popup__close');
-
-  closeAdvertInfoButton.addEventListener('click', function (evt) {
-    console.log('CLICK: hello from closeAdvertInfoButton inline listener: ');
-    console.log(evt.target);
-    closeAdvertInfo(advertDomObject);
-  });
-  document.addEventListener('keydown', onAdvertInfoCloseButtonKeydown);
   mapDomObject.insertBefore(advertDomObject, mapFiltersContainerDomObject);
-};
-
-var activateMap = function () {
-  if (!MAP_IS_ACTIVE) {
-    mapDomObject.classList.remove('map--faded');
-    enableAdvertForm();
-    addAdvertPinsToMap(adverts); // Possibly to move that to another function
-
-    MAP_IS_ACTIVE = true;
-  }
 };
 
 var disableAdvertForm = function () {
@@ -302,13 +301,6 @@ var enableAdvertForm = function () {
   }
 };
 
-var setAdvertAddress = function () {
-  var mainPinCoords = getPinCoordinates(mainPinDomObject);
-  var advertAddress = mainPinCoords[0] + ', ' + mainPinCoords[1];
-
-  advertAddressInputDomObject.value = advertAddress;
-};
-
 var getPinCoordinates = function (pin) {
   var x = parseInt(pin.offsetLeft, 10);
   var y = parseInt(pin.offsetTop, 10);
@@ -320,24 +312,21 @@ var getPinCoordinates = function (pin) {
   return [x, y];
 };
 
-// var onMainPinMouseup = function () {
-//   activateMap();
-//   setAdvertAddress();
-// };
+var setAdvertAddress = function () {
+  var mainPinCoords = getPinCoordinates(mainPinDomObject);
+  var advertAddress = mainPinCoords[0] + ', ' + mainPinCoords[1];
 
-// var getSimilarAdvertsPins = function () {
-//   var similarAdvertsPins = [];
-//   var pin;
+  advertAddressInputDomObject.value = advertAddress;
+};
 
-//   for (var i = 0; i < mapPinsDomObject.children.length; i++) {
-//     pin = mapPinsDomObject.children[i];
-//     if (pin.classList.contains('map__pin') && !pin.classList.contains('map__pin--main')) {
-//       similarAdvertsPins.push(pin);
-//     }
-//   }
-
-//   return similarAdvertsPins;
-// }
+var activateMap = function () {
+  if (!MAP_IS_ACTIVE) {
+    mapDomObject.classList.remove('map--faded');
+    enableAdvertForm();
+    addAdvertPinsToMap(adverts);
+    MAP_IS_ACTIVE = true;
+  }
+};
 
 var adverts = generateAdverts();
 
