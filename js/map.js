@@ -137,12 +137,12 @@ var generateAdverts = function () {
 };
 
 var activateMap = function (map) {
-  var adverts = generateAdverts();
-
-  map.classList.remove('map--faded');
-  enableAdvertForm();
-  addAdvertPinsToMap(mapPinsDomObject, adverts);
-  addAdvertToMap(adverts[0], mapDomObject, mapCardTemplate);
+  if (!MAP_IS_ACTIVE) {
+    map.classList.remove('map--faded');
+    enableAdvertForm();
+    addAdvertPinsToMap(mapPinsDomObject, adverts); //Possibly to move that to another function
+    MAP_IS_ACTIVE = true;
+  }
 };
 
 var createMapPinDomObject = function (ad) {
@@ -269,8 +269,11 @@ var enableAdvertForm = function () {
   }
 };
 
-var setAdvertAddress = function (address) {
-  advertAddressInputDomObject.value = address;
+var setAdvertAddress = function () {
+  var mainPinCoords = getPinCoordinates(mainPinDomObject);
+  var advertAddress = mainPinCoords[0] + ', ' + mainPinCoords[1];
+
+  advertAddressInputDomObject.value = advertAddress;
 };
 
 var getPinCoordinates = function (pin) {
@@ -285,21 +288,30 @@ var getPinCoordinates = function (pin) {
 };
 
 var onMainPinMouseup = function () {
-  if (!MAP_IS_ACTIVE) {
-    activateMap(mapDomObject);
-    MAP_IS_ACTIVE = true;
+  activateMap(mapDomObject);
+  setAdvertAddress();
+};
+
+var getSimilarAdvertsPins = function () {
+  var similarAdvertsPins = [];
+  var pin;
+
+  for (var i = 0; i < mapPinsDomObject.length; i++) {
+    pin = mapPinsDomObject.children[i];
+    if (pin.classList.contains('map__pin') && !pin.classList.contains('map__pin--main')) {
+      similarAdvertsPins.push(pin);
+    }
   }
 
-  var mainPinCoords = getPinCoordinates(mainPinDomObject);
-  var advertAddress = mainPinCoords[0] + ', ' + mainPinCoords[1];
-
-  setAdvertAddress(advertAddress);
-};
+  return similarAdvertsPins;
+}
 
 var defaultMainPinCoords = getPinCoordinates(mainPinDomObject);
 var defaultAdvertAddress = defaultMainPinCoords[0] + ', ' + defaultMainPinCoords[1];
+var adverts = generateAdverts();
 
 disableAdvertForm();
 setAdvertAddress(defaultAdvertAddress);
 mainPinDomObject.addEventListener('mouseup', onMainPinMouseup);
+//addAdvertToMap(adverts[0], mapDomObject, mapCardTemplate);
 
