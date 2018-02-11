@@ -38,6 +38,7 @@ var RANGE_PIN_COORDINATES = {
 var MAP_IS_ACTIVE = false;
 var PIN_OFFSET_Y = 35;
 var MAIN_PIN_OFFSET_Y = 48.5;
+var ESC_CODE = 27;
 
 var mapCardTemplate = document.querySelector('template').content.querySelector('.map__card');
 var mapDomObject = document.querySelector('section.map');
@@ -45,8 +46,8 @@ var mapPinsDomObject = mapDomObject.querySelector('.map__pins');
 var mapFiltersContainerDomObject = mapDomObject.querySelector('.map__filters-container');
 var mainPinDomObject = mapPinsDomObject.querySelector('.map__pin--main');
 var avdertFormDomObject = document.querySelector('.notice__form');
-var advertAddressInputDomObject = avdertFormDomObject.querySelector('#address');
 var avdertFormFieldsets = avdertFormDomObject.children;
+var advertAddressInputDomObject = avdertFormDomObject.querySelector('#address');
 
 var getRandomInteger = function (min, max, isMaxIncluded) {
   return isMaxIncluded ? Math.round(Math.random() * (max - min)) + min : Math.floor(Math.random() * (max - min)) + min;
@@ -150,13 +151,13 @@ var createMapPinDomObject = function (ad) {
   pinImgDomObject.draggable = false;
   pinButtonDomObject.appendChild(pinImgDomObject);
 
-  pinButtonDomObject.addEventListener('click', function (evt) {
-    addAdvertToMap(ad, mapDomObject, mapCardTemplate);
+  pinButtonDomObject.addEventListener('click', function () {
+    addAdvertToMap(ad);
   });
   return pinButtonDomObject;
 };
 
-var addAdvertPinsToMap = function (mapPinsObject, ads) {
+var addAdvertPinsToMap = function (ads) {
   var fragmentDomObject = document.createDocumentFragment();
   var mapPinDomObject;
   var adsLength = ads.length;
@@ -166,7 +167,7 @@ var addAdvertPinsToMap = function (mapPinsObject, ads) {
     fragmentDomObject.appendChild(mapPinDomObject);
   }
 
-  mapPinsObject.appendChild(fragmentDomObject);
+  mapPinsDomObject.appendChild(fragmentDomObject);
 };
 
 var createFeaturesDomObject = function (features) {
@@ -205,8 +206,21 @@ var createPicturesDomObject = function (pictures) {
   return picturesDomObject;
 };
 
-var addAdvertToMap = function (ad, map, template) {
-  var advertDomObject = template.cloneNode(true);
+var onAdvertInfoCloseButtonKeydown = function (evt) {
+  if (evt.keyCode === ESC_CODE) {
+    closeAdvertInfo();
+  }
+};
+
+var closeAdvertInfo = function () {
+  var advertInfoDomObject = mapDomObject.querySelector('article.map__card');
+
+  advertInfoDomObject.remove();
+  document.removeEventListener('keydown', onAdvertInfoCloseButtonKeydown);
+};
+
+var addAdvertToMap = function (ad) {
+  var advertDomObject = mapCardTemplate.cloneNode(true);
   var roomsNumber = ad.offer.rooms;
   var roomsAvailable;
 
@@ -239,29 +253,29 @@ var addAdvertToMap = function (ad, map, template) {
   advertDomObject.replaceChild(featuresDomObject, templateFeaturesDomObject);
   advertDomObject.replaceChild(picturesDomObject, templatePicturesDomObject);
 
-  var mapCard = map.querySelector('article.map__card');
+  var mapCard = mapDomObject.querySelector('article.map__card');
 
   if (mapCard) {
-    map.replaceChild(advertDomObject, mapCard);
-  } else {
-    map.insertBefore(advertDomObject, mapFiltersContainerDomObject);
+    mapCard.remove();
   }
+
+  var closeAdvertInfoButton = advertDomObject.querySelector('button.popup__close');
+
+  closeAdvertInfoButton.addEventListener('click', function (evt) {
+    console.log('CLICK: hello from closeAdvertInfoButton inline listener: ');
+    console.log(evt.target);
+    closeAdvertInfo(advertDomObject);
+  });
+  document.addEventListener('keydown', onAdvertInfoCloseButtonKeydown);
+  mapDomObject.insertBefore(advertDomObject, mapFiltersContainerDomObject);
 };
 
-var activateMap = function (map) {
+var activateMap = function () {
   if (!MAP_IS_ACTIVE) {
-    map.classList.remove('map--faded');
+    mapDomObject.classList.remove('map--faded');
     enableAdvertForm();
-    addAdvertPinsToMap(mapPinsDomObject, adverts); //Possibly to move that to another function
+    addAdvertPinsToMap(adverts); // Possibly to move that to another function
 
-    var similarAdvertsPins = getSimilarAdvertsPins();
-    console.log(similarAdvertsPins);
-    // for (var i = 0; i < similarAdvertsPins.length; i++) {
-    //   similarAdvertsPins[i].addEventListener ('click', function (evt) {
-    //     console.log(evt.currentTarget);
-
-    //   });
-    // }
     MAP_IS_ACTIVE = true;
   }
 };
@@ -306,33 +320,30 @@ var getPinCoordinates = function (pin) {
   return [x, y];
 };
 
-var onMainPinMouseup = function () {
-  activateMap(mapDomObject);
-  setAdvertAddress();
-};
+// var onMainPinMouseup = function () {
+//   activateMap();
+//   setAdvertAddress();
+// };
 
-var getSimilarAdvertsPins = function () {
-  var similarAdvertsPins = [];
-  var pin;
+// var getSimilarAdvertsPins = function () {
+//   var similarAdvertsPins = [];
+//   var pin;
 
-  for (var i = 0; i < mapPinsDomObject.children.length; i++) {
-    pin = mapPinsDomObject.children[i];
-    if (pin.classList.contains('map__pin') && !pin.classList.contains('map__pin--main')) {
-      similarAdvertsPins.push(pin);
-    }
-  }
+//   for (var i = 0; i < mapPinsDomObject.children.length; i++) {
+//     pin = mapPinsDomObject.children[i];
+//     if (pin.classList.contains('map__pin') && !pin.classList.contains('map__pin--main')) {
+//       similarAdvertsPins.push(pin);
+//     }
+//   }
 
-  return similarAdvertsPins;
-}
+//   return similarAdvertsPins;
+// }
 
-var defaultMainPinCoords = getPinCoordinates(mainPinDomObject);
-var defaultAdvertAddress = defaultMainPinCoords[0] + ', ' + defaultMainPinCoords[1];
 var adverts = generateAdverts();
 
 disableAdvertForm();
-setAdvertAddress(defaultAdvertAddress);
-mainPinDomObject.addEventListener('mouseup', onMainPinMouseup);
-//addAdvertToMap(adverts[0], mapDomObject, mapCardTemplate);
-
-
-
+setAdvertAddress();
+mainPinDomObject.addEventListener('mouseup', function () {
+  activateMap();
+  setAdvertAddress();
+});
