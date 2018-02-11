@@ -42,6 +42,7 @@ var MAIN_PIN_OFFSET_Y = 48.5;
 var mapCardTemplate = document.querySelector('template').content.querySelector('.map__card');
 var mapDomObject = document.querySelector('section.map');
 var mapPinsDomObject = mapDomObject.querySelector('.map__pins');
+var mapFiltersContainerDomObject = mapDomObject.querySelector('.map__filters-container');
 var mainPinDomObject = mapPinsDomObject.querySelector('.map__pin--main');
 var avdertFormDomObject = document.querySelector('.notice__form');
 var advertAddressInputDomObject = avdertFormDomObject.querySelector('#address');
@@ -136,15 +137,6 @@ var generateAdverts = function () {
   return adverts;
 };
 
-var activateMap = function (map) {
-  if (!MAP_IS_ACTIVE) {
-    map.classList.remove('map--faded');
-    enableAdvertForm();
-    addAdvertPinsToMap(mapPinsDomObject, adverts); //Possibly to move that to another function
-    MAP_IS_ACTIVE = true;
-  }
-};
-
 var createMapPinDomObject = function (ad) {
   var pinButtonDomObject = document.createElement('button');
   var pinImgDomObject = document.createElement('img');
@@ -158,6 +150,9 @@ var createMapPinDomObject = function (ad) {
   pinImgDomObject.draggable = false;
   pinButtonDomObject.appendChild(pinImgDomObject);
 
+  pinButtonDomObject.addEventListener('click', function (evt) {
+    addAdvertToMap(ad, mapDomObject, mapCardTemplate);
+  });
   return pinButtonDomObject;
 };
 
@@ -243,8 +238,32 @@ var addAdvertToMap = function (ad, map, template) {
 
   advertDomObject.replaceChild(featuresDomObject, templateFeaturesDomObject);
   advertDomObject.replaceChild(picturesDomObject, templatePicturesDomObject);
-  map.insertBefore(advertDomObject, map.children[1]);
 
+  var mapCard = map.querySelector('article.map__card');
+
+  if (mapCard) {
+    map.replaceChild(advertDomObject, mapCard);
+  } else {
+    map.insertBefore(advertDomObject, mapFiltersContainerDomObject);
+  }
+};
+
+var activateMap = function (map) {
+  if (!MAP_IS_ACTIVE) {
+    map.classList.remove('map--faded');
+    enableAdvertForm();
+    addAdvertPinsToMap(mapPinsDomObject, adverts); //Possibly to move that to another function
+
+    var similarAdvertsPins = getSimilarAdvertsPins();
+    console.log(similarAdvertsPins);
+    // for (var i = 0; i < similarAdvertsPins.length; i++) {
+    //   similarAdvertsPins[i].addEventListener ('click', function (evt) {
+    //     console.log(evt.currentTarget);
+
+    //   });
+    // }
+    MAP_IS_ACTIVE = true;
+  }
 };
 
 var disableAdvertForm = function () {
@@ -296,7 +315,7 @@ var getSimilarAdvertsPins = function () {
   var similarAdvertsPins = [];
   var pin;
 
-  for (var i = 0; i < mapPinsDomObject.length; i++) {
+  for (var i = 0; i < mapPinsDomObject.children.length; i++) {
     pin = mapPinsDomObject.children[i];
     if (pin.classList.contains('map__pin') && !pin.classList.contains('map__pin--main')) {
       similarAdvertsPins.push(pin);
@@ -314,4 +333,6 @@ disableAdvertForm();
 setAdvertAddress(defaultAdvertAddress);
 mainPinDomObject.addEventListener('mouseup', onMainPinMouseup);
 //addAdvertToMap(adverts[0], mapDomObject, mapCardTemplate);
+
+
 
