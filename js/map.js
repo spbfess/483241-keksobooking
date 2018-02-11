@@ -297,7 +297,7 @@ var enableAdvertForm = function () {
     }
     avdertFormDomObject.classList.remove('notice__form--disabled');
   }
-  advertAddressInputDomObject.disabled = true;
+  advertAddressInputDomObject.readOnly = true;
 };
 
 var getPinCoordinates = function (pin) {
