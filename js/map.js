@@ -277,7 +277,7 @@ var getPinCoordinates = function (pin) {
   var x = parseInt(pin.offsetLeft, 10);
   var y = parseInt(pin.offsetTop, 10);
 
-  if (!mapDomObject.classList.contains('map--faded')) {
+  if (MAP_IS_ACTIVE) {
     y = pin.classList.contains('map__pin--main') ? y + MAIN_PIN_OFFSET_Y : y + PIN_OFFSET_Y;
   }
 
