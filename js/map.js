@@ -296,6 +296,7 @@ var enableAdvertForm = function () {
     }
     avdertFormDomObject.classList.remove('notice__form--disabled');
   }
+  advertAddressInputDomObject.disabled = true;
 };
 
 var getPinCoordinates = function (pin) {
