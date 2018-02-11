@@ -13,8 +13,9 @@ var TITLES = [
 var APARTMENT_TYPES = ['flat', 'house', 'bungalo'];
 var APPARTMENTS_MAP = {
   'flat': 'Квартира',
-  'bungalo': 'Бунгало',
-  'house': 'Дом'
+  'bungalo': 'Лачуга',
+  'house': 'Дом',
+  'palace': 'Дворец'
 };
 var CHECKIN_TIMES = ['12:00', '13:00', '14:00'];
 var CHECKOUT_TIMES = ['12:00', '13:00', '14:00'];
