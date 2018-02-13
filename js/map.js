@@ -297,6 +297,7 @@ var enableAdvertForm = function () {
     }
     avdertFormDomObject.classList.remove('notice__form--disabled');
   }
+
   advertAddressInputDomObject.readOnly = true;
 };
 
@@ -334,4 +335,20 @@ setAdvertAddress();
 mainPinDomObject.addEventListener('mouseup', function () {
   activateMap();
   setAdvertAddress();
+});
+
+var roomsNumberObj = document.querySelector('#room_number');
+// console.log(roomsNumberObj.selectedIndex);
+roomsNumberObj.addEventListener('input', function(evt) {
+  var target = evt.target;
+  console.log('now select is set to: ' + target.children[target.selectedIndex].value);
+  if (target.children[target.selectedIndex].value !== '2') {
+    target.setCustomValidity('Bad');
+  } else {
+    target.setCustomValidity('');
+  }
+});
+
+roomsNumberObj.addEventListener('validity', function(evt) {
+  console.log("smth went wrong");
 });
