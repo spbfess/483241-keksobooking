@@ -47,6 +47,7 @@ var mainPinDomObject = mapPinsDomObject.querySelector('.map__pin--main');
 var avdertFormDomObject = document.querySelector('.notice__form');
 var avdertFormFieldsets = avdertFormDomObject.querySelector('fieldset');
 var advertAddressInputDomObject = avdertFormDomObject.querySelector('#address');
+var currentAdvertInfoDomObject = null;
 
 var getRandomInteger = function (min, max, isMaxIncluded) {
   return isMaxIncluded ? Math.round(Math.random() * (max - min)) + min : Math.floor(Math.random() * (max - min)) + min;
@@ -196,7 +197,7 @@ var addCloseAdvertInfoHandlers = function (advertInfo) {
 };
 
 var renderAdvertInfo = function (ad) {
-  var advertDomObject = mapCardTemplate.cloneNode(true);
+  var advertInfoDomObject = mapCardTemplate.cloneNode(true);
   var roomsNumber = ad.offer.rooms;
   var roomsAvailable;
 
@@ -211,32 +212,31 @@ var renderAdvertInfo = function (ad) {
   var guestsNumber = ad.offer.guests;
   var guestsAvailable = guestsNumber === '1' ? guestsNumber + ' гостя' : guestsNumber + ' гостей';
 
-  advertDomObject.querySelector('h3').textContent = ad.offer.title;
-  advertDomObject.querySelector('p').children[0].textContent = ad.offer.address;
-  advertDomObject.querySelector('.popup__price').textContent = ad.offer.price + '₽/ночь';
-  advertDomObject.querySelector('h4').textContent = APPARTMENTS_MAP[ad.offer.type];
-  advertDomObject.querySelector('h4 + p').textContent = roomsAvailable + ' для ' + guestsAvailable;
-  advertDomObject.querySelector('p:nth-of-type(4)').textContent = 'Заезд после ' + ad.offer.checkin + ', выезд до ' + ad.offer.checkout;
-  advertDomObject.querySelector('p:last-of-type').textContent = ad.offer.description;
-  advertDomObject.querySelector('.popup__avatar').src = ad.author.avatar;
+  advertInfoDomObject.querySelector('h3').textContent = ad.offer.title;
+  advertInfoDomObject.querySelector('p').children[0].textContent = ad.offer.address;
+  advertInfoDomObject.querySelector('.popup__price').textContent = ad.offer.price + '₽/ночь';
+  advertInfoDomObject.querySelector('h4').textContent = APPARTMENTS_MAP[ad.offer.type];
+  advertInfoDomObject.querySelector('h4 + p').textContent = roomsAvailable + ' для ' + guestsAvailable;
+  advertInfoDomObject.querySelector('p:nth-of-type(4)').textContent = 'Заезд после ' + ad.offer.checkin + ', выезд до ' + ad.offer.checkout;
+  advertInfoDomObject.querySelector('p:last-of-type').textContent = ad.offer.description;
+  advertInfoDomObject.querySelector('.popup__avatar').src = ad.author.avatar;
 
-  var templateFeaturesDomObject = advertDomObject.querySelector('.popup__features');
-  var templatePicturesDomObject = advertDomObject.querySelector('.popup__pictures');
+  var templateFeaturesDomObject = advertInfoDomObject.querySelector('.popup__features');
+  var templatePicturesDomObject = advertInfoDomObject.querySelector('.popup__pictures');
 
   var featuresDomObject = createFeaturesDomObject(ad.offer.features);
   var picturesDomObject = createPicturesDomObject(ad.offer.photos);
 
-  advertDomObject.replaceChild(featuresDomObject, templateFeaturesDomObject);
-  advertDomObject.replaceChild(picturesDomObject, templatePicturesDomObject);
-  addCloseAdvertInfoHandlers(advertDomObject);
+  advertInfoDomObject.replaceChild(featuresDomObject, templateFeaturesDomObject);
+  advertInfoDomObject.replaceChild(picturesDomObject, templatePicturesDomObject);
+  addCloseAdvertInfoHandlers(advertInfoDomObject);
 
-  var mapCard = mapDomObject.querySelector('article.map__card');
-
-  if (mapCard) {
-    mapCard.remove();
+  if (currentAdvertInfoDomObject !== null) {
+    currentAdvertInfoDomObject.remove();
   }
 
-  mapDomObject.insertBefore(advertDomObject, mapFiltersContainerDomObject);
+  currentAdvertInfoDomObject = advertInfoDomObject;
+  mapDomObject.insertBefore(advertInfoDomObject, mapFiltersContainerDomObject);
 };
 
 var createMapPinDomObject = function (ad) {
