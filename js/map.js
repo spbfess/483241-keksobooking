@@ -45,7 +45,7 @@ var mapPinsDomObject = mapDomObject.querySelector('.map__pins');
 var mapFiltersContainerDomObject = mapDomObject.querySelector('.map__filters-container');
 var mainPinDomObject = mapPinsDomObject.querySelector('.map__pin--main');
 var avdertFormDomObject = document.querySelector('.notice__form');
-var avdertFormFieldsets = avdertFormDomObject.children;
+var avdertFormFieldsets = avdertFormDomObject.querySelector('fieldset');
 var advertAddressInputDomObject = avdertFormDomObject.querySelector('#address');
 
 var getRandomInteger = function (min, max, isMaxIncluded) {
@@ -279,23 +279,20 @@ var disableAdvertForm = function () {
   var fieldsetsNumber = avdertFormFieldsets.length;
 
   for (var i = 0; i < fieldsetsNumber; i++) {
-    if (avdertFormFieldsets[i].tagName === 'FIELDSET') {
-      avdertFormFieldsets[i].disabled = true;
-    }
-    avdertFormDomObject.classList.add('notice__form--disabled');
+    avdertFormFieldsets[i].disabled = true;
   }
+
+  avdertFormDomObject.classList.add('notice__form--disabled');
 };
 
 var enableAdvertForm = function () {
   var fieldsetsNumber = avdertFormFieldsets.length;
 
   for (var i = 0; i < fieldsetsNumber; i++) {
-    if (avdertFormFieldsets[i].tagName === 'FIELDSET') {
-      avdertFormFieldsets[i].disabled = false;
-    }
-    avdertFormDomObject.classList.remove('notice__form--disabled');
+    avdertFormFieldsets[i].disabled = false;
   }
 
+  avdertFormDomObject.classList.remove('notice__form--disabled');
   advertAddressInputDomObject.readOnly = true;
 };
 
