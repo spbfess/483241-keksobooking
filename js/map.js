@@ -35,7 +35,6 @@ var RANGE_PIN_COORDINATES = {
   'X': [300, 900],
   'Y': [150, 500]
 };
-var MAP_IS_ACTIVE = false;
 var PIN_OFFSET_Y = 35;
 var MAIN_PIN_OFFSET_Y = 48.5;
 var ESC_CODE = 27;
@@ -300,30 +299,33 @@ var enableAdvertForm = function () {
   advertAddressInputDomObject.readOnly = true;
 };
 
-var getPinCoordinates = function (pin) {
+var getMainPinCoordinates = function (pin) {
   var x = parseInt(pin.offsetLeft, 10);
   var y = parseInt(pin.offsetTop, 10);
 
-  if (MAP_IS_ACTIVE) {
-    y = pin.classList.contains('map__pin--main') ? y + MAIN_PIN_OFFSET_Y : y + PIN_OFFSET_Y;
+  if (checkMapIsActive()) {
+    y = y + MAIN_PIN_OFFSET_Y;
   }
 
   return [x, y];
 };
 
 var setAdvertAddress = function () {
-  var mainPinCoords = getPinCoordinates(mainPinDomObject);
+  var mainPinCoords = getMainPinCoordinates(mainPinDomObject);
   var advertAddress = mainPinCoords[0] + ', ' + mainPinCoords[1];
 
   advertAddressInputDomObject.value = advertAddress;
 };
 
+var checkMapIsActive = function () {
+  return mapDomObject.classList.contains('map--faded') ? false : true;
+};
+
 var activateMap = function () {
-  if (!MAP_IS_ACTIVE) {
+  if (!checkMapIsActive()) {
     mapDomObject.classList.remove('map--faded');
     enableAdvertForm();
     renderAdvertPins(adverts);
-    MAP_IS_ACTIVE = true;
   }
 };
 
