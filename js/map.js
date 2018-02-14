@@ -36,7 +36,6 @@ var RANGE_PIN_COORDINATES = {
   'X': [300, 900],
   'Y': [150, 500]
 };
-var MAP_IS_ACTIVE = false;
 var PIN_OFFSET_Y = 35;
 var MAIN_PIN_OFFSET_Y = 48.5;
 var ESC_CODE = 27;
@@ -47,8 +46,9 @@ var mapPinsDomObject = mapDomObject.querySelector('.map__pins');
 var mapFiltersContainerDomObject = mapDomObject.querySelector('.map__filters-container');
 var mainPinDomObject = mapPinsDomObject.querySelector('.map__pin--main');
 var avdertFormDomObject = document.querySelector('.notice__form');
-var avdertFormFieldsets = avdertFormDomObject.children;
+var avdertFormFieldsets = avdertFormDomObject.querySelector('fieldset');
 var advertAddressInputDomObject = avdertFormDomObject.querySelector('#address');
+var currentAdvertInfoDomObject = null;
 
 var getRandomInteger = function (min, max, isMaxIncluded) {
   return isMaxIncluded ? Math.round(Math.random() * (max - min)) + min : Math.floor(Math.random() * (max - min)) + min;
@@ -197,8 +197,8 @@ var addCloseAdvertInfoHandlers = function (advertInfo) {
   document.addEventListener('keydown', onAdvertInfoCloseButtonKeydown);
 };
 
-var renderAdvertInfo = function (ad) {
-  var advertDomObject = mapCardTemplate.cloneNode(true);
+var createAdvertInfoDomObject = function (ad) {
+  var advertInfoDomObject = mapCardTemplate.cloneNode(true);
   var roomsNumber = ad.offer.rooms;
   var roomsAvailable;
 
@@ -213,32 +213,36 @@ var renderAdvertInfo = function (ad) {
   var guestsNumber = ad.offer.guests;
   var guestsAvailable = guestsNumber === '1' ? guestsNumber + ' гостя' : guestsNumber + ' гостей';
 
-  advertDomObject.querySelector('h3').textContent = ad.offer.title;
-  advertDomObject.querySelector('p').children[0].textContent = ad.offer.address;
-  advertDomObject.querySelector('.popup__price').textContent = ad.offer.price + '₽/ночь';
-  advertDomObject.querySelector('h4').textContent = APPARTMENTS_MAP[ad.offer.type];
-  advertDomObject.querySelector('h4 + p').textContent = roomsAvailable + ' для ' + guestsAvailable;
-  advertDomObject.querySelector('p:nth-of-type(4)').textContent = 'Заезд после ' + ad.offer.checkin + ', выезд до ' + ad.offer.checkout;
-  advertDomObject.querySelector('p:last-of-type').textContent = ad.offer.description;
-  advertDomObject.querySelector('.popup__avatar').src = ad.author.avatar;
+  advertInfoDomObject.querySelector('h3').textContent = ad.offer.title;
+  advertInfoDomObject.querySelector('p').children[0].textContent = ad.offer.address;
+  advertInfoDomObject.querySelector('.popup__price').textContent = ad.offer.price + '₽/ночь';
+  advertInfoDomObject.querySelector('h4').textContent = APPARTMENTS_MAP[ad.offer.type];
+  advertInfoDomObject.querySelector('h4 + p').textContent = roomsAvailable + ' для ' + guestsAvailable;
+  advertInfoDomObject.querySelector('p:nth-of-type(4)').textContent = 'Заезд после ' + ad.offer.checkin + ', выезд до ' + ad.offer.checkout;
+  advertInfoDomObject.querySelector('p:last-of-type').textContent = ad.offer.description;
+  advertInfoDomObject.querySelector('.popup__avatar').src = ad.author.avatar;
 
-  var templateFeaturesDomObject = advertDomObject.querySelector('.popup__features');
-  var templatePicturesDomObject = advertDomObject.querySelector('.popup__pictures');
-
+  var templateFeaturesDomObject = advertInfoDomObject.querySelector('.popup__features');
+  var templatePicturesDomObject = advertInfoDomObject.querySelector('.popup__pictures');
   var featuresDomObject = createFeaturesDomObject(ad.offer.features);
   var picturesDomObject = createPicturesDomObject(ad.offer.photos);
 
-  advertDomObject.replaceChild(featuresDomObject, templateFeaturesDomObject);
-  advertDomObject.replaceChild(picturesDomObject, templatePicturesDomObject);
-  addCloseAdvertInfoHandlers(advertDomObject);
+  advertInfoDomObject.replaceChild(featuresDomObject, templateFeaturesDomObject);
+  advertInfoDomObject.replaceChild(picturesDomObject, templatePicturesDomObject);
 
-  var mapCard = mapDomObject.querySelector('article.map__card');
+  return advertInfoDomObject;
+};
 
-  if (mapCard) {
-    mapCard.remove();
+var renderAdvertInfo = function (ad) {
+  var advertInfoDomObject = createAdvertInfoDomObject(ad);
+  addCloseAdvertInfoHandlers(advertInfoDomObject);
+
+  if (currentAdvertInfoDomObject !== null) {
+    currentAdvertInfoDomObject.remove();
   }
 
-  mapDomObject.insertBefore(advertDomObject, mapFiltersContainerDomObject);
+  currentAdvertInfoDomObject = advertInfoDomObject;
+  mapDomObject.insertBefore(advertInfoDomObject, mapFiltersContainerDomObject);
 };
 
 var createMapPinDomObject = function (ad) {
@@ -281,50 +285,50 @@ var disableAdvertForm = function () {
   var fieldsetsNumber = avdertFormFieldsets.length;
 
   for (var i = 0; i < fieldsetsNumber; i++) {
-    if (avdertFormFieldsets[i].tagName === 'FIELDSET') {
-      avdertFormFieldsets[i].disabled = true;
-    }
-    avdertFormDomObject.classList.add('notice__form--disabled');
+    avdertFormFieldsets[i].disabled = true;
   }
+
+  avdertFormDomObject.classList.add('notice__form--disabled');
 };
 
 var enableAdvertForm = function () {
   var fieldsetsNumber = avdertFormFieldsets.length;
 
   for (var i = 0; i < fieldsetsNumber; i++) {
-    if (avdertFormFieldsets[i].tagName === 'FIELDSET') {
-      avdertFormFieldsets[i].disabled = false;
-    }
-    avdertFormDomObject.classList.remove('notice__form--disabled');
+    avdertFormFieldsets[i].disabled = false;
   }
 
+  avdertFormDomObject.classList.remove('notice__form--disabled');
   advertAddressInputDomObject.readOnly = true;
 };
 
-var getPinCoordinates = function (pin) {
+var getMainPinCoordinates = function (pin) {
   var x = parseInt(pin.offsetLeft, 10);
   var y = parseInt(pin.offsetTop, 10);
 
-  if (MAP_IS_ACTIVE) {
-    y = pin.classList.contains('map__pin--main') ? y + MAIN_PIN_OFFSET_Y : y + PIN_OFFSET_Y;
+  if (checkMapIsActive()) {
+    y = y + MAIN_PIN_OFFSET_Y;
   }
 
   return [x, y];
 };
 
 var setAdvertAddress = function () {
-  var mainPinCoords = getPinCoordinates(mainPinDomObject);
+  var mainPinCoords = getMainPinCoordinates(mainPinDomObject);
   var advertAddress = mainPinCoords[0] + ', ' + mainPinCoords[1];
 
   advertAddressInputDomObject.value = advertAddress;
 };
 
+var checkMapIsActive = function () {
+  return mapDomObject.classList.contains('map--faded') ? false : true;
+};
+
 var activateMap = function () {
-  if (!MAP_IS_ACTIVE) {
+  if (!checkMapIsActive()) {
     mapDomObject.classList.remove('map--faded');
     enableAdvertForm();
     renderAdvertPins(adverts);
-    MAP_IS_ACTIVE = true;
   }
 };
 
