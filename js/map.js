@@ -10,12 +10,24 @@ var TITLES = [
   'Некрасивый негостеприимный домик',
   'Уютное бунгало далеко от моря',
   'Неуютное бунгало по колено в воде'];
-var APARTMENT_TYPES = ['flat', 'house', 'bungalo'];
+var APARTMENT_TYPES = ['flat', 'house', 'bungalo', 'palace'];
 var APPARTMENTS_MAP = {
-  'flat': 'Квартира',
-  'bungalo': 'Лачуга',
-  'house': 'Дом',
-  'palace': 'Дворец'
+  flat: {
+    alias: 'Квартира',
+    minPrice: 1000
+  },
+  bungalo: {
+    alias: 'Лачуга',
+    minPrice: 0
+  },
+  house: {
+    alias: 'Дом',
+    minPrice: 5000
+  },
+  palace: {
+    alias: 'Дворец',
+    minPrice: 10000
+  }
 };
 var CHECKIN_TIMES = ['12:00', '13:00', '14:00'];
 var CHECKOUT_TIMES = ['12:00', '13:00', '14:00'];
@@ -47,6 +59,13 @@ var mapFiltersContainerDomObject = mapDomObject.querySelector('.map__filters-con
 var mainPinDomObject = mapPinsDomObject.querySelector('.map__pin--main');
 var avdertFormDomObject = document.querySelector('.notice__form');
 var avdertFormFieldsets = avdertFormDomObject.querySelector('fieldset');
+var advertFormTypeDomObject = avdertFormDomObject.querySelector('#type');
+var advertFormPriceDomObject = avdertFormDomObject.querySelector('#price');
+var advertFormTimeInDomObject = avdertFormDomObject.querySelector('#timein');
+var advertFormTimeOutDomObject = avdertFormDomObject.querySelector('#timeout');
+var advertFormRoomNumberDomObject = avdertFormDomObject.querySelector('#room_number');
+var advertFormCapacityDomObject = avdertFormDomObject.querySelector('#capacity');
+
 var advertAddressInputDomObject = avdertFormDomObject.querySelector('#address');
 var currentAdvertInfoDomObject = null;
 
@@ -216,7 +235,7 @@ var createAdvertInfoDomObject = function (ad) {
   advertInfoDomObject.querySelector('h3').textContent = ad.offer.title;
   advertInfoDomObject.querySelector('p').children[0].textContent = ad.offer.address;
   advertInfoDomObject.querySelector('.popup__price').textContent = ad.offer.price + '₽/ночь';
-  advertInfoDomObject.querySelector('h4').textContent = APPARTMENTS_MAP[ad.offer.type];
+  advertInfoDomObject.querySelector('h4').textContent = APPARTMENTS_MAP[ad.offer.type]['alias'];
   advertInfoDomObject.querySelector('h4 + p').textContent = roomsAvailable + ' для ' + guestsAvailable;
   advertInfoDomObject.querySelector('p:nth-of-type(4)').textContent = 'Заезд после ' + ad.offer.checkin + ', выезд до ' + ad.offer.checkout;
   advertInfoDomObject.querySelector('p:last-of-type').textContent = ad.offer.description;
@@ -332,6 +351,42 @@ var activateMap = function () {
   }
 };
 
+var setDrivenTime = function (driving) {
+  var driven = (driving === advertFormTimeInDomObject) ? advertFormTimeOutDomObject : advertFormTimeInDomObject;
+  driven.selectedIndex = driving.selectedIndex;
+};
+
+var validateChekInOutTime = function() {
+  advertFormTimeInDomObject.addEventListener('input', function (evt) {
+    setDrivenTime(evt.target);
+  });
+  advertFormTimeOutDomObject.addEventListener('input', function (evt) {
+    setDrivenTime(evt.target);
+  });
+};
+
+var validatePrice = function () {
+  advertFormPriceDomObject.addEventListener('input', function (evt) {
+    var target = evt.target;
+    var accomodationType = advertFormTypeDomObject.children[advertFormTypeDomObject.selectedIndex].value;
+    var currentPrice = parseInt(target.value, 10);
+    var minPrice = APPARTMENTS_MAP[accomodationType].minPrice
+
+    if (currentPrice < APPARTMENTS_MAP[accomodationType].minPrice) {
+      target.setCustomValidity('Для данного типа жилья цена не может быть ниже ' + APPARTMENTS_MAP[accomodationType].minPrice);
+    }
+    else {
+      target.setCustomValidity('');
+    }
+  });
+};
+
+var validateAdvertForm = function () {
+  validateChekInOutTime();
+  validatePrice();
+  // validateAccomodation();
+};
+
 var adverts = generateAdverts();
 
 disableAdvertForm();
@@ -341,10 +396,12 @@ mainPinDomObject.addEventListener('mouseup', function () {
   setAdvertAddress();
 });
 
+validateAdvertForm();
+
 var roomsNumberObj = document.querySelector('#room_number');
-// console.log(roomsNumberObj.selectedIndex);
 roomsNumberObj.addEventListener('input', function(evt) {
   var target = evt.target;
+  console.log('roomsNumber is being changed');
   console.log('now select is set to: ' + target.children[target.selectedIndex].value);
   if (target.children[target.selectedIndex].value !== '2') {
     target.setCustomValidity('Bad');
