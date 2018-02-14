@@ -196,7 +196,7 @@ var addCloseAdvertInfoHandlers = function (advertInfo) {
   document.addEventListener('keydown', onAdvertInfoCloseButtonKeydown);
 };
 
-var renderAdvertInfo = function (ad) {
+var createAdvertInfoDomObject = function (ad) {
   var advertInfoDomObject = mapCardTemplate.cloneNode(true);
   var roomsNumber = ad.offer.rooms;
   var roomsAvailable;
@@ -223,12 +223,17 @@ var renderAdvertInfo = function (ad) {
 
   var templateFeaturesDomObject = advertInfoDomObject.querySelector('.popup__features');
   var templatePicturesDomObject = advertInfoDomObject.querySelector('.popup__pictures');
-
   var featuresDomObject = createFeaturesDomObject(ad.offer.features);
   var picturesDomObject = createPicturesDomObject(ad.offer.photos);
 
   advertInfoDomObject.replaceChild(featuresDomObject, templateFeaturesDomObject);
   advertInfoDomObject.replaceChild(picturesDomObject, templatePicturesDomObject);
+
+  return advertInfoDomObject;
+};
+
+var renderAdvertInfo = function (ad) {
+  var advertInfoDomObject = createAdvertInfoDomObject(ad);
   addCloseAdvertInfoHandlers(advertInfoDomObject);
 
   if (currentAdvertInfoDomObject !== null) {
