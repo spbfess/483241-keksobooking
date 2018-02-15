@@ -10,8 +10,8 @@ var TITLES = [
   'Некрасивый негостеприимный домик',
   'Уютное бунгало далеко от моря',
   'Неуютное бунгало по колено в воде'];
-var APARTMENT_TYPES = ['flat', 'house', 'bungalo', 'palace'];
-var APPARTMENTS_MAP = {
+var ACCOMMODATION_TYPES = ['flat', 'house', 'bungalo', 'palace'];
+var ACCOMMODATION_MAP = {
   flat: {
     alias: 'Квартира',
     minPrice: 1000
@@ -59,7 +59,7 @@ var mapFiltersContainerDomObject = mapDomObject.querySelector('.map__filters-con
 var mainPinDomObject = mapPinsDomObject.querySelector('.map__pin--main');
 var avdertFormDomObject = document.querySelector('.notice__form');
 var avdertFormFieldsets = avdertFormDomObject.querySelector('fieldset');
-var advertFormTypeDomObject = avdertFormDomObject.querySelector('#type');
+var advertFormAccommodationDomObject = avdertFormDomObject.querySelector('#type');
 var advertFormPriceDomObject = avdertFormDomObject.querySelector('#price');
 var advertFormTimeInDomObject = avdertFormDomObject.querySelector('#timein');
 var advertFormTimeOutDomObject = avdertFormDomObject.querySelector('#timeout');
@@ -107,7 +107,7 @@ var getShuffledAndSlicedArray = function (elements, sliceLength) {
 var getRandomAdvert = function () {
   var randomAvatarNumber = getRandomElement(AVATAR_NUMBERS, true);
   var randomTitle = getRandomElement(TITLES, true);
-  var randomApartmentType = getRandomElement(APARTMENT_TYPES, false);
+  var randomApartmentType = getRandomElement(ACCOMMODATION_TYPES, false);
   var randomCheckinTime = getRandomElement(CHECKIN_TIMES, false);
   var randomCheckoutTime = getRandomElement(CHECKOUT_TIMES, false);
   var randomFeatures = getShuffledAndSlicedArray(FEATURES, getRandomInteger(0, FEATURES.length, true));
@@ -235,7 +235,7 @@ var createAdvertInfoDomObject = function (ad) {
   advertInfoDomObject.querySelector('h3').textContent = ad.offer.title;
   advertInfoDomObject.querySelector('p').children[0].textContent = ad.offer.address;
   advertInfoDomObject.querySelector('.popup__price').textContent = ad.offer.price + '₽/ночь';
-  advertInfoDomObject.querySelector('h4').textContent = APPARTMENTS_MAP[ad.offer.type]['alias'];
+  advertInfoDomObject.querySelector('h4').textContent = ACCOMMODATION_MAP[ad.offer.type]['alias'];
   advertInfoDomObject.querySelector('h4 + p').textContent = roomsAvailable + ' для ' + guestsAvailable;
   advertInfoDomObject.querySelector('p:nth-of-type(4)').textContent = 'Заезд после ' + ad.offer.checkin + ', выезд до ' + ad.offer.checkout;
   advertInfoDomObject.querySelector('p:last-of-type').textContent = ad.offer.description;
@@ -356,7 +356,7 @@ var setDrivenTime = function (driving) {
   driven.selectedIndex = driving.selectedIndex;
 };
 
-var validateChekInOutTime = function() {
+var validateTime = function() {
   advertFormTimeInDomObject.addEventListener('input', function (evt) {
     setDrivenTime(evt.target);
   });
@@ -365,26 +365,40 @@ var validateChekInOutTime = function() {
   });
 };
 
+var getSelectedAccommodation = function () {
+  var selectedIndex = advertFormAccommodationDomObject.selectedIndex;
+  var accommodationOptions = advertFormAccommodationDomObject.children;
+  var accommodationType = accommodationOptions[selectedIndex].value;
+
+  return accommodationType;
+};
+
+var getSelectedPrice = function () {
+  return parseInt(advertFormPriceDomObject.value, 10);
+}
+
+var setPriceValidity = function () {
+  var currentPrice = getSelectedPrice();
+  var accommodation = getSelectedAccommodation();
+  var minPrice = ACCOMMODATION_MAP[accommodation].minPrice;
+
+  (currentPrice < minPrice) ? advertFormPriceDomObject.setCustomValidity('Для данного типа жилья цена не может быть ниже ' + minPrice) : advertFormPriceDomObject.setCustomValidity('');
+}
+
 var validatePrice = function () {
   advertFormPriceDomObject.addEventListener('input', function (evt) {
-    var target = evt.target;
-    var accomodationType = advertFormTypeDomObject.children[advertFormTypeDomObject.selectedIndex].value;
-    var currentPrice = parseInt(target.value, 10);
-    var minPrice = APPARTMENTS_MAP[accomodationType].minPrice
+    setPriceValidity();
+  });
 
-    if (currentPrice < APPARTMENTS_MAP[accomodationType].minPrice) {
-      target.setCustomValidity('Для данного типа жилья цена не может быть ниже ' + APPARTMENTS_MAP[accomodationType].minPrice);
-    }
-    else {
-      target.setCustomValidity('');
-    }
+  advertFormAccommodationDomObject.addEventListener('input', function (evt) {
+    setPriceValidity();
   });
 };
 
 var validateAdvertForm = function () {
-  validateChekInOutTime();
+  validateTime();
   validatePrice();
-  // validateAccomodation();
+  // validateAccommodation();
 };
 
 var adverts = generateAdverts();
