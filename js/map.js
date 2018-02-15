@@ -59,7 +59,6 @@ var mapFiltersContainerDomObject = mapDomObject.querySelector('.map__filters-con
 var mainPinDomObject = mapPinsDomObject.querySelector('.map__pin--main');
 var avdertFormDomObject = document.querySelector('.notice__form');
 var avdertFormFieldsets = avdertFormDomObject.querySelectorAll('fieldset');
-console.dir(avdertFormFieldsets);
 var advertFormAccommodationDomObject = avdertFormDomObject.querySelector('#type');
 var advertFormPriceDomObject = avdertFormDomObject.querySelector('#price');
 var advertFormTimeInDomObject = avdertFormDomObject.querySelector('#timein');
@@ -352,12 +351,12 @@ var activateMap = function () {
   }
 };
 
-var setDrivenTime = function (driving) {
-  var driven = (driving === advertFormTimeInDomObject) ? advertFormTimeOutDomObject : advertFormTimeInDomObject;
-  driven.selectedIndex = driving.selectedIndex;
+var setDrivenTime = function (drivingTime) {
+  var drivenTime = (drivingTime === advertFormTimeInDomObject) ? advertFormTimeOutDomObject : advertFormTimeInDomObject;
+  drivenTime.selectedIndex = drivingTime.selectedIndex;
 };
 
-var validateTime = function() {
+var validateTime = function () {
   advertFormTimeInDomObject.addEventListener('input', function (evt) {
     setDrivenTime(evt.target);
   });
@@ -366,44 +365,81 @@ var validateTime = function() {
   });
 };
 
-var getSelectedAccommodation = function () {
-  var selectedIndex = advertFormAccommodationDomObject.selectedIndex;
-  var accommodationOptions = advertFormAccommodationDomObject.children;
-  var accommodationType = accommodationOptions[selectedIndex].value;
+var getSelectValue = function (select) {
+  var selectedIndex = select.selectedIndex;
+  var selectOptions = select.children;
+  var selectedValue = selectOptions[selectedIndex].value;
 
-  return accommodationType;
+  return selectedValue;
+};
+
+var getSelectIntValue = function (select) {
+  return parseInt(getSelectValue(select), 10);
 };
 
 var getSelectedPrice = function () {
   return parseInt(advertFormPriceDomObject.value, 10);
-}
+};
 
 var setPriceValidity = function () {
   var currentPrice = getSelectedPrice();
-  var accommodation = getSelectedAccommodation();
+  var accommodation = getSelectValue(advertFormAccommodationDomObject);
   var minPrice = ACCOMMODATION_MAP[accommodation].minPrice;
 
-  (currentPrice < minPrice) ? advertFormPriceDomObject.setCustomValidity('Для данного типа жилья цена не может быть ниже ' + minPrice) : advertFormPriceDomObject.setCustomValidity('');
-}
+  if (currentPrice < minPrice) {
+    advertFormPriceDomObject.setCustomValidity('Для данного типа жилья цена не может быть ниже ' + minPrice);
+  } else {
+    advertFormPriceDomObject.setCustomValidity('');
+  }
+};
 
 var validatePrice = function () {
-  advertFormPriceDomObject.addEventListener('input', function (evt) {
+  advertFormPriceDomObject.addEventListener('input', function () {
     setPriceValidity();
   });
 
-  advertFormAccommodationDomObject.addEventListener('input', function (evt) {
+  advertFormAccommodationDomObject.addEventListener('input', function () {
     setPriceValidity();
   });
 };
 
-var validateAccommodation = function () {
+var setCapacityValidity = function () {
+  var roomsNumber = getSelectIntValue(advertFormRoomNumberDomObject);
+  var capacity = getSelectIntValue(advertFormCapacityDomObject);
+  var failed = false;
+  var message;
 
+  if (capacity === 0 || roomsNumber === 100) {
+    if (!(capacity === 0 && roomsNumber === 100)) {
+      failed = true;
+      message = 'Для 100 комнат единственное валидное значение кол-ва мест - не для гоcтей, и наоборот';
+    }
+  } else if (capacity > roomsNumber) {
+    failed = true;
+    message = 'Кол-во мест не может превышать кол-во комнат';
+  }
+
+  if (failed) {
+    advertFormCapacityDomObject.setCustomValidity(message);
+  } else {
+    advertFormCapacityDomObject.setCustomValidity('');
+  }
+};
+
+var validateCapacity = function () {
+  advertFormRoomNumberDomObject.addEventListener('input', function () {
+    setCapacityValidity();
+  });
+
+  advertFormCapacityDomObject.addEventListener('input', function () {
+    setCapacityValidity();
+  });
 };
 
 var validateAdvertForm = function () {
   validateTime();
   validatePrice();
-  validateAccommodation();
+  validateCapacity();
 };
 
 var adverts = generateAdverts();
@@ -416,19 +452,3 @@ mainPinDomObject.addEventListener('mouseup', function () {
 });
 
 validateAdvertForm();
-
-var roomsNumberObj = document.querySelector('#room_number');
-roomsNumberObj.addEventListener('input', function(evt) {
-  var target = evt.target;
-  console.log('roomsNumber is being changed');
-  console.log('now select is set to: ' + target.children[target.selectedIndex].value);
-  if (target.children[target.selectedIndex].value !== '2') {
-    target.setCustomValidity('Bad');
-  } else {
-    target.setCustomValidity('');
-  }
-});
-
-roomsNumberObj.addEventListener('validity', function(evt) {
-  console.log("smth went wrong");
-});
