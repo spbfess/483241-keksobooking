@@ -58,7 +58,8 @@ var mapPinsDomObject = mapDomObject.querySelector('.map__pins');
 var mapFiltersContainerDomObject = mapDomObject.querySelector('.map__filters-container');
 var mainPinDomObject = mapPinsDomObject.querySelector('.map__pin--main');
 var avdertFormDomObject = document.querySelector('.notice__form');
-var avdertFormFieldsets = avdertFormDomObject.querySelector('fieldset');
+var avdertFormFieldsets = avdertFormDomObject.querySelectorAll('fieldset');
+console.dir(avdertFormFieldsets);
 var advertFormAccommodationDomObject = avdertFormDomObject.querySelector('#type');
 var advertFormPriceDomObject = avdertFormDomObject.querySelector('#price');
 var advertFormTimeInDomObject = avdertFormDomObject.querySelector('#timein');
@@ -395,10 +396,14 @@ var validatePrice = function () {
   });
 };
 
+var validateAccommodation = function () {
+
+};
+
 var validateAdvertForm = function () {
   validateTime();
   validatePrice();
-  // validateAccommodation();
+  validateAccommodation();
 };
 
 var adverts = generateAdverts();
