@@ -65,7 +65,7 @@ var advertFormTimeInDomObject = avdertFormDomObject.querySelector('#timein');
 var advertFormTimeOutDomObject = avdertFormDomObject.querySelector('#timeout');
 var advertFormRoomNumberDomObject = avdertFormDomObject.querySelector('#room_number');
 var advertFormCapacityDomObject = avdertFormDomObject.querySelector('#capacity');
-
+var advertFormResetDomObject = avdertFormDomObject.querySelector('button.form__reset');
 var advertAddressInputDomObject = avdertFormDomObject.querySelector('#address');
 var currentAdvertInfoDomObject = null;
 
@@ -321,9 +321,9 @@ var enableAdvertForm = function () {
   advertAddressInputDomObject.readOnly = true;
 };
 
-var getMainPinCoordinates = function (pin) {
-  var x = parseInt(pin.offsetLeft, 10);
-  var y = parseInt(pin.offsetTop, 10);
+var getMainPinCoordinates = function () {
+  var x = parseInt(mainPinDomObject.offsetLeft, 10);
+  var y = parseInt(mainPinDomObject.offsetTop, 10);
 
   if (checkMapIsActive()) {
     y = y + MAIN_PIN_OFFSET_Y;
@@ -332,23 +332,19 @@ var getMainPinCoordinates = function (pin) {
   return [x, y];
 };
 
+var setMainPinCoordinates = function (coordinates) {
+  var x = coordinates[0];
+  var y = checkMapIsActive() ? coordinates[1] - MAIN_PIN_OFFSET_Y : coordinates[1];
+
+  mainPinDomObject.style.left = x + 'px';
+  mainPinDomObject.style.top = y + 'px';
+};
+
 var setAdvertAddress = function () {
-  var mainPinCoords = getMainPinCoordinates(mainPinDomObject);
+  var mainPinCoords = getMainPinCoordinates();
   var advertAddress = mainPinCoords[0] + ', ' + mainPinCoords[1];
 
   advertAddressInputDomObject.value = advertAddress;
-};
-
-var checkMapIsActive = function () {
-  return mapDomObject.classList.contains('map--faded') ? false : true;
-};
-
-var activateMap = function () {
-  if (!checkMapIsActive()) {
-    mapDomObject.classList.remove('map--faded');
-    enableAdvertForm();
-    renderAdvertPins(adverts);
-  }
 };
 
 var setDrivenTime = function (drivingTime) {
@@ -442,13 +438,57 @@ var validateAdvertForm = function () {
   validateCapacity();
 };
 
-var adverts = generateAdverts();
+var checkMapIsActive = function () {
+  return mapDomObject.classList.contains('map--faded') ? false : true;
+};
 
-disableAdvertForm();
-setAdvertAddress();
+var activateMap = function () {
+  mapDomObject.classList.remove('map--faded');
+  renderAdvertPins(adverts);
+};
+
+var getRenderedAdvertPins = function () {
+  return mapPinsDomObject.querySelectorAll('.map__pin:not(.map__pin--main)');
+};
+
+var clearRenderedAdvertPins = function (pins) {
+  var pinsNumber = pins.length;
+
+  for (var i = 0; i < pinsNumber; i++) {
+    pins[i].remove();
+  }
+};
+
+var resetAdvertForm = function () {
+  avdertFormDomObject.reset();
+  setAdvertAddress();
+  disableAdvertForm();
+};
+
+var deactivateMap = function () {
+  var renderedPins = getRenderedAdvertPins();
+
+  clearRenderedAdvertPins(renderedPins);
+  mapDomObject.classList.add('map--faded');
+  setMainPinCoordinates(mainPinDefaultCoordinates);
+};
+
+var adverts = generateAdverts();
+var mainPinDefaultCoordinates = getMainPinCoordinates();
+
+resetAdvertForm();
+
 mainPinDomObject.addEventListener('mouseup', function () {
-  activateMap();
+  if (!checkMapIsActive()) {
+    activateMap();
+    enableAdvertForm();
+  }
   setAdvertAddress();
 });
 
 validateAdvertForm();
+advertFormResetDomObject.addEventListener('click', function (evt) {
+  evt.preventDefault();
+  deactivateMap();
+  resetAdvertForm();
+});
