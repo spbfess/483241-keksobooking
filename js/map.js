@@ -45,7 +45,7 @@ var mapPinsDomObject = mapDomObject.querySelector('.map__pins');
 var mapFiltersContainerDomObject = mapDomObject.querySelector('.map__filters-container');
 var mainPinDomObject = mapPinsDomObject.querySelector('.map__pin--main');
 var avdertFormDomObject = document.querySelector('.notice__form');
-var avdertFormFieldsets = avdertFormDomObject.querySelector('fieldset');
+var avdertFormFieldsets = avdertFormDomObject.querySelectorAll('fieldset');
 var advertAddressInputDomObject = avdertFormDomObject.querySelector('#address');
 var currentAdvertInfoDomObject = null;
 
