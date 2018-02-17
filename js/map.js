@@ -58,16 +58,16 @@ var mapDomObject = document.querySelector('section.map');
 var mapPinsDomObject = mapDomObject.querySelector('.map__pins');
 var mapFiltersContainerDomObject = mapDomObject.querySelector('.map__filters-container');
 var mainPinDomObject = mapPinsDomObject.querySelector('.map__pin--main');
-var avdertFormDomObject = document.querySelector('.notice__form');
-var avdertFormFieldsets = avdertFormDomObject.querySelectorAll('fieldset');
-var advertFormAccommodationDomObject = avdertFormDomObject.querySelector('#type');
-var advertFormPriceDomObject = avdertFormDomObject.querySelector('#price');
-var advertFormTimeInDomObject = avdertFormDomObject.querySelector('#timein');
-var advertFormTimeOutDomObject = avdertFormDomObject.querySelector('#timeout');
-var advertFormRoomNumberDomObject = avdertFormDomObject.querySelector('#room_number');
-var advertFormCapacityDomObject = avdertFormDomObject.querySelector('#capacity');
-var advertFormResetDomObject = avdertFormDomObject.querySelector('button.form__reset');
-var advertFormAddressDomObject = avdertFormDomObject.querySelector('#address');
+var advertFormDomObject = document.querySelector('.notice__form');
+var advertFormFieldsets = advertFormDomObject.querySelectorAll('fieldset');
+var advertFormAccommodationDomObject = advertFormDomObject.querySelector('#type');
+var advertFormPriceDomObject = advertFormDomObject.querySelector('#price');
+var advertFormTimeInDomObject = advertFormDomObject.querySelector('#timein');
+var advertFormTimeOutDomObject = advertFormDomObject.querySelector('#timeout');
+var advertFormRoomNumberDomObject = advertFormDomObject.querySelector('#room_number');
+var advertFormCapacityDomObject = advertFormDomObject.querySelector('#capacity');
+var advertFormResetDomObject = advertFormDomObject.querySelector('button.form__reset');
+var advertFormAddressDomObject = advertFormDomObject.querySelector('#address');
 
 var getRandomInteger = function (min, max, isMaxIncluded) {
   return isMaxIncluded ? Math.round(Math.random() * (max - min)) + min : Math.floor(Math.random() * (max - min)) + min;
@@ -332,28 +332,28 @@ var setMainPinCoordinates = function (coordinates) {
 };
 
 var disableAdvertForm = function () {
-  var fieldsetsNumber = avdertFormFieldsets.length;
+  var fieldsetsNumber = advertFormFieldsets.length;
 
   for (var i = 0; i < fieldsetsNumber; i++) {
-    avdertFormFieldsets[i].disabled = true;
+    advertFormFieldsets[i].disabled = true;
   }
 
-  avdertFormDomObject.classList.add('notice__form--disabled');
+  advertFormDomObject.classList.add('notice__form--disabled');
 };
 
 var enableAdvertForm = function () {
-  var fieldsetsNumber = avdertFormFieldsets.length;
+  var fieldsetsNumber = advertFormFieldsets.length;
 
   for (var i = 0; i < fieldsetsNumber; i++) {
-    avdertFormFieldsets[i].disabled = false;
+    advertFormFieldsets[i].disabled = false;
   }
 
-  avdertFormDomObject.classList.remove('notice__form--disabled');
+  advertFormDomObject.classList.remove('notice__form--disabled');
   advertFormAddressDomObject.readOnly = true;
 };
 
 var resetAdvertForm = function () {
-  avdertFormDomObject.reset();
+  advertFormDomObject.reset();
   setAdvertAddress();
   disableAdvertForm();
 };
