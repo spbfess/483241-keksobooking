@@ -396,25 +396,9 @@ var syncCheckInOutTime = function () {
   });
 };
 
-var getSelectValue = function (select) {
-  var selectedIndex = select.selectedIndex;
-  var selectOptions = select.children;
-  var selectedValue = selectOptions[selectedIndex].value;
-
-  return selectedValue;
-};
-
-var getSelectIntValue = function (select) {
-  return parseInt(getSelectValue(select), 10);
-};
-
-var getSelectedPrice = function () {
-  return parseInt(advertFormPriceDomObject.value, 10);
-};
-
 var setPriceValidity = function () {
-  var currentPrice = getSelectedPrice();
-  var accommodation = getSelectValue(advertFormAccommodationDomObject);
+  var currentPrice = parseInt(advertFormPriceDomObject.value, 10);
+  var accommodation = advertFormAccommodationDomObject.value;
   var minPrice = ACCOMMODATION_MAP[accommodation].minPrice;
 
   if (currentPrice < minPrice) {
@@ -435,8 +419,8 @@ var validatePrice = function () {
 };
 
 var setCapacityValidity = function () {
-  var roomsNumber = getSelectIntValue(advertFormRoomNumberDomObject);
-  var capacity = getSelectIntValue(advertFormCapacityDomObject);
+  var roomsNumber = parseInt(advertFormRoomNumberDomObject.value, 10);
+  var capacity = parseInt(advertFormCapacityDomObject.value, 10);
   var failed = false;
   var message;
 
