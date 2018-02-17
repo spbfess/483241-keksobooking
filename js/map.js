@@ -402,12 +402,6 @@ var setMinPrice = function () {
     var minPrice = ACCOMMODATION_MAP[accommodation].minPrice;
 
     advertFormPriceDomObject.min = minPrice;
-
-    // if (currentPrice < minPrice) {
-    //   advertFormPriceDomObject.setCustomValidity('Для данного типа жилья цена не может быть ниже ' + minPrice);
-    // } else {
-    //   advertFormPriceDomObject.setCustomValidity('');
-    // }
   });
 };
 
@@ -431,6 +425,7 @@ var setCapacityValidity = function () {
     advertFormCapacityDomObject.setCustomValidity(message);
   } else {
     advertFormCapacityDomObject.setCustomValidity('');
+    advertFormCapacityDomObject.style.border = '';
   }
 };
 
@@ -448,6 +443,26 @@ var setAdvertFormReactionOnUserInput = function () {
   syncCheckInOutTime();
   setMinPrice();
   validateCapacity();
+
+  advertFormDomObject.addEventListener('invalid', function (evt) {
+    var target = evt.target;
+    target.style.border = '3px solid red';
+
+    if (target.validity.tooShort) {
+      target.setCustomValidity('Это поле должно содержать минимум ' + target.minLength + ' символов');
+    } else if (target.validity.tooLong) {
+      target.setCustomValidity('Это поле не должно быть длиннее ' + target.maxLength + ' символов');
+    } else if (target.validity.valueMissing) {
+      target.setCustomValidity('Обязательное поле для заполнения');
+    } else if (target.validity.rangeUnderflow) {
+      target.setCustomValidity('Значение не может быть ниже ' + target.min);
+    } else if (target.validity.rangeOverflow) {
+      target.setCustomValidity('Значение не может быть выше ' + target.max);
+    } else if (target !== advertFormCapacityDomObject) {
+      target.setCustomValidity('');
+      target.style.border = '';
+    }
+  }, true);
 };
 
 var adverts = generateAdverts();
@@ -462,9 +477,7 @@ mainPinDomObject.addEventListener('mouseup', function () {
   }
   setAdvertAddress();
 });
-
 setAdvertFormReactionOnUserInput();
-
 advertFormResetDomObject.addEventListener('click', function (evt) {
   evt.preventDefault();
   deactivateMap();
