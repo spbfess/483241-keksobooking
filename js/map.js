@@ -387,7 +387,7 @@ var setDrivenTime = function (drivingTime) {
   drivenTime.selectedIndex = drivingTime.selectedIndex;
 };
 
-var validateTime = function () {
+var syncCheckInOutTime = function () {
   advertFormTimeInDomObject.addEventListener('input', function (evt) {
     setDrivenTime(evt.target);
   });
@@ -468,7 +468,7 @@ var validateCapacity = function () {
 };
 
 var validateAdvertForm = function () {
-  validateTime();
+  syncCheckInOutTime();
   validatePrice();
   validateCapacity();
 };
