@@ -463,7 +463,8 @@ mainPinDomObject.addEventListener('mouseup', function () {
   setAdvertAddress();
 });
 
-setAdvertFormHandlers();
+setAdvertFormReactionOnUserInput();
+
 advertFormResetDomObject.addEventListener('click', function (evt) {
   evt.preventDefault();
   deactivateMap();
