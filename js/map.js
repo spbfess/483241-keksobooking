@@ -409,7 +409,6 @@ var setMinPrice = function () {
     //   advertFormPriceDomObject.setCustomValidity('');
     // }
   });
-
 };
 
 var setCapacityValidity = function () {
@@ -445,7 +444,7 @@ var validateCapacity = function () {
   });
 };
 
-var validateAdvertForm = function () {
+var setAdvertFormReactionOnUserInput = function () {
   syncCheckInOutTime();
   setMinPrice();
   validateCapacity();
@@ -464,7 +463,7 @@ mainPinDomObject.addEventListener('mouseup', function () {
   setAdvertAddress();
 });
 
-validateAdvertForm();
+setAdvertFormHandlers();
 advertFormResetDomObject.addEventListener('click', function (evt) {
   evt.preventDefault();
   deactivateMap();
