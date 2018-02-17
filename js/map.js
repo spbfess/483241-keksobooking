@@ -388,34 +388,28 @@ var setDrivenTime = function (drivingTime) {
 };
 
 var syncCheckInOutTime = function () {
-  advertFormTimeInDomObject.addEventListener('input', function (evt) {
+  advertFormTimeInDomObject.addEventListener('change', function (evt) {
     setDrivenTime(evt.target);
   });
-  advertFormTimeOutDomObject.addEventListener('input', function (evt) {
+  advertFormTimeOutDomObject.addEventListener('change', function (evt) {
     setDrivenTime(evt.target);
   });
 };
 
-var setPriceValidity = function () {
-  var currentPrice = parseInt(advertFormPriceDomObject.value, 10);
-  var accommodation = advertFormAccommodationDomObject.value;
-  var minPrice = ACCOMMODATION_MAP[accommodation].minPrice;
+var setMinPrice = function () {
+  advertFormAccommodationDomObject.addEventListener('change', function () {
+    var accommodation = advertFormAccommodationDomObject.value;
+    var minPrice = ACCOMMODATION_MAP[accommodation].minPrice;
 
-  if (currentPrice < minPrice) {
-    advertFormPriceDomObject.setCustomValidity('Для данного типа жилья цена не может быть ниже ' + minPrice);
-  } else {
-    advertFormPriceDomObject.setCustomValidity('');
-  }
-};
+    advertFormPriceDomObject.min = minPrice;
 
-var validatePrice = function () {
-  advertFormPriceDomObject.addEventListener('input', function () {
-    setPriceValidity();
+    // if (currentPrice < minPrice) {
+    //   advertFormPriceDomObject.setCustomValidity('Для данного типа жилья цена не может быть ниже ' + minPrice);
+    // } else {
+    //   advertFormPriceDomObject.setCustomValidity('');
+    // }
   });
 
-  advertFormAccommodationDomObject.addEventListener('input', function () {
-    setPriceValidity();
-  });
 };
 
 var setCapacityValidity = function () {
@@ -442,18 +436,18 @@ var setCapacityValidity = function () {
 };
 
 var validateCapacity = function () {
-  advertFormRoomNumberDomObject.addEventListener('input', function () {
+  advertFormRoomNumberDomObject.addEventListener('change', function () {
     setCapacityValidity();
   });
 
-  advertFormCapacityDomObject.addEventListener('input', function () {
+  advertFormCapacityDomObject.addEventListener('change', function () {
     setCapacityValidity();
   });
 };
 
 var validateAdvertForm = function () {
   syncCheckInOutTime();
-  validatePrice();
+  setMinPrice();
   validateCapacity();
 };
 
