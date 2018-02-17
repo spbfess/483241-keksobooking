@@ -455,7 +455,7 @@ var setAdvertFormReactionOnUserInput = function () {
       target.setCustomValidity('Обязательное поле для заполнения');
     } else if (target.validity.rangeUnderflow) {
       target.setCustomValidity('Значение не может быть ниже ' + target.min);
-    } else if (target.validity.rangeOverFlow) {
+    } else if (target.validity.rangeOverflow) {
       target.setCustomValidity('Значение не может быть выше ' + target.max);
     } else if (target !== advertFormCapacityDomObject) {
       target.setCustomValidity('');
