@@ -425,7 +425,6 @@ var setCapacityValidity = function () {
     advertFormCapacityDomObject.setCustomValidity(message);
   } else {
     advertFormCapacityDomObject.setCustomValidity('');
-    advertFormCapacityDomObject.style.border = '';
   }
 };
 
@@ -456,13 +455,17 @@ var setAdvertFormReactionOnUserInput = function () {
       target.setCustomValidity('Обязательное поле для заполнения');
     } else if (target.validity.rangeUnderflow) {
       target.setCustomValidity('Значение не может быть ниже ' + target.min);
-    } else if (target.validity.rangeOverflow) {
+    } else if (target.validity.rangeOverFlow) {
       target.setCustomValidity('Значение не может быть выше ' + target.max);
     } else if (target !== advertFormCapacityDomObject) {
       target.setCustomValidity('');
       target.style.border = '';
     }
   }, true);
+
+  advertFormDomObject.addEventListener('input', function (evt) {
+    evt.target.style.border = '';
+  });
 };
 
 var adverts = generateAdverts();
