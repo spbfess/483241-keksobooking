@@ -1,5 +1,6 @@
+'use strict';
+
 (function () {
-  'use strict';
 
   var PHOTO_WIDTH = 100;
   var ACCOMMODATION_MAP = {
@@ -57,7 +58,7 @@
   };
 
   var onMapCardCloseButtonKeydown = function (evt) {
-    if (evt.keyCode === util.ESC_CODE) {
+    if (evt.keyCode === window.util.ESC_CODE) {
       closeMapCard();
     }
   };
@@ -120,6 +121,6 @@
   };
 
   window.card = {
-    renderMapCard: renderMapCard
+    render: renderMapCard
   };
-}) ();
+})();

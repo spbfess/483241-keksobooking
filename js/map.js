@@ -1,6 +1,6 @@
-(function () {
-  'use strict';
+'use strict';
 
+(function () {
   var MAIN_PIN_OFFSET_Y = 48.5;
 
   var mapDomObject = document.querySelector('section.map');
@@ -9,7 +9,7 @@
 
   var addRenderMapCardHandler = function (pinButton, ad) {
     pinButton.addEventListener('click', function () {
-      card.renderMapCard(mapDomObject, ad);
+      window.card.render(mapDomObject, ad);
     });
   };
 
@@ -19,7 +19,7 @@
     var adsLength = ads.length;
 
     for (var i = 0; i < adsLength; i++) {
-      mapPinDomObject = pin.createMapPinDomObject(ads[i]);
+      mapPinDomObject = window.pin.create(ads[i]);
       addRenderMapCardHandler(mapPinDomObject, ads[i]);
       fragmentDomObject.appendChild(mapPinDomObject);
     }
@@ -75,48 +75,23 @@
     setMainPinCoordinates(mainPinDefaultCoordinates);
   };
 
-  //   advertFormDomObject.addEventListener('invalid', function (evt) {
-  //     var target = evt.target;
-  //     target.style.border = '3px solid red';
+  var onAdvertFormResetClick = function (evt) {
+    evt.preventDefault();
+    deactivateMap();
+    window.form.reset(mainPinDefaultCoordinates);
+  };
 
-  //     if (target.validity.tooShort) {
-  //       target.setCustomValidity('Это поле должно содержать минимум ' + target.minLength + ' символов');
-  //     } else if (target.validity.tooLong) {
-  //       target.setCustomValidity('Это поле не должно быть длиннее ' + target.maxLength + ' символов');
-  //     } else if (target.validity.valueMissing) {
-  //       target.setCustomValidity('Обязательное поле для заполнения');
-  //     } else if (target.validity.rangeUnderflow) {
-  //       target.setCustomValidity('Значение не может быть ниже ' + target.min);
-  //     } else if (target.validity.rangeOverflow) {
-  //       target.setCustomValidity('Значение не может быть выше ' + target.max);
-  //     } else if (target !== advertFormCapacityDomObject) {
-  //       target.setCustomValidity('');
-  //       target.style.border = '';
-  //     }
-  //   }, true);
-
-  //   advertFormDomObject.addEventListener('input', function (evt) {
-  //     evt.target.style.border = '';
-  //   });
-
-  var adverts = data.generateAdverts();
+  var adverts = window.data.generateAdverts();
   var mainPinDefaultCoordinates = getMainPinCoordinates();
 
-  form.setAdvertAddress(mainPinDefaultCoordinates);
-  // resetAdvertForm();
+  window.form.reset(mainPinDefaultCoordinates);
+  window.form.addResetHadler(onAdvertFormResetClick);
 
   mainPinDomObject.addEventListener('mouseup', function () {
     if (!checkMapIsActive()) {
       activateMap();
-      form.enableAdvertForm();
+      window.form.enable();
     }
-    form.setAdvertAddress(getMainPinCoordinates());
+    window.form.setAddress(getMainPinCoordinates());
   });
-  // setAdvertFormReactionOnUserInput();
-  var advertFormResetDomObject = document.querySelector('button.form__reset');
-  advertFormResetDomObject.addEventListener('click', function (evt) {
-    evt.preventDefault();
-    deactivateMap();
-    form.resetAdvertForm();
-  });
-}) ();
+})();

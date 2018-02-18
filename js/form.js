@@ -1,7 +1,7 @@
-(function () {
-  'use strict';
+'use strict';
 
-  var MIN_PRICE_MAP ={
+(function () {
+  var MIN_PRICE_MAP = {
     flat: 1000,
     bungalo: 0,
     house: 5000,
@@ -16,7 +16,7 @@
   var advertFormTimeOutDomObject = advertFormDomObject.querySelector('#timeout');
   var advertFormRoomNumberDomObject = advertFormDomObject.querySelector('#room_number');
   var advertFormCapacityDomObject = advertFormDomObject.querySelector('#capacity');
-  // var advertFormResetDomObject = advertFormDomObject.querySelector('button.form__reset');
+  var advertFormResetDomObject = advertFormDomObject.querySelector('button.form__reset');
   var advertFormAddressDomObject = advertFormDomObject.querySelector('#address');
 
   var disableAdvertForm = function () {
@@ -46,9 +46,9 @@
     advertFormAddressDomObject.readOnly = true;
   };
 
-  var resetAdvertForm = function () {
+  var resetAdvertForm = function (initialAdvertAddress) {
     advertFormDomObject.reset();
-    // setAdvertAddress(); // ?????????????????????????
+    setAdvertAddress(initialAdvertAddress);
     disableAdvertForm();
   };
 
@@ -117,7 +117,10 @@
     element.style.border = '';
   };
 
-  resetAdvertForm();
+  var addAdvertFromResetHadler = function (resetHandler) {
+    advertFormResetDomObject.addEventListener('click', resetHandler);
+  };
+
   syncCheckInOutTime();
   setMinPrice();
   validateCapacity();
@@ -147,8 +150,9 @@
   });
 
   window.form = {
-    enableAdvertForm: enableAdvertForm,
-    setAdvertAddress: setAdvertAddress,
-    resetAdvertForm: resetAdvertForm
+    enable: enableAdvertForm,
+    setAddress: setAdvertAddress,
+    reset: resetAdvertForm,
+    addResetHadler: addAdvertFromResetHadler
   };
-}) ();
+})();

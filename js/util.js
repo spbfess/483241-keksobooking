@@ -1,6 +1,6 @@
-(function () {
-  'use strict';
+'use strict';
 
+(function () {
   var ESC_CODE = 27;
 
   var getRandomInteger = function (min, max, isMaxIncluded) {
@@ -45,4 +45,4 @@
     getShuffledArray: getShuffledArray,
     getShuffledAndSlicedArray: getShuffledAndSlicedArray
   };
-}) ();
+})();

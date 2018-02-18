@@ -1,6 +1,6 @@
-(function () {
-  'use strict';
+'use strict';
 
+(function () {
   var PIN_WIDTH = 40;
   var PIN_HEIGHT = 40;
 
@@ -21,6 +21,6 @@
   };
 
   window.pin = {
-    createMapPinDomObject: createMapPinDomObject
+    create: createMapPinDomObject
   };
-}) ();
+})();
