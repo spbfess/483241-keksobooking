@@ -82,17 +82,85 @@
     window.form.reset(mainPinDefaultCoordinates);
   };
 
+
+
   var adverts = window.data.generateAdverts();
   var mainPinDefaultCoordinates = getMainPinCoordinates();
 
   window.form.reset(mainPinDefaultCoordinates);
   window.form.addResetHadler(onAdvertFormResetClick);
 
-  mainPinDomObject.addEventListener('mouseup', function () {
-    if (!checkMapIsActive()) {
-      activateMap();
-      window.form.enable();
-    }
-    window.form.setAddress(getMainPinCoordinates());
+  mainPinDomObject.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+
+    var initialCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+    // var dragged = false;
+
+    var onMouseMove = function (mouseMoveEvt) {
+      // dragged = true;
+      var mainPinCoords = getMainPinCoordinates();
+      console.log(mainPinCoords);
+      var shift = {
+          x: initialCoords.x - mouseMoveEvt.clientX,
+          y: initialCoords.y - mouseMoveEvt.clientY
+        };
+      var x;
+      var y;
+
+      if (parseInt(mainPinCoords[0]) < 0) {
+        x = 0;
+      } else if (parseInt(mainPinCoords[0]) > 1000) {
+        x = 1000;
+      } else {
+        x = parseInt(mainPinDomObject.offsetLeft) - shift.x;
+      }
+
+      mainPinDomObject.style.left = x + 'px';
+      mainPinDomObject.style.top = (mainPinDomObject.offsetTop - shift.y) + 'px';
+      window.form.setAddress(getMainPinCoordinates());
+      initialCoords = {
+        x: mouseMoveEvt.clientX,
+        y: mouseMoveEvt.clientY
+      };
+
+    };
+
+    var onMouseUp = function (mouseUpEvt) {
+      mouseUpEvt.preventDefault();
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mousemove', onMouseUp);
+
+      // var onClickPreventDefault = function (clickEvt) {
+      //   clickEvt.preventDefault();
+      //   mainPinDomObject.removeEventListener('click', onClickPreventDefault);
+      // };
+
+      // if (dragged) {
+      //   mainPinDomObject.addEventListener('click', onClickPreventDefault);
+      // }
+
+      if (!checkMapIsActive()) {
+        activateMap();
+        window.form.enable();
+      }
+
+      // window.form.setAddress(getMainPinCoordinates());
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
   });
+
+
+  // setMainPinCoordinates([100, 100]);
+  // mainPinDomObject.addEventListener('mouseup', function () {
+  //   if (!checkMapIsActive()) {
+  //     activateMap();
+  //     window.form.enable();
+  //   }
+  //   window.form.setAddress(getMainPinCoordinates());
+  // });
 })();
