@@ -110,7 +110,7 @@
     var mapCardDomObject = createMapCardDomObject(ad);
     addCloseMapCardHandlers(mapCardDomObject);
 
-    if (currentMapCardDomObject !== null) {
+    if (currentMapCardDomObject) {
       currentMapCardDomObject.remove();
     }
 
@@ -119,6 +119,7 @@
   };
 
   window.card = {
-    render: renderMapCard
+    render: renderMapCard,
+    close: closeMapCard
   };
 })();
