@@ -46,9 +46,9 @@
     advertFormAddressDomObject.readOnly = true;
   };
 
-  var resetAdvertForm = function (initialAdvertAddress) {
+  var resetAdvertForm = function (initialAddressCoordinates) {
     advertFormDomObject.reset();
-    setAdvertAddress(initialAdvertAddress);
+    setAdvertAddress(initialAddressCoordinates);
     disableAdvertForm();
   };
 
