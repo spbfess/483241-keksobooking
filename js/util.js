@@ -39,7 +39,11 @@
   };
 
   window.util = {
-    ESC_CODE: ESC_CODE,
+    isEscEvent: function (evt, action) {
+      if (evt.keyCode === ESC_CODE) {
+        action();
+      }
+    },
     getRandomInteger: getRandomInteger,
     getRandomElement: getRandomElement,
     getShuffledArray: getShuffledArray,

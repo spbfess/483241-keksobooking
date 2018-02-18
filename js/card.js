@@ -58,9 +58,7 @@
   };
 
   var onMapCardCloseButtonKeydown = function (evt) {
-    if (evt.keyCode === window.util.ESC_CODE) {
-      closeMapCard();
-    }
+    window.util.isEscEvent(evt, closeMapCard);
   };
 
   var addCloseMapCardHandlers = function (mapCard) {
