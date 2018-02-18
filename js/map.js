@@ -78,6 +78,7 @@
   var onAdvertFormResetClick = function (evt) {
     evt.preventDefault();
     deactivateMap();
+    window.card.close();
     window.form.reset(mainPinDefaultCoordinates);
   };
 
