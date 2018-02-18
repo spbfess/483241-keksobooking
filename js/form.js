@@ -10,6 +10,7 @@
 
   var advertFormDomObject = document.querySelector('.notice__form');
   var advertFormFieldsets = advertFormDomObject.querySelectorAll('fieldset');
+  var advertFormFields = advertFormDomObject.querySelectorAll('select, input');
   var advertFormAccommodationDomObject = advertFormDomObject.querySelector('#type');
   var advertFormPriceDomObject = advertFormDomObject.querySelector('#price');
   var advertFormTimeInDomObject = advertFormDomObject.querySelector('#timein');
@@ -47,6 +48,7 @@
   };
 
   var resetAdvertForm = function (initialAddressCoordinates) {
+    clearInvalidityStyleOnAllFields();
     advertFormDomObject.reset();
     setAdvertAddress(initialAddressCoordinates);
     disableAdvertForm();
@@ -109,15 +111,23 @@
     });
   };
 
-  var addInvalidStyle = function (element) {
+  var addInvalidityStyle = function (element) {
     element.style.border = '3px solid red';
   };
 
-  var clearInvalidStyle = function (element) {
+  var clearInvalidityStyle = function (element) {
     element.style.border = '';
   };
 
-  var addAdvertFromResetHadler = function (resetHandler) {
+  var clearInvalidityStyleOnAllFields = function () {
+    var fieldsNumber = advertFormFields.length;
+
+    for (var i = 0; i < fieldsNumber; i++) {
+      clearInvalidityStyle(advertFormFields[i]);
+    }
+  };
+
+  var addAdvertFormResetHadler = function (resetHandler) {
     advertFormResetDomObject.addEventListener('click', resetHandler);
   };
 
@@ -126,33 +136,17 @@
   validateCapacity();
 
   advertFormDomObject.addEventListener('invalid', function (evt) {
-    var target = evt.target;
-    addInvalidStyle(target);
-
-    if (target.validity.tooShort) {
-      target.setCustomValidity('Это поле должно содержать минимум ' + target.minLength + ' символов');
-    } else if (target.validity.tooLong) {
-      target.setCustomValidity('Это поле не должно быть длиннее ' + target.maxLength + ' символов');
-    } else if (target.validity.valueMissing) {
-      target.setCustomValidity('Обязательное поле для заполнения');
-    } else if (target.validity.rangeUnderflow) {
-      target.setCustomValidity('Значение не может быть ниже ' + target.min);
-    } else if (target.validity.rangeOverflow) {
-      target.setCustomValidity('Значение не может быть выше ' + target.max);
-    } else if (target !== advertFormCapacityDomObject) {
-      target.setCustomValidity('');
-      clearInvalidStyle(target);
-    }
+    addInvalidityStyle(evt.target);
   }, true);
 
   advertFormDomObject.addEventListener('input', function (evt) {
-    clearInvalidStyle(evt.target);
+    clearInvalidityStyle(evt.target);
   });
 
   window.form = {
     enable: enableAdvertForm,
     setAddress: setAdvertAddress,
     reset: resetAdvertForm,
-    addResetHadler: addAdvertFromResetHadler
+    addResetHadler: addAdvertFormResetHadler
   };
 })();
