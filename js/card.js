@@ -53,7 +53,10 @@
   var closeMapCard = function () {
     var mapCardDomObject = document.querySelector('article.map__card');
 
-    mapCardDomObject.remove();
+    if (mapCardDomObject) {
+      mapCardDomObject.remove();
+    }
+
     document.removeEventListener('keydown', onMapCardCloseButtonKeydown);
   };
 
