@@ -50,7 +50,7 @@
     }
 
     return number;
-  }
+  };
 
   window.util = {
     isEscEvent: function (evt, action) {
