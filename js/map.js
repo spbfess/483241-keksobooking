@@ -117,13 +117,14 @@
 
   var onMainPinMouseUp = function (evt) {
     evt.preventDefault();
-    document.removeEventListener('mousemove', onMainPinMouseMove);
-    document.removeEventListener('mousemove', onMainPinMouseUp);
 
     if (!checkMapIsActive()) {
       activateMap();
       window.form.enable(getMainPinCoordinates());
     }
+
+    document.removeEventListener('mousemove', onMainPinMouseMove);
+    document.removeEventListener('mouseup', onMainPinMouseUp);
   };
 
   var adverts = window.data.generateAdverts();
