@@ -36,7 +36,7 @@
     advertFormAddressDomObject.value = advertAddress;
   };
 
-  var enableAdvertForm = function () {
+  var enableAdvertForm = function (initialAddressCoordinates) {
     var fieldsetsNumber = advertFormFieldsets.length;
 
     for (var i = 0; i < fieldsetsNumber; i++) {
@@ -45,6 +45,7 @@
 
     advertFormDomObject.classList.remove('notice__form--disabled');
     advertFormAddressDomObject.readOnly = true;
+    setAdvertAddress(initialAddressCoordinates);
   };
 
   var resetAdvertForm = function (initialAddressCoordinates) {
