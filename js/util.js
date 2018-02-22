@@ -38,6 +38,20 @@
     return shuffledArray.splice(0, sliceLength);
   };
 
+  var stickToRange = function (number, rangeMin, rangeMax) {
+    /* returns number, if number in range rangeMin..rangeMax,
+               rangeMin, if number < rangeMin,
+               rangeMax, if number > rangeMax */
+
+    if (number < rangeMin) {
+      number = rangeMin;
+    } else if (number > rangeMax) {
+      number = rangeMax;
+    }
+
+    return number;
+  };
+
   window.util = {
     isEscEvent: function (evt, action) {
       if (evt.keyCode === ESC_CODE) {
@@ -47,6 +61,7 @@
     getRandomInteger: getRandomInteger,
     getRandomElement: getRandomElement,
     getShuffledArray: getShuffledArray,
-    getShuffledAndSlicedArray: getShuffledAndSlicedArray
+    getShuffledAndSlicedArray: getShuffledAndSlicedArray,
+    stickToRange: stickToRange
   };
 })();

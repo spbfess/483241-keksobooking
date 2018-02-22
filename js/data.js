@@ -28,7 +28,6 @@
     'X': [300, 900],
     'Y': [150, 500]
   };
-  var PIN_OFFSET_Y = 35;
 
   var getRandomAdvert = function () {
     var randomAvatarNumber = window.util.getRandomElement(AVATAR_NUMBERS, true);
@@ -43,7 +42,7 @@
     var randomGuestsNumber = window.util.getRandomInteger(RANGE_GUESTS[0], RANGE_GUESTS[1], true);
     var randomLocation = {
       'x': window.util.getRandomInteger(RANGE_PIN_COORDINATES.X[0], RANGE_PIN_COORDINATES.X[1], true),
-      'y': window.util.getRandomInteger(RANGE_PIN_COORDINATES.Y[0], RANGE_PIN_COORDINATES.Y[1], true) - PIN_OFFSET_Y
+      'y': window.util.getRandomInteger(RANGE_PIN_COORDINATES.Y[0], RANGE_PIN_COORDINATES.Y[1], true)
     };
 
     var advert = {

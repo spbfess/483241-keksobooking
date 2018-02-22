@@ -1,11 +1,24 @@
 'use strict';
 
 (function () {
-  var MAIN_PIN_OFFSET_Y = 48.5;
+  var MAIN_PIN_OFFSET_Y = 48;
+  var MAIN_PIN_Y_LIMITS = [150, 500];
 
   var mapDomObject = document.querySelector('section.map');
+  var mapWidth = mapDomObject.offsetWidth;
   var mapPinsDomObject = mapDomObject.querySelector('.map__pins');
   var mainPinDomObject = mapPinsDomObject.querySelector('.map__pin--main');
+  var mainPinCoordinatesRange = {
+    x: {
+      min: 0,
+      max: parseInt(mapWidth, 10)
+    },
+    y: {
+      min: MAIN_PIN_Y_LIMITS[0],
+      max: MAIN_PIN_Y_LIMITS[1]
+    }
+  };
+  var pointerInitialCoords;
 
   var addRenderMapCardHandler = function (pinButton, ad) {
     pinButton.addEventListener('click', function () {
@@ -78,7 +91,40 @@
   var onAdvertFormResetClick = function (evt) {
     evt.preventDefault();
     deactivateMap();
+    window.card.close();
     window.form.reset(mainPinDefaultCoordinates);
+  };
+
+  var onMainPinMouseMove = function (evt) {
+    var mainPinCoords = getMainPinCoordinates();
+    var shift = {
+      x: pointerInitialCoords.x - evt.clientX,
+      y: pointerInitialCoords.y - evt.clientY
+    };
+    var x = mainPinCoords[0] - shift.x;
+    var y = mainPinCoords[1] - shift.y;
+
+    x = window.util.stickToRange(x, mainPinCoordinatesRange.x.min, mainPinCoordinatesRange.x.max);
+    y = window.util.stickToRange(y, mainPinCoordinatesRange.y.min, mainPinCoordinatesRange.y.max);
+
+    setMainPinCoordinates([x, y]);
+    window.form.setAddress([x, y]);
+    pointerInitialCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+  };
+
+  var onMainPinMouseUp = function (evt) {
+    evt.preventDefault();
+
+    if (!checkMapIsActive()) {
+      activateMap();
+      window.form.enable(getMainPinCoordinates());
+    }
+
+    document.removeEventListener('mousemove', onMainPinMouseMove);
+    document.removeEventListener('mouseup', onMainPinMouseUp);
   };
 
   var adverts = window.data.generateAdverts();
@@ -87,11 +133,15 @@
   window.form.reset(mainPinDefaultCoordinates);
   window.form.addResetHadler(onAdvertFormResetClick);
 
-  mainPinDomObject.addEventListener('mouseup', function () {
-    if (!checkMapIsActive()) {
-      activateMap();
-      window.form.enable();
-    }
-    window.form.setAddress(getMainPinCoordinates());
+  mainPinDomObject.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+
+    pointerInitialCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+
+    document.addEventListener('mousemove', onMainPinMouseMove);
+    document.addEventListener('mouseup', onMainPinMouseUp);
   });
 })();
