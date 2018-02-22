@@ -19,7 +19,6 @@
     }
   };
   var pointerInitialCoords;
-  // var mainPinDragged;
 
   var addRenderMapCardHandler = function (pinButton, ad) {
     pinButton.addEventListener('click', function () {
@@ -97,8 +96,6 @@
   };
 
   var onMainPinMouseMove = function (evt) {
-    // mainPinDragged = true;
-
     var mainPinCoords = getMainPinCoordinates();
     var shift = {
       x: pointerInitialCoords.x - evt.clientX,
@@ -126,10 +123,6 @@
     if (!checkMapIsActive()) {
       activateMap();
       window.form.enable(getMainPinCoordinates());
-
-      // if (!mainPinDragged) {
-      //   window.form.setAddress(getMainPinCoordinates());
-      // }
     }
   };
 
@@ -142,7 +135,6 @@
   mainPinDomObject.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
 
-    // mainPinDragged = false;
     pointerInitialCoords = {
       x: evt.clientX,
       y: evt.clientY
