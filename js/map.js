@@ -18,6 +18,8 @@
       max: MAIN_PIN_Y_LIMITS[1]
     }
   };
+  var pointerInitialCoords;
+  var mainPinDragged;
 
   var addRenderMapCardHandler = function (pinButton, ad) {
     pinButton.addEventListener('click', function () {
@@ -94,6 +96,43 @@
     window.form.reset(mainPinDefaultCoordinates);
   };
 
+  var onMainPinMouseMove = function (evt) {
+    mainPinDragged = true;
+
+    var mainPinCoords = getMainPinCoordinates();
+    var shift = {
+      x: pointerInitialCoords.x - evt.clientX,
+      y: pointerInitialCoords.y - evt.clientY
+    };
+    var x = mainPinCoords[0] - shift.x;
+    var y = mainPinCoords[1] - shift.y;
+
+    x = window.util.stickToRange(x, mainPinCoordinatesRange.x.min, mainPinCoordinatesRange.x.max);
+    y = window.util.stickToRange(y, mainPinCoordinatesRange.y.min, mainPinCoordinatesRange.y.max);
+
+    setMainPinCoordinates([x, y]);
+    window.form.setAddress([x, y]);
+    pointerInitialCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+  };
+
+  var onMainPinMouseUp = function (evt) {
+    evt.preventDefault();
+    document.removeEventListener('mousemove', onMainPinMouseMove);
+    document.removeEventListener('mousemove', onMainPinMouseUp);
+
+    if (!checkMapIsActive()) {
+      activateMap();
+      window.form.enable();
+
+      if (!mainPinDragged) {
+        window.form.setAddress(getMainPinCoordinates());
+      }
+    }
+  };
+
   var adverts = window.data.generateAdverts();
   var mainPinDefaultCoordinates = getMainPinCoordinates();
 
@@ -103,51 +142,13 @@
   mainPinDomObject.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
 
-    var dragged = false;
-    var initialCoords = {
+    mainPinDragged = false;
+    pointerInitialCoords = {
       x: evt.clientX,
       y: evt.clientY
     };
 
-    var onMouseMove = function (mouseMoveEvt) {
-      dragged = true;
-
-      var mainPinCoords = getMainPinCoordinates();
-      var shift = {
-        x: initialCoords.x - mouseMoveEvt.clientX,
-        y: initialCoords.y - mouseMoveEvt.clientY
-      };
-      var x = mainPinCoords[0] - shift.x;
-      var y = mainPinCoords[1] - shift.y;
-
-      x = window.util.stickToRange(x, mainPinCoordinatesRange.x.min, mainPinCoordinatesRange.x.max);
-      y = window.util.stickToRange(y, mainPinCoordinatesRange.y.min, mainPinCoordinatesRange.y.max);
-
-      setMainPinCoordinates([x, y]);
-      window.form.setAddress([x, y]);
-      initialCoords = {
-        x: mouseMoveEvt.clientX,
-        y: mouseMoveEvt.clientY
-      };
-
-    };
-
-    var onMouseUp = function (mouseUpEvt) {
-      mouseUpEvt.preventDefault();
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mousemove', onMouseUp);
-
-      if (!checkMapIsActive()) {
-        activateMap();
-        window.form.enable();
-
-        if (!dragged) {
-          window.form.setAddress(getMainPinCoordinates());
-        }
-      }
-    };
-
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
+    document.addEventListener('mousemove', onMainPinMouseMove);
+    document.addEventListener('mouseup', onMainPinMouseUp);
   });
 })();
