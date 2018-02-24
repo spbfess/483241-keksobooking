@@ -7,6 +7,7 @@
     house: 5000,
     palace: 10000
   };
+  var SEND_URL = 'https://js.dump.academy/keksobooking';
 
   var advertFormDomObject = document.querySelector('.notice__form');
   var advertFormFieldsets = advertFormDomObject.querySelectorAll('fieldset');
@@ -51,7 +52,11 @@
   var resetAdvertForm = function (initialAddressCoordinates) {
     clearInvalidityStyleOnAllFields();
     advertFormDomObject.reset();
-    setAdvertAddress(initialAddressCoordinates);
+
+    if (initialAddressCoordinates) {
+      setAdvertAddress(initialAddressCoordinates);
+    }
+
     disableAdvertForm();
   };
 
@@ -132,6 +137,17 @@
     advertFormResetDomObject.addEventListener('click', resetHandler);
   };
 
+  var onAdvertFormFailedSubmit = function (message) {
+    console.log(message);
+  };
+
+  var onAdvertFormSuccessSubmit = function () {
+    var currentAddress = advertFormAddressDomObject.value;
+    advertFormDomObject.reset();
+    advertFormAddressDomObject.value = currentAddress;
+    console.log('Данные успешно отправлены');
+  };
+
   syncCheckInOutTime();
   setMinPrice();
   validateCapacity();
@@ -142,6 +158,12 @@
 
   advertFormDomObject.addEventListener('input', function (evt) {
     clearInvalidityStyle(evt.target);
+  });
+
+  advertFormDomObject.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    window.backend.send(new FormData(advertFormDomObject), onAdvertFormSuccessSubmit, onAdvertFormFailedSubmit);
+    // window.backend.send2(SEND_URL, new FormData(advertFormDomObject), onAdvertFormSuccessSubmit, onAdvertFormFailedSubmit);
   });
 
   window.form = {

@@ -3,6 +3,7 @@
 (function () {
   var MAIN_PIN_OFFSET_Y = 48;
   var MAIN_PIN_Y_LIMITS = [150, 500];
+  var LOAD_URL = 'https://js.dump.academy/keksobooking/data';
 
   var mapDomObject = document.querySelector('section.map');
   var mapWidth = mapDomObject.offsetWidth;
@@ -71,9 +72,20 @@
     mainPinDomObject.style.top = y + 'px';
   };
 
+  var onAdvertsSuccessLoad = function (loadedAdverts) {
+    console.log('Данные успешно загружены');
+    renderAdvertPins(loadedAdverts);
+  };
+
+  var onAdvertsFailedLoad = function (message) {
+    console.log(message);
+  };
+
   var activateMap = function () {
     mapDomObject.classList.remove('map--faded');
-    renderAdvertPins(adverts);
+    // renderAdvertPins(adverts);
+    window.backend.load(onAdvertsSuccessLoad, onAdvertsFailedLoad);
+    // window.backend.load2(LOAD_URL, onAdvertsSuccessLoad, onAdvertsFailedLoad);
   };
 
   var checkMapIsActive = function () {
