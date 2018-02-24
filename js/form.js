@@ -132,19 +132,16 @@
     }
   };
 
-  var addAdvertFormResetHadler = function (resetHandler) {
+  var addAdvertFormResetHandler = function (resetHandler) {
     advertFormResetDomObject.addEventListener('click', resetHandler);
   };
 
-  var onAdvertFormFailedSubmit = function (message) {
-    console.log(message);
+  var addAdvertFormSubmitHandler = function (submitHandler) {
+    advertFormDomObject.addEventListener('submit', submitHandler);
   };
 
-  var onAdvertFormSuccessSubmit = function () {
-    var currentAddress = advertFormAddressDomObject.value;
-    advertFormDomObject.reset();
-    advertFormAddressDomObject.value = currentAddress;
-    console.log('Данные успешно отправлены');
+  var getFormDataObject = function () {
+    return new FormData(advertFormDomObject);
   };
 
   syncCheckInOutTime();
@@ -159,15 +156,12 @@
     clearInvalidityStyle(evt.target);
   });
 
-  advertFormDomObject.addEventListener('submit', function (evt) {
-    evt.preventDefault();
-    window.backend.send(new FormData(advertFormDomObject), onAdvertFormSuccessSubmit, onAdvertFormFailedSubmit);
-  });
-
   window.form = {
     enable: enableAdvertForm,
-    setAddress: setAdvertAddress,
     reset: resetAdvertForm,
-    addResetHadler: addAdvertFormResetHadler
+    setAddress: setAdvertAddress,
+    addResetHandler: addAdvertFormResetHandler,
+    addSubmitHandler: addAdvertFormSubmitHandler,
+    getFormDataObject: getFormDataObject
   };
 })();

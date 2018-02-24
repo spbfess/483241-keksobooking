@@ -97,11 +97,29 @@
     setMainPinCoordinates(mainPinDefaultCoordinates);
   };
 
-  var onAdvertFormResetClick = function (evt) {
-    evt.preventDefault();
+  var resetPage = function () {
     deactivateMap();
     window.card.close();
     window.form.reset(mainPinDefaultCoordinates);
+  };
+
+  var onAdvertFormResetClick = function (evt) {
+    evt.preventDefault();
+    resetPage();
+  };
+
+  var onAdvertFormSubmitFail = function (message) {
+    console.log(message);
+  };
+
+  var onAdvertFormSubmitSuccess = function () {
+    resetPage();
+    console.log('Данные успешно отправлены');
+  };
+
+  var onAdvertFormSubmit = function (evt) {
+    evt.preventDefault();
+    window.backend.send(window.form.getFormDataObject(), onAdvertFormSubmitSuccess, onAdvertFormSubmitFail);
   };
 
   var onMainPinMouseMove = function (evt) {
@@ -139,7 +157,8 @@
   var mainPinDefaultCoordinates = getMainPinCoordinates();
 
   window.form.reset(mainPinDefaultCoordinates);
-  window.form.addResetHadler(onAdvertFormResetClick);
+  window.form.addResetHandler(onAdvertFormResetClick);
+  window.form.addSubmitHandler(onAdvertFormSubmit);
 
   mainPinDomObject.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
