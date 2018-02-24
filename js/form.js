@@ -7,7 +7,6 @@
     house: 5000,
     palace: 10000
   };
-  var SEND_URL = 'https://js.dump.academy/keksobooking';
 
   var advertFormDomObject = document.querySelector('.notice__form');
   var advertFormFieldsets = advertFormDomObject.querySelectorAll('fieldset');
@@ -163,7 +162,6 @@
   advertFormDomObject.addEventListener('submit', function (evt) {
     evt.preventDefault();
     window.backend.send(new FormData(advertFormDomObject), onAdvertFormSuccessSubmit, onAdvertFormFailedSubmit);
-    // window.backend.send2(SEND_URL, new FormData(advertFormDomObject), onAdvertFormSuccessSubmit, onAdvertFormFailedSubmit);
   });
 
   window.form = {
