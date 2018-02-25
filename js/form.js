@@ -21,11 +21,9 @@
   var advertFormAddressDomObject = advertFormDomObject.querySelector('#address');
 
   var disableAdvertForm = function () {
-    var fieldsetsNumber = advertFormFieldsets.length;
-
-    for (var i = 0; i < fieldsetsNumber; i++) {
-      advertFormFieldsets[i].disabled = true;
-    }
+    advertFormFieldsets.forEach(function (fieldset) {
+      fieldset.disabled = true;
+    });
 
     advertFormDomObject.classList.add('notice__form--disabled');
   };
@@ -37,11 +35,9 @@
   };
 
   var enableAdvertForm = function (initialAddressCoordinates) {
-    var fieldsetsNumber = advertFormFieldsets.length;
-
-    for (var i = 0; i < fieldsetsNumber; i++) {
-      advertFormFieldsets[i].disabled = false;
-    }
+    advertFormFieldsets.forEach(function (fieldset) {
+      fieldset.disabled = false;
+    });
 
     advertFormDomObject.classList.remove('notice__form--disabled');
     advertFormAddressDomObject.readOnly = true;
@@ -124,11 +120,9 @@
   };
 
   var clearInvalidityStyleOnAllFields = function () {
-    var fieldsNumber = advertFormFields.length;
-
-    for (var i = 0; i < fieldsNumber; i++) {
-      clearInvalidityStyle(advertFormFields[i]);
-    }
+    advertFormFields.forEach(function (field) {
+      clearInvalidityStyle(field);
+    });
   };
 
   var addAdvertFormResetHandler = function (resetHandler) {

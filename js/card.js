@@ -15,15 +15,14 @@
   var currentMapCardDomObject = null;
 
   var createFeaturesDomObject = function (features) {
-    var featuresLength = features.length;
     var featuresDomObject = document.createElement('ul');
     var featureDomObject;
 
-    for (var i = 0; i < featuresLength; i++) {
+    features.forEach(function (feature) {
       featureDomObject = document.createElement('li');
-      featureDomObject.classList.add('feature', 'feature--' + features[i]);
+      featureDomObject.classList.add('feature', 'feature--' + feature);
       featuresDomObject.appendChild(featureDomObject);
-    }
+    });
 
     featuresDomObject.classList.add('popup__features');
 
@@ -31,19 +30,17 @@
   };
 
   var createPicturesDomObject = function (pictures) {
-    var picturesLength = pictures.length;
     var picturesDomObject = document.createElement('ul');
     var pictureDomObject;
     var templatePictureDomObject = document.createElement('li');
 
     templatePictureDomObject.appendChild(document.createElement('img'));
-
-    for (var i = 0; i < picturesLength; i++) {
+    pictures.forEach(function (picture) {
       pictureDomObject = templatePictureDomObject.cloneNode(true);
-      pictureDomObject.firstElementChild.src = pictures[i];
+      pictureDomObject.firstElementChild.src = picture;
       pictureDomObject.firstElementChild.width = PHOTO_WIDTH;
       picturesDomObject.appendChild(pictureDomObject);
-    }
+    });
 
     picturesDomObject.classList.add('popup__pictures');
 
