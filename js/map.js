@@ -5,6 +5,8 @@
   var MAIN_PIN_Y_LIMITS = [150, 500];
 
   var mapDomObject = document.querySelector('section.map');
+  var filtersDomObject = mapDomObject.querySelector('.map__filters');
+  var filters = filtersDomObject.querySelectorAll('select, input');
   var mapWidth = mapDomObject.offsetWidth;
   var mapPinsDomObject = mapDomObject.querySelector('.map__pins');
   var mainPinDomObject = mapPinsDomObject.querySelector('.map__pin--main');
@@ -19,6 +21,7 @@
     }
   };
   var pointerInitialCoords;
+  var adverts = [];
 
   var addRenderMapCardHandler = function (pinButton, ad) {
     pinButton.addEventListener('click', function () {
@@ -110,6 +113,7 @@
   };
 
   var onAdvertsSuccessLoad = function (loadedAdverts) {
+    adverts = loadedAdverts;
     renderAdvertPins(loadedAdverts);
   };
 
@@ -149,6 +153,15 @@
     document.removeEventListener('mouseup', onMainPinMouseUp);
   };
 
+  filtersDomObject.addEventListener('change', function(evt) {
+    console.log('change detected on: ' + evt.target.tagName, evt.target)
+    var filtered = window.filters.filter(adverts, filters);
+
+    clearRenderedAdvertPins(getRenderedAdvertPins());
+    renderAdvertPins(filtered);
+  });
+
+//-----------------------------------------------------------------------------------------------------
   var mainPinDefaultCoordinates = getMainPinCoordinates();
 
   window.form.reset(mainPinDefaultCoordinates);
