@@ -59,7 +59,6 @@
     disableAdvertForm();
   };
 
-
   var setDrivenTime = function (drivingTime) {
     var drivenTime = (drivingTime === advertFormTimeInDomObject) ? advertFormTimeOutDomObject : advertFormTimeInDomObject;
     drivenTime.selectedIndex = drivingTime.selectedIndex;

@@ -22,6 +22,7 @@
 
     setTimeout(function () {
       modalDomObject.classList.remove(ModalClass.SHOW, modalTypeClass);
+      modalDomObject.textContent = '';
     }, displayTime);
   };
 

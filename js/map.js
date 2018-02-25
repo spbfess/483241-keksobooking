@@ -71,18 +71,9 @@
     mainPinDomObject.style.top = y + 'px';
   };
 
-  var onAdvertsSuccessLoad = function (loadedAdverts) {
-    console.log('Данные успешно загружены');
-    renderAdvertPins(loadedAdverts);
-  };
-
-  var onAdvertsFailedLoad = function (message) {
-    console.log(message);
-  };
-
   var activateMap = function () {
     mapDomObject.classList.remove('map--faded');
-    window.backend.load(onAdvertsSuccessLoad, onAdvertsFailedLoad);
+    window.backend.load(onAdvertsSuccessLoad, onFailedServerCommunication);
   };
 
   var checkMapIsActive = function () {
@@ -108,18 +99,22 @@
     resetPage();
   };
 
-  var onAdvertFormSubmitFail = function (message) {
-    console.log(message);
-  };
-
   var onAdvertFormSubmitSuccess = function () {
     resetPage();
-    console.log('Данные успешно отправлены');
+    window.modal.open('Данные успешно загружены на сервер', false);
   };
 
   var onAdvertFormSubmit = function (evt) {
     evt.preventDefault();
-    window.backend.send(window.form.getFormDataObject(), onAdvertFormSubmitSuccess, onAdvertFormSubmitFail);
+    window.backend.send(window.form.getFormDataObject(), onAdvertFormSubmitSuccess, onFailedServerCommunication);
+  };
+
+  var onAdvertsSuccessLoad = function (loadedAdverts) {
+    renderAdvertPins(loadedAdverts);
+  };
+
+  var onFailedServerCommunication = function (message) {
+    window.modal.open(message, true);
   };
 
   var onMainPinMouseMove = function (evt) {
