@@ -51,10 +51,13 @@
   var resetAdvertForm = function (initialAddressCoordinates) {
     clearInvalidityStyleOnAllFields();
     advertFormDomObject.reset();
-    setAdvertAddress(initialAddressCoordinates);
+
+    if (initialAddressCoordinates) {
+      setAdvertAddress(initialAddressCoordinates);
+    }
+
     disableAdvertForm();
   };
-
 
   var setDrivenTime = function (drivingTime) {
     var drivenTime = (drivingTime === advertFormTimeInDomObject) ? advertFormTimeOutDomObject : advertFormTimeInDomObject;
@@ -128,8 +131,16 @@
     }
   };
 
-  var addAdvertFormResetHadler = function (resetHandler) {
+  var addAdvertFormResetHandler = function (resetHandler) {
     advertFormResetDomObject.addEventListener('click', resetHandler);
+  };
+
+  var addAdvertFormSubmitHandler = function (submitHandler) {
+    advertFormDomObject.addEventListener('submit', submitHandler);
+  };
+
+  var getFormDataObject = function () {
+    return new FormData(advertFormDomObject);
   };
 
   syncCheckInOutTime();
@@ -146,8 +157,10 @@
 
   window.form = {
     enable: enableAdvertForm,
-    setAddress: setAdvertAddress,
     reset: resetAdvertForm,
-    addResetHadler: addAdvertFormResetHadler
+    setAddress: setAdvertAddress,
+    addResetHandler: addAdvertFormResetHandler,
+    addSubmitHandler: addAdvertFormSubmitHandler,
+    getFormDataObject: getFormDataObject
   };
 })();

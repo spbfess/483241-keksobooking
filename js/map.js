@@ -73,7 +73,7 @@
 
   var activateMap = function () {
     mapDomObject.classList.remove('map--faded');
-    renderAdvertPins(adverts);
+    window.backend.load(onAdvertsSuccessLoad, onFailedServerCommunication);
   };
 
   var checkMapIsActive = function () {
@@ -88,11 +88,33 @@
     setMainPinCoordinates(mainPinDefaultCoordinates);
   };
 
-  var onAdvertFormResetClick = function (evt) {
-    evt.preventDefault();
+  var resetPage = function () {
     deactivateMap();
     window.card.close();
     window.form.reset(mainPinDefaultCoordinates);
+  };
+
+  var onAdvertFormResetClick = function (evt) {
+    evt.preventDefault();
+    resetPage();
+  };
+
+  var onAdvertFormSubmitSuccess = function () {
+    resetPage();
+    window.modal.open('Данные успешно загружены на сервер', false);
+  };
+
+  var onAdvertFormSubmit = function (evt) {
+    evt.preventDefault();
+    window.backend.send(window.form.getFormDataObject(), onAdvertFormSubmitSuccess, onFailedServerCommunication);
+  };
+
+  var onAdvertsSuccessLoad = function (loadedAdverts) {
+    renderAdvertPins(loadedAdverts);
+  };
+
+  var onFailedServerCommunication = function (message) {
+    window.modal.open(message, true);
   };
 
   var onMainPinMouseMove = function (evt) {
@@ -127,11 +149,11 @@
     document.removeEventListener('mouseup', onMainPinMouseUp);
   };
 
-  var adverts = window.data.generateAdverts();
   var mainPinDefaultCoordinates = getMainPinCoordinates();
 
   window.form.reset(mainPinDefaultCoordinates);
-  window.form.addResetHadler(onAdvertFormResetClick);
+  window.form.addResetHandler(onAdvertFormResetClick);
+  window.form.addSubmitHandler(onAdvertFormSubmit);
 
   mainPinDomObject.addEventListener('mousedown', function (evt) {
     evt.preventDefault();

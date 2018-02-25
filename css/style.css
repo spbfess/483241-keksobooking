@@ -854,3 +854,90 @@ textarea:focus
 {
     background-position: -10px -10px;
 }
+
+@keyframes modal-appear {
+    0% {
+    padding: 0;
+    height: 0;
+    }
+
+    50% {
+    padding: 0 30px;
+    height: 0;
+    }
+
+    100% {
+    padding: 30px 30px;
+    }
+}
+
+@keyframes modal-disappear {
+    100% {
+    padding: 0;
+    height: 0;
+    }
+}
+
+@keyframes modal-move-in {
+    0% {
+    top: -10000px;
+    }
+
+    90% {
+    top: 10%;
+    }
+
+    100% {
+    top: 20%;
+    }
+}
+
+@keyframes modal-move-out {
+    100% {
+    top: -10000px;
+    }
+}
+
+.modal
+{
+    display: none;
+    z-index: 100;
+    position: fixed;
+    top: 20%;
+    left: 50%;
+
+    width: 700px;
+    transform: translate(-50%);
+
+    padding: 30px 30px;
+    box-sizing: border-box;
+    overflow: hidden;
+
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+
+    border: 1px solid rgba(255, 255, 255, .6);
+    border-radius: 5px;
+}
+
+.modal__error {
+    background-color: rgba(255, 0, 0, .6);
+}
+
+.modal__info {
+    background-color: rgba(100, 200, 100, .6);
+    color: rgba(0, 0, 0, .8);
+}
+
+.modal__show {
+    display: block;
+    -webkit-animation: modal-move-in 500ms, modal-appear 1000ms;
+            animation: modal-move-in 500ms, modal-appear 1000ms;
+}
+
+.modal__close {
+    -webkit-animation: modal-disappear 1000ms forwards, modal-move-out 5000ms forwards;
+            animation: modal-disappear 1000ms forwards, modal-move-out 5000ms forwards;
+}
+
