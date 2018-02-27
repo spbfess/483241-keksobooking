@@ -16,8 +16,11 @@
     }
   };
 
-  var filterFunc = function (ads, rawFilters) {
-    var filter = getFilterObject(rawFilters);
+  var filtersFormDomObject = document.querySelector('.map__filters');
+  var filtersFormFields = filtersFormDomObject.querySelectorAll('select, input');
+
+  var getItFiltered = function (ads) {
+    var filter = getFilterObject();
     var filterFeatures = filter.features;
     var filterSelects = Object.keys(filter.select);
 
@@ -45,12 +48,12 @@
     return filtered;
   };
 
-  var getFilterObject = function (rawFilters) {
+  var getFilterObject = function () {
     var features = [];
     var select = {};
     var selectNameRegexp = /housing-(.*)/;
 
-    rawFilters.forEach(function (field) {
+    filtersFormFields.forEach(function (field) {
       switch (field.tagName) {
         case 'INPUT':
           if (field.checked) {
@@ -69,7 +72,15 @@
     return {features: features, select: select};
   };
 
-  window.filters = {
-    filter: filterFunc
+  var setChangeHandler = function (data, cb) {
+    filtersFormDomObject.addEventListener('change', function () {
+      var filtered = getItFiltered(data);
+
+      cb(filtered);
+    });
+  };
+
+  window.filter = {
+    setChangeHandler: setChangeHandler
   };
 })();

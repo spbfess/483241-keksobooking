@@ -6,8 +6,6 @@
   var MAX_PINS_NUMBER_AT_MAP = 5;
 
   var mapDomObject = document.querySelector('section.map');
-  var filtersDomObject = mapDomObject.querySelector('.map__filters');
-  var filters = filtersDomObject.querySelectorAll('select, input');
   var mapWidth = mapDomObject.offsetWidth;
   var mapPinsDomObject = mapDomObject.querySelector('.map__pins');
   var mainPinDomObject = mapPinsDomObject.querySelector('.map__pin--main');
@@ -22,11 +20,20 @@
     }
   };
   var pointerInitialCoords;
-  var adverts = [];
 
   var addRenderMapCardHandler = function (pinButton, ad) {
     pinButton.addEventListener('click', function () {
       window.card.render(mapDomObject, ad);
+    });
+  };
+
+  var getRenderedAdvertPins = function () {
+    return mapPinsDomObject.querySelectorAll('.map__pin:not(.map__pin--main)');
+  };
+
+  var clearRenderedAdvertPins = function (pins) {
+    pins.forEach(function (pin) {
+      pin.remove();
     });
   };
 
@@ -44,14 +51,9 @@
     mapPinsDomObject.appendChild(fragmentDomObject);
   };
 
-  var getRenderedAdvertPins = function () {
-    return mapPinsDomObject.querySelectorAll('.map__pin:not(.map__pin--main)');
-  };
-
-  var clearRenderedAdvertPins = function (pins) {
-    pins.forEach(function (pin) {
-      pin.remove();
-    });
+  var reRenderAdvertPins = function (ads) {
+    clearRenderedAdvertPins(getRenderedAdvertPins());
+    renderAdvertPins(ads);
   };
 
   var getMainPinCoordinates = function () {
@@ -112,8 +114,8 @@
   };
 
   var onAdvertsSuccessLoad = function (loadedAdverts) {
-    adverts = loadedAdverts;
     renderAdvertPins(loadedAdverts);
+    window.filter.setChangeHandler(loadedAdverts, reRenderAdvertPins);
   };
 
   var onFailedServerCommunication = function (message) {
@@ -158,13 +160,6 @@
   window.form.reset(mainPinDefaultCoordinates);
   window.form.addResetHandler(onAdvertFormResetClick);
   window.form.addSubmitHandler(onAdvertFormSubmit);
-
-  filtersDomObject.addEventListener('change', function () {
-    var filtered = window.filters.filter(adverts, filters);
-
-    clearRenderedAdvertPins(getRenderedAdvertPins());
-    renderAdvertPins(filtered);
-  });
 
   mainPinDomObject.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
