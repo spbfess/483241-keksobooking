@@ -97,7 +97,7 @@
   var resetPage = function () {
     deactivateMap();
     window.card.close();
-    window.filter.disableForm();
+    window.filter.resetForm();
     window.form.reset(mainPinDefaultCoordinates);
   };
 

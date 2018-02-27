@@ -80,13 +80,18 @@
   var disableFiltersForm = function () {
     filtersFormFields.forEach(function (field) {
       field.disabled = true;
-    })
+    });
+  };
+
+  var resetFiltersForm = function () {
+    filtersFormDomObject.reset();
+    disableFiltersForm();
   };
 
   var enableFiltersForm = function () {
     filtersFormFields.forEach(function (field) {
       field.disabled = false;
-    })
+    });
   };
 
   var setChangeHandler = function (adverts, applyFiltration) {
@@ -102,6 +107,6 @@
   window.filter = {
     setChangeHandler: setChangeHandler,
     enableForm: enableFiltersForm,
-    disableForm: disableFiltersForm
+    resetForm: resetFiltersForm
   };
 })();
