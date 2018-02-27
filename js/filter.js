@@ -24,7 +24,7 @@
   var getAdsFiltered = function (ads) {
     var adFilter = getAdFilterObject();
     var filterFeatures = adFilter.features;
-    var filterSelects = Object.keys(adFilter.select);
+    var accommodationFilters = Object.keys(adFilter.accommodation);
 
     var filteredAds = ads.filter(function (ad) {
       var advertFeatures = ad.offer.features;
@@ -33,18 +33,18 @@
         return advertFeatures.indexOf(feature) !== -1;
       });
 
-      var selectFiltrationPassed = filterSelects.every(function (option) {
+      var accommodationFiltrationPassed = accommodationFilters.every(function (option) {
         if (option === 'price') {
-          var priceFilterMin = PRICE_FILTER[adFilter.select.price].min;
-          var priceFilterMax = PRICE_FILTER[adFilter.select.price].max;
+          var priceFilterMin = PRICE_FILTER[adFilter.accommodation.price].min;
+          var priceFilterMax = PRICE_FILTER[adFilter.accommodation.price].max;
 
           return window.util.numberIsInRange(ad.offer.price, priceFilterMin, priceFilterMax);
         }
 
-        return ad.offer[option].toString() === adFilter.select[option];
+        return ad.offer[option].toString() === adFilter.accommodation[option];
       });
 
-      return featuresFiltrationPassed && selectFiltrationPassed;
+      return featuresFiltrationPassed && accommodationFiltrationPassed;
     });
 
     return filteredAds;
@@ -52,7 +52,7 @@
 
   var getAdFilterObject = function () {
     var features = [];
-    var select = {};
+    var accommodation = {};
     var selectNamePattern = /housing-(.*)/;
 
     filtersFormFields.forEach(function (field) {
@@ -65,13 +65,16 @@
         case 'SELECT':
           if (field.value !== 'any') {
             var filterName = selectNamePattern.exec(field.name)[1];
-            select[filterName] = field.value;
+            accommodation[filterName] = field.value;
           }
           break;
       }
     });
 
-    return {features: features, select: select};
+    return {
+      features: features,
+      accommodation: accommodation
+    };
   };
 
   var disableFiltersForm = function () {
