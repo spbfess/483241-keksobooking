@@ -78,6 +78,7 @@
 
   var activateMap = function () {
     mapDomObject.classList.remove('map--faded');
+    window.filter.enableForm();
     window.backend.load(onAdvertsSuccessLoad, onFailedServerCommunication);
   };
 
@@ -96,6 +97,7 @@
   var resetPage = function () {
     deactivateMap();
     window.card.close();
+    window.filter.disableForm();
     window.form.reset(mainPinDefaultCoordinates);
   };
 
@@ -158,7 +160,7 @@
   // -----------------------------------------------------------------------------------------------------
   var mainPinDefaultCoordinates = getMainPinCoordinates();
 
-  window.form.reset(mainPinDefaultCoordinates);
+  resetPage();
   window.form.addResetHandler(onAdvertFormResetClick);
   window.form.addSubmitHandler(onAdvertFormSubmit);
 
