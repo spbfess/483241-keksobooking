@@ -78,7 +78,6 @@
 
   var activateMap = function () {
     mapDomObject.classList.remove('map--faded');
-    window.filter.enableForm();
     window.backend.load(onAdvertsSuccessLoad, onFailedServerCommunication);
   };
 
@@ -118,6 +117,7 @@
 
   var onAdvertsSuccessLoad = function (loadedAdverts) {
     renderAdvertPins(loadedAdverts);
+    window.filter.enableForm();
     window.filter.setChangeHandler(loadedAdverts, reRenderAdvertPins);
   };
 
