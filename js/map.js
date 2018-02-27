@@ -53,6 +53,7 @@
 
   var reRenderAdvertPins = function (ads) {
     clearRenderedAdvertPins(getRenderedAdvertPins());
+    window.card.close();
     renderAdvertPins(ads);
   };
 

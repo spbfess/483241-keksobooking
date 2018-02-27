@@ -15,9 +15,11 @@
       max: Infinity
     }
   };
+  var DEBOUNCE_INTERVAL = 500;
 
   var filtersFormDomObject = document.querySelector('.map__filters');
   var filtersFormFields = filtersFormDomObject.querySelectorAll('select, input');
+  var debounceFiltering = window.debounce.getFunction(DEBOUNCE_INTERVAL);
 
   var getItFiltered = function (ads) {
     var filter = getFilterObject();
@@ -72,11 +74,13 @@
     return {features: features, select: select};
   };
 
-  var setChangeHandler = function (data, cb) {
+  var setChangeHandler = function (adverts, cb) {
     filtersFormDomObject.addEventListener('change', function () {
-      var filtered = getItFiltered(data);
+      var filtered = getItFiltered(adverts);
 
-      cb(filtered);
+      debounceFiltering(function () {
+        cb(filtered);
+      });
     });
   };
 
