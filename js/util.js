@@ -39,10 +39,6 @@
   };
 
   var stickToRange = function (number, rangeMin, rangeMax) {
-    /* returns number, if number in range rangeMin..rangeMax,
-               rangeMin, if number < rangeMin,
-               rangeMax, if number > rangeMax */
-
     if (number < rangeMin) {
       number = rangeMin;
     } else if (number > rangeMax) {
@@ -50,6 +46,11 @@
     }
 
     return number;
+  };
+
+  var numberIsInRange = function (number, min, max) {
+    // max is not included
+    return number >= min && number < max;
   };
 
   window.util = {
@@ -62,6 +63,7 @@
     getRandomElement: getRandomElement,
     getShuffledArray: getShuffledArray,
     getShuffledAndSlicedArray: getShuffledAndSlicedArray,
-    stickToRange: stickToRange
+    stickToRange: stickToRange,
+    numberIsInRange: numberIsInRange
   };
 })();

@@ -3,6 +3,7 @@
 (function () {
   var MAIN_PIN_OFFSET_Y = 48;
   var MAIN_PIN_Y_LIMITS = [150, 500];
+  var MAX_PINS_NUMBER_AT_MAP = 5;
 
   var mapDomObject = document.querySelector('section.map');
   var mapWidth = mapDomObject.offsetWidth;
@@ -26,30 +27,34 @@
     });
   };
 
-  var renderAdvertPins = function (ads) {
-    var fragmentDomObject = document.createDocumentFragment();
-    var mapPinDomObject;
-    var adsLength = ads.length;
-
-    for (var i = 0; i < adsLength; i++) {
-      mapPinDomObject = window.pin.create(ads[i]);
-      addRenderMapCardHandler(mapPinDomObject, ads[i]);
-      fragmentDomObject.appendChild(mapPinDomObject);
-    }
-
-    mapPinsDomObject.appendChild(fragmentDomObject);
-  };
-
   var getRenderedAdvertPins = function () {
     return mapPinsDomObject.querySelectorAll('.map__pin:not(.map__pin--main)');
   };
 
   var clearRenderedAdvertPins = function (pins) {
-    var pinsNumber = pins.length;
+    pins.forEach(function (pin) {
+      pin.remove();
+    });
+  };
 
-    for (var i = 0; i < pinsNumber; i++) {
-      pins[i].remove();
-    }
+  var renderAdvertPins = function (ads) {
+    var fragmentDomObject = document.createDocumentFragment();
+    var mapPinDomObject;
+
+    ads = window.util.getShuffledAndSlicedArray(ads, MAX_PINS_NUMBER_AT_MAP);
+    ads.forEach(function (ad) {
+      mapPinDomObject = window.pin.create(ad);
+      addRenderMapCardHandler(mapPinDomObject, ad);
+      fragmentDomObject.appendChild(mapPinDomObject);
+    });
+
+    mapPinsDomObject.appendChild(fragmentDomObject);
+  };
+
+  var reRenderAdvertPins = function (ads) {
+    clearRenderedAdvertPins(getRenderedAdvertPins());
+    window.card.close();
+    renderAdvertPins(ads);
   };
 
   var getMainPinCoordinates = function () {
@@ -91,6 +96,7 @@
   var resetPage = function () {
     deactivateMap();
     window.card.close();
+    window.filter.resetForm();
     window.form.reset(mainPinDefaultCoordinates);
   };
 
@@ -111,6 +117,8 @@
 
   var onAdvertsSuccessLoad = function (loadedAdverts) {
     renderAdvertPins(loadedAdverts);
+    window.filter.enableForm();
+    window.filter.setChangeHandler(loadedAdverts, reRenderAdvertPins);
   };
 
   var onFailedServerCommunication = function (message) {
@@ -149,9 +157,10 @@
     document.removeEventListener('mouseup', onMainPinMouseUp);
   };
 
+  // -----------------------------------------------------------------------------------------------------
   var mainPinDefaultCoordinates = getMainPinCoordinates();
 
-  window.form.reset(mainPinDefaultCoordinates);
+  resetPage();
   window.form.addResetHandler(onAdvertFormResetClick);
   window.form.addSubmitHandler(onAdvertFormSubmit);
 
