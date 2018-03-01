@@ -48,11 +48,7 @@
     clearInvalidityStyleOnAllFields();
     advertFormDomObject.reset();
     setMinPrice();
-
-    if (initialAddressCoordinates) {
-      setAdvertAddress(initialAddressCoordinates);
-    }
-
+    setAdvertAddress(initialAddressCoordinates);
     disableAdvertForm();
   };
 
@@ -156,11 +152,11 @@
   });
 
   window.form = {
-    enable: enableAdvertForm,
-    reset: resetAdvertForm,
-    setAddress: setAdvertAddress,
     addResetHandler: addAdvertFormResetHandler,
     addSubmitHandler: addAdvertFormSubmitHandler,
-    getFormDataObject: getFormDataObject
+    enable: enableAdvertForm,
+    getFormDataObject: getFormDataObject,
+    reset: resetAdvertForm,
+    setAddress: setAdvertAddress,
   };
 })();
