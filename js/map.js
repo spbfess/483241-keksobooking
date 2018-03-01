@@ -48,7 +48,7 @@
     window.backend.load(onAdvertsSuccessLoad, onFailedServerCommunication);
   };
 
-  var checkMapIsActive = function () {
+  var isMapActive = function () {
     return mapDomObject.classList.contains('map--faded') ? false : true;
   };
 
@@ -115,7 +115,7 @@
   var onMainPinMouseUp = function (evt) {
     evt.preventDefault();
 
-    if (!checkMapIsActive()) {
+    if (!isMapActive()) {
       activateMap();
       window.form.enable(getMainPinCoordinates());
     }
