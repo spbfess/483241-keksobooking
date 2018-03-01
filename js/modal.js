@@ -20,7 +20,7 @@
     modalDomObject.textContent = message;
     modalDomObject.classList.add(ModalClass.SHOW, modalTypeClass);
 
-    setTimeout(function () {
+    window.setTimeout(function () {
       modalDomObject.classList.remove(ModalClass.SHOW, modalTypeClass);
       modalDomObject.textContent = '';
     }, displayTime);
