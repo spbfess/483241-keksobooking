@@ -127,8 +127,7 @@
   var mainPinDefaultCoordinates = getMainPinCoordinates();
 
   resetPage();
-  window.form.addResetHandler(onAdvertFormResetClick);
-  window.form.addSubmitHandler(onAdvertFormSubmit);
+  window.form.initialize(onAdvertFormResetClick, onAdvertFormSubmit);
 
   mainPinDomObject.addEventListener('mousedown', function (evt) {
     evt.preventDefault();

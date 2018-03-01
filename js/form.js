@@ -127,34 +127,30 @@
     });
   };
 
-  var addAdvertFormResetHandler = function (resetHandler) {
-    advertFormResetDomObject.addEventListener('click', resetHandler);
-  };
-
-  var addAdvertFormSubmitHandler = function (submitHandler) {
-    advertFormDomObject.addEventListener('submit', submitHandler);
-  };
-
   var getFormDataObject = function () {
     return new FormData(advertFormDomObject);
   };
 
-  syncCheckInOutTime();
-  setMinPriceOnAccommodationChange();
-  validateCapacity();
+  var initializeAdvertForm = function (onAdvertFormResetClick, onAdvertFormSubmit) {
+    syncCheckInOutTime();
+    setMinPriceOnAccommodationChange();
+    validateCapacity();
 
-  advertFormDomObject.addEventListener('invalid', function (evt) {
-    addInvalidityStyle(evt.target);
-  }, true);
+    advertFormDomObject.addEventListener('invalid', function (evt) {
+      addInvalidityStyle(evt.target);
+    }, true);
 
-  advertFormDomObject.addEventListener('input', function (evt) {
-    clearInvalidityStyle(evt.target);
-  });
+    advertFormDomObject.addEventListener('input', function (evt) {
+      clearInvalidityStyle(evt.target);
+    });
+
+    advertFormResetDomObject.addEventListener('click', onAdvertFormResetClick);
+    advertFormDomObject.addEventListener('submit', onAdvertFormSubmit);
+  };
 
   window.form = {
-    addResetHandler: addAdvertFormResetHandler,
-    addSubmitHandler: addAdvertFormSubmitHandler,
     enable: enableAdvertForm,
+    initialize: initializeAdvertForm,
     getFormDataObject: getFormDataObject,
     reset: resetAdvertForm,
     setAddress: setAdvertAddress,
