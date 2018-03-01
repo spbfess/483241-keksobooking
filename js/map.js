@@ -2,7 +2,10 @@
 
 (function () {
   var MAIN_PIN_OFFSET_Y = 48;
-  var MAIN_PIN_Y_LIMITS = [150, 500];
+  var MainPinYLimit = {
+    MIN: 150,
+    MAX: 500
+  };
 
   var mapDomObject = document.querySelector('section.map');
   var mapWidth = mapDomObject.offsetWidth;
@@ -13,11 +16,11 @@
       max: parseInt(mapWidth, 10)
     },
     y: {
-      min: MAIN_PIN_Y_LIMITS[0],
-      max: MAIN_PIN_Y_LIMITS[1]
+      min: MainPinYLimit.MIN,
+      max: MainPinYLimit.MAX
     }
   };
-  var pointerInitialCoords;
+  var pointerInitialCoordinates;
 
   var addRenderMapCardHandler = function (pinButton, ad) {
     pinButton.addEventListener('click', function () {
@@ -96,8 +99,8 @@
   var onMainPinMouseMove = function (evt) {
     var mainPinCoords = getMainPinCoordinates();
     var shift = {
-      x: pointerInitialCoords.x - evt.clientX,
-      y: pointerInitialCoords.y - evt.clientY
+      x: pointerInitialCoordinates.x - evt.clientX,
+      y: pointerInitialCoordinates.y - evt.clientY
     };
     var x = mainPinCoords[0] - shift.x;
     var y = mainPinCoords[1] - shift.y;
@@ -107,7 +110,7 @@
 
     setMainPinCoordinates([x, y]);
     window.form.setAddress([x, y]);
-    pointerInitialCoords = {
+    pointerInitialCoordinates = {
       x: evt.clientX,
       y: evt.clientY
     };
@@ -134,7 +137,7 @@
   mainPinDomObject.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
 
-    pointerInitialCoords = {
+    pointerInitialCoordinates = {
       x: evt.clientX,
       y: evt.clientY
     };
