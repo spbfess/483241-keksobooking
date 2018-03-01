@@ -7,8 +7,8 @@
     SHOW: 'modal__show'
   };
   var ModalDisplayTime = {
-    ERROR: 5000,
-    INFO: 2000
+    ERROR: 7000,
+    INFO: 5000
   };
 
   var modalDomObject = document.querySelector('.modal');
