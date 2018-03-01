@@ -47,6 +47,7 @@
   var resetAdvertForm = function (initialAddressCoordinates) {
     clearInvalidityStyleOnAllFields();
     advertFormDomObject.reset();
+    setMinPrice();
 
     if (initialAddressCoordinates) {
       setAdvertAddress(initialAddressCoordinates);
@@ -70,11 +71,15 @@
   };
 
   var setMinPrice = function () {
-    advertFormAccommodationDomObject.addEventListener('change', function () {
-      var accommodation = advertFormAccommodationDomObject.value;
-      var minPrice = MIN_PRICE_MAP[accommodation];
+    var accommodation = advertFormAccommodationDomObject.value;
+    var minPrice = MIN_PRICE_MAP[accommodation];
 
-      advertFormPriceDomObject.min = minPrice;
+    advertFormPriceDomObject.min = minPrice;
+  };
+
+  var setMinPriceOnAccommodationChange = function () {
+    advertFormAccommodationDomObject.addEventListener('change', function () {
+      setMinPrice();
     });
   };
 
@@ -138,7 +143,7 @@
   };
 
   syncCheckInOutTime();
-  setMinPrice();
+  setMinPriceOnAccommodationChange();
   validateCapacity();
 
   advertFormDomObject.addEventListener('invalid', function (evt) {
