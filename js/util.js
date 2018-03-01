@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var ESC_CODE = 27;
+  var ESC_KEY_CODE = 27;
 
   var getRandomInteger = function (min, max) {
     // max is not included
@@ -51,7 +51,7 @@
   };
 
   var isEscEvent = function (evt, callback) {
-    if (evt.keyCode === ESC_CODE) {
+    if (evt.keyCode === ESC_KEY_CODE) {
         callback();
     }
   };

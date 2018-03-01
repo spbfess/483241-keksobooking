@@ -119,7 +119,7 @@
   };
 
   window.card = {
-    render: renderMapCard,
-    close: closeMapCard
+    close: closeMapCard,
+    render: renderMapCard
   };
 })();
