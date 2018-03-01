@@ -55,9 +55,9 @@
   };
 
   window.pin = {
+    getAll: getRenderedAdvertPins,
+    clearAll: clearRenderedAdvertPins,
     renderAll: renderAdvertPins,
     reRenderAll: reRenderAdvertPins,
-    clearAll: clearRenderedAdvertPins,
-    getAll: getRenderedAdvertPins
   };
 })();
