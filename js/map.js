@@ -3,12 +3,10 @@
 (function () {
   var MAIN_PIN_OFFSET_Y = 48;
   var MAIN_PIN_Y_LIMITS = [150, 500];
-  var MAX_PINS_NUMBER_AT_MAP = 5;
 
   var mapDomObject = document.querySelector('section.map');
   var mapWidth = mapDomObject.offsetWidth;
-  var mapPinsDomObject = mapDomObject.querySelector('.map__pins');
-  var mainPinDomObject = mapPinsDomObject.querySelector('.map__pin--main');
+  var mainPinDomObject = mapDomObject.querySelector('.map__pin--main');
   var mainPinCoordinatesRange = {
     x: {
       min: 0,
@@ -25,36 +23,6 @@
     pinButton.addEventListener('click', function () {
       window.card.render(mapDomObject, ad);
     });
-  };
-
-  var getRenderedAdvertPins = function () {
-    return mapPinsDomObject.querySelectorAll('.map__pin:not(.map__pin--main)');
-  };
-
-  var clearRenderedAdvertPins = function (pins) {
-    pins.forEach(function (pin) {
-      pin.remove();
-    });
-  };
-
-  var renderAdvertPins = function (ads) {
-    var fragmentDomObject = document.createDocumentFragment();
-    var mapPinDomObject;
-
-    ads = window.util.getShuffledAndSlicedArray(ads, MAX_PINS_NUMBER_AT_MAP);
-    ads.forEach(function (ad) {
-      mapPinDomObject = window.pin.create(ad);
-      addRenderMapCardHandler(mapPinDomObject, ad);
-      fragmentDomObject.appendChild(mapPinDomObject);
-    });
-
-    mapPinsDomObject.appendChild(fragmentDomObject);
-  };
-
-  var reRenderAdvertPins = function (ads) {
-    clearRenderedAdvertPins(getRenderedAdvertPins());
-    window.card.close();
-    renderAdvertPins(ads);
   };
 
   var getMainPinCoordinates = function () {
@@ -86,9 +54,9 @@
   };
 
   var deactivateMap = function () {
-    var renderedPins = getRenderedAdvertPins();
+    var renderedPins = window.pin.getAll();
 
-    clearRenderedAdvertPins(renderedPins);
+    window.pin.clearAll(renderedPins);
     mapDomObject.classList.add('map--faded');
     setMainPinCoordinates(mainPinDefaultCoordinates);
   };
@@ -116,9 +84,9 @@
   };
 
   var onAdvertsSuccessLoad = function (loadedAdverts) {
-    renderAdvertPins(loadedAdverts);
+    window.pin.renderAll(loadedAdverts, addRenderMapCardHandler);
     window.filter.enableForm();
-    window.filter.setChangeHandler(loadedAdverts, reRenderAdvertPins);
+    window.filter.setChangeHandler(loadedAdverts, window.pin.reRenderAll, addRenderMapCardHandler);
   };
 
   var onFailedServerCommunication = function (message) {
@@ -157,7 +125,6 @@
     document.removeEventListener('mouseup', onMainPinMouseUp);
   };
 
-  // -----------------------------------------------------------------------------------------------------
   var mainPinDefaultCoordinates = getMainPinCoordinates();
 
   resetPage();

@@ -21,7 +21,7 @@
     var shuffledArray = [];
 
     elements = elements.slice();
-    elements.forEach(function(element) {
+    elements.forEach(function () {
       shuffledArray.push(pullRandomElement(elements));
     });
 

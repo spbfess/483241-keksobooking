@@ -94,12 +94,12 @@
     });
   };
 
-  var setChangeHandler = function (adverts, applyFiltration) {
+  var setChangeHandler = function (adverts, onFiltrationAppliance, onPinRender) {
     filtersFormDomObject.addEventListener('change', function () {
       var filteredAds = getAdsFiltered(adverts);
 
       debounceFiltration(function () {
-        applyFiltration(filteredAds);
+        onFiltrationAppliance(filteredAds, onPinRender);
       });
     });
   };
