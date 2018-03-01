@@ -3,36 +3,33 @@
 (function () {
   var ESC_CODE = 27;
 
-  var getRandomInteger = function (min, max, isMaxIncluded) {
-    return isMaxIncluded ? Math.round(Math.random() * (max - min)) + min : Math.floor(Math.random() * (max - min)) + min;
+  var getRandomInteger = function (min, max) {
+    // max is not included
+    return Math.floor(Math.random() * (max - min)) + min;
   };
 
-  var getRandomElement = function (elements, removeFromObject) {
-    var randomElement;
-    var randomIndex;
-    var elementsLength = elements.length;
-
-    if (elementsLength !== 0) {
-      randomIndex = getRandomInteger(0, elementsLength, false);
-      randomElement = removeFromObject ? elements.splice(randomIndex, 1)[0] : elements.slice(randomIndex, randomIndex + 1)[0];
-    }
+  var pullRandomElement = function (elements) {
+    // takes away random element from elements object and returns it
+    var randomIndex = getRandomInteger(0, elements.length);
+    var randomElement = elements.splice(randomIndex, 1)[0];
 
     return randomElement;
   };
 
   var getShuffledArray = function (elements) {
-    elements = elements.slice();
-    var elementsLength = elements.length;
+    // does not change initial array, returns shuffled copy
     var shuffledArray = [];
 
-    for (var i = 0; i < elementsLength; i++) {
-      shuffledArray.push(getRandomElement(elements, true));
-    }
+    elements = elements.slice();
+    elements.forEach(function(element) {
+      shuffledArray.push(pullRandomElement(elements));
+    });
 
     return shuffledArray;
   };
 
   var getShuffledAndSlicedArray = function (elements, sliceLength) {
+    // does not change initial array, returns shuffled copy slice
     var shuffledArray = getShuffledArray(elements);
 
     return shuffledArray.splice(0, sliceLength);
@@ -54,14 +51,11 @@
   };
 
   window.util = {
-    isEscEvent: function (evt, action) {
+    isEscEvent: function (evt, callback) {
       if (evt.keyCode === ESC_CODE) {
-        action();
+        callback();
       }
     },
-    getRandomInteger: getRandomInteger,
-    getRandomElement: getRandomElement,
-    getShuffledArray: getShuffledArray,
     getShuffledAndSlicedArray: getShuffledAndSlicedArray,
     stickToRange: stickToRange,
     numberIsInRange: numberIsInRange
