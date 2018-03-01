@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-
   var PHOTO_WIDTH = 100;
   var ACCOMMODATION_MAP = {
     flat: 'Квартира',
