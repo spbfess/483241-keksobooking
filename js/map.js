@@ -30,18 +30,14 @@
 
   var getMainPinCoordinates = function () {
     var x = parseInt(mainPinDomObject.offsetLeft, 10);
-    var y = parseInt(mainPinDomObject.offsetTop, 10);
-
-    if (checkMapIsActive()) {
-      y = y + MAIN_PIN_OFFSET_Y;
-    }
+    var y = parseInt(mainPinDomObject.offsetTop, 10) + MAIN_PIN_OFFSET_Y;;
 
     return [x, y];
   };
 
   var setMainPinCoordinates = function (coordinates) {
     var x = coordinates[0];
-    var y = checkMapIsActive() ? coordinates[1] - MAIN_PIN_OFFSET_Y : coordinates[1];
+    var y = coordinates[1] - MAIN_PIN_OFFSET_Y;
 
     mainPinDomObject.style.left = x + 'px';
     mainPinDomObject.style.top = y + 'px';
