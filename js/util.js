@@ -54,7 +54,7 @@
 
   var isEscEvent = function (evt, callback) {
     if (evt.keyCode === ESC_KEY_CODE) {
-        callback();
+      callback();
     }
   };
 
