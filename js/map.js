@@ -30,7 +30,7 @@
 
   var getMainPinCoordinates = function () {
     var x = parseInt(mainPinDomObject.offsetLeft, 10);
-    var y = parseInt(mainPinDomObject.offsetTop, 10) + MAIN_PIN_OFFSET_Y;;
+    var y = parseInt(mainPinDomObject.offsetTop, 10) + MAIN_PIN_OFFSET_Y;
 
     return [x, y];
   };
