@@ -75,6 +75,7 @@
     var minPrice = MIN_PRICE_MAP[accommodation];
 
     advertFormPriceDomObject.min = minPrice;
+    advertFormPriceDomObject.placeholder = minPrice;
   };
 
   var setMinPriceOnAccommodationChange = function () {
