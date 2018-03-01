@@ -890,6 +890,7 @@ textarea:focus
     display: none;
     z-index: 100;
     position: fixed;
+
     top: 20%;
     left: 50%;
 
