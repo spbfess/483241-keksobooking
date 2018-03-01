@@ -74,7 +74,7 @@
 
   var onAdvertFormSubmitSuccess = function () {
     resetPage();
-    window.modal.open('Данные успешно загружены на сервер', false);
+    window.modal.display('Данные успешно загружены на сервер', false);
   };
 
   var onAdvertFormSubmit = function (evt) {
@@ -89,7 +89,7 @@
   };
 
   var onFailedServerCommunication = function (message) {
-    window.modal.open(message, true);
+    window.modal.display(message, true);
   };
 
   var onMainPinMouseMove = function (evt) {

@@ -13,7 +13,7 @@
 
   var modalDomObject = document.querySelector('.modal');
 
-  var openModal = function (message, isError) {
+  var displayModalWindow = function (message, isError) {
     var modalTypeClass = isError ? ModalCssClass.ERROR : ModalCssClass.INFO;
     var displayTime = isError ? ModalDisplayTime.ERROR : ModalDisplayTime.INFO;
 
@@ -27,6 +27,6 @@
   };
 
   window.modal = {
-    open: openModal
+    display: displayModalWindow
   };
 })();
