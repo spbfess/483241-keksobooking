@@ -50,14 +50,16 @@
     return number >= min && number < max;
   };
 
-  window.util = {
-    isEscEvent: function (evt, callback) {
-      if (evt.keyCode === ESC_CODE) {
+  var isEscEvent = function (evt, callback) {
+    if (evt.keyCode === ESC_CODE) {
         callback();
-      }
-    },
+    }
+  };
+
+  window.util = {
     getShuffledAndSlicedArray: getShuffledAndSlicedArray,
-    stickToRange: stickToRange,
-    numberIsInRange: numberIsInRange
+    isEscEvent: isEscEvent,
+    numberIsInRange: numberIsInRange,
+    stickToRange: stickToRange
   };
 })();
