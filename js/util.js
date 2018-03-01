@@ -18,12 +18,14 @@
 
   var getShuffledArray = function (elements) {
     // does not change initial array, returns shuffled copy
+    elements = elements.slice();
+
+    var elementsLength = elements.length;
     var shuffledArray = [];
 
-    elements = elements.slice();
-    elements.forEach(function () {
+    for (var i = 0; i < elementsLength; i++) {
       shuffledArray.push(pullRandomElement(elements));
-    });
+    }
 
     return shuffledArray;
   };
