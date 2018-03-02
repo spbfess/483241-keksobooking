@@ -10,7 +10,7 @@
   var mapDomObject = document.querySelector('section.map');
   var mapWidth = mapDomObject.offsetWidth;
   var mainPinDomObject = mapDomObject.querySelector('.map__pin--main');
-  var mainPinCoordinatesRange = {
+  var mainPinPositionRange = {
     x: {
       min: 0,
       max: parseInt(mapWidth, 10)
@@ -28,16 +28,19 @@
     });
   };
 
-  var getMainPinCoordinates = function () {
+  var getMainPinPosition = function () {
     var x = parseInt(mainPinDomObject.offsetLeft, 10);
     var y = parseInt(mainPinDomObject.offsetTop, 10) + MAIN_PIN_OFFSET_Y;
 
-    return [x, y];
+    return {
+      x: x,
+      y: y
+    };
   };
 
-  var setMainPinCoordinates = function (coordinates) {
-    var x = coordinates[0];
-    var y = coordinates[1] - MAIN_PIN_OFFSET_Y;
+  var setMainPinPosition = function (position) {
+    var x = position.x;
+    var y = position.y - MAIN_PIN_OFFSET_Y;
 
     mainPinDomObject.style.left = x + 'px';
     mainPinDomObject.style.top = y + 'px';
@@ -57,14 +60,14 @@
 
     window.pin.clearAll(renderedPins);
     mapDomObject.classList.add('map--faded');
-    setMainPinCoordinates(mainPinDefaultCoordinates);
+    setMainPinPosition(mainPinDefaultPosition);
   };
 
   var resetPage = function () {
     deactivateMap();
     window.card.close();
     window.filter.resetForm();
-    window.form.reset(mainPinDefaultCoordinates);
+    window.form.reset(mainPinDefaultPosition);
   };
 
   var onAdvertFormResetClick = function (evt) {
@@ -93,19 +96,24 @@
   };
 
   var onMainPinMouseMove = function (evt) {
-    var mainPinCoords = getMainPinCoordinates();
+    var mainPinPosition = getMainPinPosition();
     var shift = {
       x: pointerInitialPosition.x - evt.clientX,
       y: pointerInitialPosition.y - evt.clientY
     };
-    var x = mainPinCoords[0] - shift.x;
-    var y = mainPinCoords[1] - shift.y;
+    var x = mainPinPosition.x - shift.x;
+    var y = mainPinPosition.y - shift.y;
 
-    x = window.util.stickToRange(x, mainPinCoordinatesRange.x.min, mainPinCoordinatesRange.x.max);
-    y = window.util.stickToRange(y, mainPinCoordinatesRange.y.min, mainPinCoordinatesRange.y.max);
+    x = window.util.stickToRange(x, mainPinPositionRange.x.min, mainPinPositionRange.x.max);
+    y = window.util.stickToRange(y, mainPinPositionRange.y.min, mainPinPositionRange.y.max);
 
-    setMainPinCoordinates([x, y]);
-    window.form.setAddress([x, y]);
+    var newMainPinPosition = {
+      x: x,
+      y: y
+    };
+
+    setMainPinPosition(newMainPinPosition);
+    window.form.setAddress(newMainPinPosition);
     pointerInitialPosition = {
       x: evt.clientX,
       y: evt.clientY
@@ -117,14 +125,14 @@
 
     if (!isMapActive()) {
       activateMap();
-      window.form.enable(getMainPinCoordinates());
+      window.form.enable(getMainPinPosition());
     }
 
     document.removeEventListener('mousemove', onMainPinMouseMove);
     document.removeEventListener('mouseup', onMainPinMouseUp);
   };
 
-  var mainPinDefaultCoordinates = getMainPinCoordinates();
+  var mainPinDefaultPosition = getMainPinPosition();
 
   resetPage();
   window.form.initialize(onAdvertFormResetClick, onAdvertFormSubmit);

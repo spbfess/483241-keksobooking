@@ -28,27 +28,27 @@
     advertFormDomObject.classList.add('notice__form--disabled');
   };
 
-  var setAdvertAddress = function (addressCoordinates) {
-    var advertAddress = addressCoordinates[0] + ', ' + addressCoordinates[1];
+  var setAdvertAddress = function (address) {
+    var advertAddress = address.x + ', ' + address.y;
 
     advertFormAddressDomObject.value = advertAddress;
   };
 
-  var enableAdvertForm = function (initialAddressCoordinates) {
+  var enableAdvertForm = function (initialAddress) {
     advertFormFieldsets.forEach(function (fieldset) {
       fieldset.disabled = false;
     });
 
     advertFormDomObject.classList.remove('notice__form--disabled');
     advertFormAddressDomObject.readOnly = true;
-    setAdvertAddress(initialAddressCoordinates);
+    setAdvertAddress(initialAddress);
   };
 
-  var resetAdvertForm = function (initialAddressCoordinates) {
+  var resetAdvertForm = function (initialAddress) {
     clearInvalidityStyleOnAllFields();
     advertFormDomObject.reset();
     setMinPrice();
-    setAdvertAddress(initialAddressCoordinates);
+    setAdvertAddress(initialAddress);
     disableAdvertForm();
   };
 
