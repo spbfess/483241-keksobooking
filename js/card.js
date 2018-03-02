@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-
   var PHOTO_WIDTH = 100;
   var ACCOMMODATION_MAP = {
     flat: 'Квартира',
@@ -49,7 +48,7 @@
 
   var closeMapCard = function () {
     var mapCardDomObject = document.querySelector('article.map__card');
-
+    // this check is necessary, since we use that function w/o checking if a card is rendered as of the moment
     if (mapCardDomObject) {
       mapCardDomObject.remove();
     }
@@ -119,7 +118,7 @@
   };
 
   window.card = {
-    render: renderMapCard,
-    close: closeMapCard
+    close: closeMapCard,
+    render: renderMapCard
   };
 })();

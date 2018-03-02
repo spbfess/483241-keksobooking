@@ -28,30 +28,27 @@
     advertFormDomObject.classList.add('notice__form--disabled');
   };
 
-  var setAdvertAddress = function (addressCoordinates) {
-    var advertAddress = addressCoordinates[0] + ', ' + addressCoordinates[1];
+  var setAdvertAddress = function (address) {
+    var advertAddress = address.x + ', ' + address.y;
 
     advertFormAddressDomObject.value = advertAddress;
   };
 
-  var enableAdvertForm = function (initialAddressCoordinates) {
+  var enableAdvertForm = function (initialAddress) {
     advertFormFieldsets.forEach(function (fieldset) {
       fieldset.disabled = false;
     });
 
     advertFormDomObject.classList.remove('notice__form--disabled');
     advertFormAddressDomObject.readOnly = true;
-    setAdvertAddress(initialAddressCoordinates);
+    setAdvertAddress(initialAddress);
   };
 
-  var resetAdvertForm = function (initialAddressCoordinates) {
+  var resetAdvertForm = function (initialAddress) {
     clearInvalidityStyleOnAllFields();
     advertFormDomObject.reset();
-
-    if (initialAddressCoordinates) {
-      setAdvertAddress(initialAddressCoordinates);
-    }
-
+    setMinPrice();
+    setAdvertAddress(initialAddress);
     disableAdvertForm();
   };
 
@@ -70,11 +67,16 @@
   };
 
   var setMinPrice = function () {
-    advertFormAccommodationDomObject.addEventListener('change', function () {
-      var accommodation = advertFormAccommodationDomObject.value;
-      var minPrice = MIN_PRICE_MAP[accommodation];
+    var accommodation = advertFormAccommodationDomObject.value;
+    var minPrice = MIN_PRICE_MAP[accommodation];
 
-      advertFormPriceDomObject.min = minPrice;
+    advertFormPriceDomObject.min = minPrice;
+    advertFormPriceDomObject.placeholder = minPrice;
+  };
+
+  var setMinPriceOnAccommodationChange = function () {
+    advertFormAccommodationDomObject.addEventListener('change', function () {
+      setMinPrice();
     });
   };
 
@@ -125,36 +127,32 @@
     });
   };
 
-  var addAdvertFormResetHandler = function (resetHandler) {
-    advertFormResetDomObject.addEventListener('click', resetHandler);
-  };
-
-  var addAdvertFormSubmitHandler = function (submitHandler) {
-    advertFormDomObject.addEventListener('submit', submitHandler);
-  };
-
   var getFormDataObject = function () {
     return new FormData(advertFormDomObject);
   };
 
-  syncCheckInOutTime();
-  setMinPrice();
-  validateCapacity();
+  var initializeAdvertForm = function (onAdvertFormResetClick, onAdvertFormSubmit) {
+    syncCheckInOutTime();
+    setMinPriceOnAccommodationChange();
+    validateCapacity();
 
-  advertFormDomObject.addEventListener('invalid', function (evt) {
-    addInvalidityStyle(evt.target);
-  }, true);
+    advertFormDomObject.addEventListener('invalid', function (evt) {
+      addInvalidityStyle(evt.target);
+    }, true);
 
-  advertFormDomObject.addEventListener('input', function (evt) {
-    clearInvalidityStyle(evt.target);
-  });
+    advertFormDomObject.addEventListener('input', function (evt) {
+      clearInvalidityStyle(evt.target);
+    });
+
+    advertFormResetDomObject.addEventListener('click', onAdvertFormResetClick);
+    advertFormDomObject.addEventListener('submit', onAdvertFormSubmit);
+  };
 
   window.form = {
     enable: enableAdvertForm,
+    initialize: initializeAdvertForm,
+    getFormDataObject: getFormDataObject,
     reset: resetAdvertForm,
     setAddress: setAdvertAddress,
-    addResetHandler: addAdvertFormResetHandler,
-    addSubmitHandler: addAdvertFormSubmitHandler,
-    getFormDataObject: getFormDataObject
   };
 })();

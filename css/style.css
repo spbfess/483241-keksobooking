@@ -871,13 +871,6 @@ textarea:focus
     }
 }
 
-@keyframes modal-disappear {
-    100% {
-    padding: 0;
-    height: 0;
-    }
-}
-
 @keyframes modal-move-in {
     0% {
     top: -10000px;
@@ -892,17 +885,12 @@ textarea:focus
     }
 }
 
-@keyframes modal-move-out {
-    100% {
-    top: -10000px;
-    }
-}
-
 .modal
 {
     display: none;
     z-index: 100;
     position: fixed;
+
     top: 20%;
     left: 50%;
 
@@ -928,6 +916,7 @@ textarea:focus
 .modal__info {
     background-color: rgba(100, 200, 100, .6);
     color: rgba(0, 0, 0, .8);
+    border-color: rgba(0, 0, 0, .8);
 }
 
 .modal__show {
@@ -935,9 +924,3 @@ textarea:focus
     -webkit-animation: modal-move-in 500ms, modal-appear 1000ms;
             animation: modal-move-in 500ms, modal-appear 1000ms;
 }
-
-.modal__close {
-    -webkit-animation: modal-disappear 1000ms forwards, modal-move-out 5000ms forwards;
-            animation: modal-disappear 1000ms forwards, modal-move-out 5000ms forwards;
-}
-
