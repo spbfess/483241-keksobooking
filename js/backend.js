@@ -5,41 +5,46 @@
   var HTTP_STATUS_OK = 200;
   var SEND_URL = 'https://js.dump.academy/keksobooking';
   var LOAD_URL = 'https://js.dump.academy/keksobooking/data';
-  var ErrorMessage = {
-    SEND_BASE: 'При попытке отправить данные на сервер произошла ошибка:',
-    LOAD_BASE: 'При попытке получить данные с сервера произошла ошибка:',
-    HTTP_ANNEX: 'http код ошибки:',
-    NETWORK_ANNEX: 'сервер не доступен по сети. Проверьте сетевые настройки и подключение к интернету.',
-    TIMEOUT_ANNEX: 'запрос не был выполнен за отведенное время:'
+  var StatusMessage = {
+    ERROR_SEND_BASE: 'При попытке отправить данные на сервер произошла ошибка:',
+    ERROR_LOAD_BASE: 'При попытке получить данные с сервера произошла ошибка:',
+    ERROR_HTTP_ANNEX: 'http код ошибки:',
+    ERROR_NETWORK_ANNEX: 'сервер не доступен по сети. Проверьте сетевые настройки и подключение к интернету.',
+    ERROR_TIMEOUT_ANNEX: 'запрос не был выполнен за отведенное время:',
+    SUCCESS: 'Данные успешно загружены на сервер'
   };
 
   var getXhrObject = function (onLoad, onError, isSendAction) {
     var xhr = new XMLHttpRequest();
-    var errorMessageBase = isSendAction ? ErrorMessage.SEND_BASE : ErrorMessage.LOAD_BASE;
+    var errorMessageBase = isSendAction ? StatusMessage.ERROR_SEND_BASE : StatusMessage.ERROR_LOAD_BASE;
 
     xhr.responseType = 'json';
     xhr.timeout = TIMEOUT;
 
     xhr.addEventListener('load', function () {
       if (xhr.status === HTTP_STATUS_OK) {
-        onLoad(xhr.response);
+        if (isSendAction) {
+          onLoad(StatusMessage.SUCCESS);
+        } else {
+          onLoad(xhr.response);
+        }
       } else {
-        var httpErrorMessage = [errorMessageBase, ErrorMessage.HTTP_ANNEX, xhr.status, xhr.statusText].join(' ');
+        var httpStatusMessage = [errorMessageBase, StatusMessage.ERROR_HTTP_ANNEX, xhr.status, xhr.statusText].join(' ');
 
-        onError(httpErrorMessage);
+        onError(httpStatusMessage);
       }
     });
 
     xhr.addEventListener('error', function () {
-      var networkErrorMessage = [errorMessageBase, ErrorMessage.NETWORK_ANNEX].join(' ');
+      var networkStatusMessage = [errorMessageBase, StatusMessage.ERROR_NETWORK_ANNEX].join(' ');
 
-      onError(networkErrorMessage);
+      onError(networkStatusMessage);
     });
 
     xhr.addEventListener('timeout', function () {
-      var timeoutErrorMessage = [errorMessageBase, ErrorMessage.TIMEOUT_ANNEX, xhr.timeout / 1000, 'секунд'].join(' ');
+      var timeoutStatusMessage = [errorMessageBase, StatusMessage.ERROR_TIMEOUT_ANNEX, xhr.timeout / 1000, 'секунд'].join(' ');
 
-      onError(timeoutErrorMessage);
+      onError(timeoutStatusMessage);
     });
 
     return xhr;

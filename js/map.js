@@ -48,7 +48,7 @@
 
   var activateMap = function () {
     mapDomObject.classList.remove('map--faded');
-    window.backend.load(onAdvertsSuccessLoad, onFailedServerCommunication);
+    window.backend.load(onAdvertsLoadSuccess, onFailedServerCommunication);
   };
 
   var isMapActive = function () {
@@ -75,9 +75,9 @@
     resetPage();
   };
 
-  var onAdvertFormSubmitSuccess = function () {
+  var onAdvertFormSubmitSuccess = function (message) {
     resetPage();
-    window.modal.display('Данные успешно загружены на сервер', false);
+    window.modal.display(message, false);
   };
 
   var onAdvertFormSubmit = function (evt) {
@@ -85,7 +85,7 @@
     window.backend.send(window.form.getFormDataObject(), onAdvertFormSubmitSuccess, onFailedServerCommunication);
   };
 
-  var onAdvertsSuccessLoad = function (loadedAdverts) {
+  var onAdvertsLoadSuccess = function (loadedAdverts) {
     window.pin.renderAll(loadedAdverts, addRenderMapCardHandler);
     window.filter.enableForm();
     window.filter.setChangeHandler(loadedAdverts, window.pin.reRenderAll, addRenderMapCardHandler);
