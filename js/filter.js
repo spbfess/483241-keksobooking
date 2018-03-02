@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var PRICE_FILTER = {
+  var PRICE_FILTER_MAP = {
     low: {
       min: 0,
       max: 10000
@@ -35,8 +35,8 @@
 
       var accommodationFiltrationPassed = accommodationFilters.every(function (option) {
         if (option === 'price') {
-          var priceFilterMin = PRICE_FILTER[adFilter.accommodation.price].min;
-          var priceFilterMax = PRICE_FILTER[adFilter.accommodation.price].max;
+          var priceFilterMin = PRICE_FILTER_MAP[adFilter.accommodation.price].min;
+          var priceFilterMax = PRICE_FILTER_MAP[adFilter.accommodation.price].max;
 
           return window.util.numberIsInRange(ad.offer.price, priceFilterMin, priceFilterMax);
         }

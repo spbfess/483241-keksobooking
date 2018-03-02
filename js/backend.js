@@ -2,6 +2,7 @@
 
 (function () {
   var TIMEOUT = 10000;
+  var HTTP_STATUS_OK = 200;
   var SEND_URL = 'https://js.dump.academy/keksobooking';
   var LOAD_URL = 'https://js.dump.academy/keksobooking/data';
   var ErrorMessage = {
@@ -20,7 +21,7 @@
     xhr.timeout = TIMEOUT;
 
     xhr.addEventListener('load', function () {
-      if (xhr.status === 200) {
+      if (xhr.status === HTTP_STATUS_OK) {
         onLoad(xhr.response);
       } else {
         var httpErrorMessage = [errorMessageBase, ErrorMessage.HTTP_ANNEX, xhr.status, xhr.statusText].join(' ');

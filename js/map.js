@@ -20,7 +20,7 @@
       max: MainPinYLimit.MAX
     }
   };
-  var pointerInitialCoordinates;
+  var pointerInitialPosition;
 
   var addRenderMapCardHandler = function (pinButton, ad) {
     pinButton.addEventListener('click', function () {
@@ -95,8 +95,8 @@
   var onMainPinMouseMove = function (evt) {
     var mainPinCoords = getMainPinCoordinates();
     var shift = {
-      x: pointerInitialCoordinates.x - evt.clientX,
-      y: pointerInitialCoordinates.y - evt.clientY
+      x: pointerInitialPosition.x - evt.clientX,
+      y: pointerInitialPosition.y - evt.clientY
     };
     var x = mainPinCoords[0] - shift.x;
     var y = mainPinCoords[1] - shift.y;
@@ -106,7 +106,7 @@
 
     setMainPinCoordinates([x, y]);
     window.form.setAddress([x, y]);
-    pointerInitialCoordinates = {
+    pointerInitialPosition = {
       x: evt.clientX,
       y: evt.clientY
     };
@@ -132,7 +132,7 @@
   mainPinDomObject.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
 
-    pointerInitialCoordinates = {
+    pointerInitialPosition = {
       x: evt.clientX,
       y: evt.clientY
     };
