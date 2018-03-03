@@ -160,27 +160,44 @@
 
   var avatarFileChooser = document.querySelector('#avatar');
   var avatar = document.querySelector('.notice__preview img');
+  var photoFileChooser = document.querySelector('#images');
   var photoContainer = advertFormDomObject.querySelector('.form__photo-container');
-  console.log('container: ', photoContainer);
 
   var renderAvatar = function (avatarPreview) {
-    avatar.src = avatarPreview;
+    avatar.src = avatarPreview[0];
   };
 
-  var renderPhoto = function(photoPreviews) {
+  var renderPhotos = function(photoPreviews) {
     var fragment = document.createDocumentFragment();
     photoPreviews.forEach(function(photoPreview) {
-      var photoDomObject = document.createElement(img);
+      var photoDomObject = document.createElement('img');
 
       photoDomObject.src = photoPreview;
+      photoDomObject.width = 100;
       fragment.append(photoDomObject);
     });
 
-    // photoContainer
+    photoContainer.appendChild(fragment);
   };
 
+  var getPictuesLoadedNumber = function () {
+    return photoContainer.querySelectorAll('img').length;
+  };
+
+
   avatarFileChooser.addEventListener('change', function () {
-    window.file.preview(avatarFileChooser, avatar, renderAvatar);
+    // window.file.preview(avatarFileChooser, renderAvatar);
+    var files = Array.prototype.slice.call(avatarFileChooser.files);
+
+    window.file.preview(files, renderAvatar);
+    console.log(files);
   });
 
+  photoFileChooser.addEventListener('change', function () {
+    var loaded = photoContainer.querySelectorAll('img').length;
+    var files = Array.prototype.slice.call(photoFileChooser.files, loaded);
+
+    console.log(files);
+    window.file.preview(files, renderPhotos);
+  });
 })();
