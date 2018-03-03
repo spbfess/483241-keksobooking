@@ -156,4 +156,31 @@
     reset: resetAdvertForm,
     setAddress: setAdvertAddress,
   };
+
+
+  var avatarFileChooser = document.querySelector('#avatar');
+  var avatar = document.querySelector('.notice__preview img');
+  var photoContainer = advertFormDomObject.querySelector('.form__photo-container');
+  console.log('container: ', photoContainer);
+
+  var renderAvatar = function (avatarPreview) {
+    avatar.src = avatarPreview;
+  };
+
+  var renderPhoto = function(photoPreviews) {
+    var fragment = document.createDocumentFragment();
+    photoPreviews.forEach(function(photoPreview) {
+      var photoDomObject = document.createElement(img);
+
+      photoDomObject.src = photoPreview;
+      fragment.append(photoDomObject);
+    });
+
+    // photoContainer
+  };
+
+  avatarFileChooser.addEventListener('change', function () {
+    window.file.preview(avatarFileChooser, avatar, renderAvatar);
+  });
+
 })();
