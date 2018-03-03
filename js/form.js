@@ -7,6 +7,7 @@
     house: 5000,
     palace: 10000
   };
+  var MAX_ROOMS_NUMBER = 100;
 
   var advertFormDomObject = document.querySelector('.notice__form');
   var advertFormFieldsets = advertFormDomObject.querySelectorAll('fieldset');
@@ -86,8 +87,8 @@
     var failed = false;
     var message;
 
-    if (capacity === 0 || roomsNumber === 100) {
-      if (!(capacity === 0 && roomsNumber === 100)) {
+    if (capacity === 0 || roomsNumber === MAX_ROOMS_NUMBER) {
+      if (!(capacity === 0 && roomsNumber === MAX_ROOMS_NUMBER)) {
         failed = true;
         message = 'Для 100 комнат единственное валидное значение кол-ва мест - не для гоcтей, и наоборот';
       }
@@ -127,7 +128,7 @@
     });
   };
 
-  var getFormDataObject = function () {
+  var getAdverFromSendObject = function () {
     return new FormData(advertFormDomObject);
   };
 
@@ -151,7 +152,7 @@
   window.form = {
     enable: enableAdvertForm,
     initialize: initializeAdvertForm,
-    getFormDataObject: getFormDataObject,
+    getSendObject: getAdverFromSendObject,
     reset: resetAdvertForm,
     setAddress: setAdvertAddress,
   };

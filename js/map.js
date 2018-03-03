@@ -82,7 +82,7 @@
 
   var onAdvertFormSubmit = function (evt) {
     evt.preventDefault();
-    window.backend.send(window.form.getFormDataObject(), onAdvertFormSubmitSuccess, onFailedServerCommunication);
+    window.backend.send(window.form.getSendObject(), onAdvertFormSubmitSuccess, onFailedServerCommunication);
   };
 
   var onAdvertsLoadSuccess = function (loadedAdverts) {

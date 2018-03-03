@@ -47,10 +47,9 @@
   };
 
   var closeMapCard = function () {
-    var mapCardDomObject = document.querySelector('article.map__card');
     // this check is necessary, since we use that function w/o checking if a card is rendered as of the moment
-    if (mapCardDomObject) {
-      mapCardDomObject.remove();
+    if (currentMapCardDomObject) {
+      currentMapCardDomObject.remove();
     }
 
     document.removeEventListener('keydown', onMapCardCloseButtonKeydown);
