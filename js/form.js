@@ -145,9 +145,9 @@
     var templatePhotosElementDomObject = document.createElement('li');
     var templatePhotoDomObject = document.createElement('img');
 
+    templatePhotosElementDomObject.draggable = true;
     templatePhotosElementDomObject.classList.add('photo__preview');
     templatePhotoDomObject.width = PHOTO_PREVIEW_WIDTH;
-    templatePhotoDomObject.draggable = true;
     templatePhotosElementDomObject.appendChild(templatePhotoDomObject);
 
     photoPreviews.forEach(function(photoPreview, index) {
@@ -199,27 +199,49 @@
   };
 
 
-  var draggedPhoto = null;
+  var draggedPhotosElementDomObject = null;
+
+  var onPhotoPreviewsDrop = function (evt) {
+    if (evt.target.classList.contains('photo__preview')) {
+      if (draggedPhotosElementDomObject !== evt.target) {
+        draggedPhotosElementDomObject.style.opacity = 1;
+        evt.target.classList.remove('photo__preview--dragover');
+
+        var tempDragged = draggedPhotosElementDomObject.cloneNode(true);
+        var tempDropped = evt.target.cloneNode(true);
+
+        photoPreviewsDomObject.replaceChild(tempDragged, evt.target);
+        photoPreviewsDomObject.replaceChild(tempDropped, draggedPhotosElementDomObject);
+      }
+    }
+
+    return false;
+  };
 
   photoPreviewsDomObject.addEventListener('dragstart', function (evt) {
-    if (evt.target.tagName.toLowerCase() === 'img') {
-      draggedPhoto = evt.target;
-      evt.dataTransfer.setData('text/plain', evt.target.data_id);
-      console.log('dragstart fired on: ', evt.target, ' id: ', evt.dataTransfer.getData('text/plain'));
+    if (evt.target.classList.contains('photo__preview')) {
+      draggedPhotosElementDomObject = evt.target;
+      evt.target.style.opacity = '0.4';
     }
   });
-
+  photoPreviewsDomObject.addEventListener('dragenter', function (evt) {
+    evt.target.classList.add('photo__preview--dragover');
+  });
   photoPreviewsDomObject.addEventListener('dragover', function (evt) {
     evt.preventDefault();
-    // console.log('dragover fired on: ', evt.target);
+    evt.dataTransfer.dropEffect = 'move';
+
     return false;
   });
-
-  photoPreviewsDomObject.addEventListener('drop', function (evt) {
-    // evt.target.style.backgroundColor = '';
-    evt.target.appendChild(draggedItem);
-    evt.preventDefault();
+  photoPreviewsDomObject.addEventListener('dragleave', function (evt) {
+    evt.target.classList.remove('photo__preview--dragover');
   });
+  photoPreviewsDomObject.addEventListener('dragend', function (evt) {
+    evt.target.classList.remove('photo__preview--dragover');
+    evt.target.style.opacity = 1;
+
+  });
+  photoPreviewsDomObject.addEventListener('drop', onPhotoPreviewsDrop);
 
   window.form = {
     enable: enableAdvertForm,
