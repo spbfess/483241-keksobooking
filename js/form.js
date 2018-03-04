@@ -21,15 +21,12 @@
   var advertFormCapacityDomObject = advertFormDomObject.querySelector('#capacity');
   var advertFormResetDomObject = advertFormDomObject.querySelector('button.form__reset');
   var advertFormAddressDomObject = advertFormDomObject.querySelector('#address');
-
-  var photoContainer = advertFormDomObject.querySelector('.form__photo-container');
-  var photoPreviewsDomObject = photoContainer.querySelector('.photo__previews');
-  var avatarFileChooser = document.querySelector('#avatar');
-  var photoFileChooser = document.querySelector('#images');
-  var avatarDomObject = document.querySelector('.notice__preview img');
+  var avatarFileChooserDomObject = advertFormDomObject.querySelector('#avatar');
+  var avatarDomObject = advertFormDomObject.querySelector('.notice__preview img');
   var defaultAvatarImage = avatarDomObject.src;
-
-
+  var photoContainerDomObject = advertFormDomObject.querySelector('.form__photo-container');
+  var photoPreviewsDomObject = photoContainerDomObject.querySelector('.photo__previews');
+  var photoFileChooserDomObject = photoContainerDomObject.querySelector('#images');
 
   var disableAdvertForm = function () {
     advertFormFieldsets.forEach(function (fieldset) {
@@ -180,16 +177,16 @@
       clearInvalidityStyle(evt.target);
     });
 
-    avatarFileChooser.addEventListener('change', function () {
-      var files = Array.prototype.slice.call(avatarFileChooser.files);
+    avatarFileChooserDomObject.addEventListener('change', function () {
+      var files = Array.prototype.slice.call(avatarFileChooserDomObject.files);
 
       window.file.createPreviews(files, function (avatarPreview) {
         avatarDomObject.src = avatarPreview[0];
       });
     });
 
-    photoFileChooser.addEventListener('change', function () {
-      var files = Array.prototype.slice.call(photoFileChooser.files);
+    photoFileChooserDomObject.addEventListener('change', function () {
+      var files = Array.prototype.slice.call(photoFileChooserDomObject.files);
 
       window.file.createPreviews(files, renderPhotoPreviews);
     });
