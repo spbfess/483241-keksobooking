@@ -3,7 +3,7 @@
 (function () {
   var VALID_FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
-  var defineScope = function (files, matches) {
+  var definePreviewScope = function (files, matches) {
     files.forEach(function (file) {
       var fileName = file.name.toLowerCase();
       var valid = VALID_FILE_TYPES.some(function (it) {
@@ -21,7 +21,7 @@
     var results = [];
     var matched;
 
-    defineScope(files, matches);
+    definePreviewScope(files, matches);
     matched = matches.length;
 
     var onPictureLoad = function (evt) {
