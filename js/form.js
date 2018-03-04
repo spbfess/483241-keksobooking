@@ -7,7 +7,7 @@
     house: 5000,
     palace: 10000
   };
-  var MAX_ROOMS_NUMBER = 200;
+  var MAX_ROOMS_NUMBER = 100;
   var PHOTO_PREVIEW_WIDTH = 200;
 
   var advertFormDomObject = document.querySelector('.notice__form');
@@ -143,35 +143,6 @@
     return new FormData(advertFormDomObject);
   };
 
-  var initializeAdvertForm = function (onAdvertFormResetClick, onAdvertFormSubmit) {
-    syncCheckInOutTime();
-    setMinPriceOnAccommodationChange();
-    validateCapacity();
-
-    advertFormDomObject.addEventListener('invalid', function (evt) {
-      addInvalidityStyle(evt.target);
-    }, true);
-
-    advertFormDomObject.addEventListener('input', function (evt) {
-      clearInvalidityStyle(evt.target);
-    });
-
-    advertFormResetDomObject.addEventListener('click', onAdvertFormResetClick);
-    advertFormDomObject.addEventListener('submit', onAdvertFormSubmit);
-  };
-
-  window.form = {
-    enable: enableAdvertForm,
-    initialize: initializeAdvertForm,
-    getSendObject: getAdverFromSendObject,
-    reset: resetAdvertForm,
-    setAddress: setAdvertAddress,
-  };
-
-  var renderAvatar = function (avatarPreview) {
-    avatarDomObject.src = avatarPreview[0];
-  };
-
   var renderPhotoPreviews = function(photoPreviews) {
     var fragment = document.createDocumentFragment();
     var templatePhotosElementDomObject = document.createElement('li');
@@ -196,15 +167,42 @@
     avatarDomObject.src = defaultAvatarImage;
   };
 
-  avatarFileChooser.addEventListener('change', function () {
-    var files = Array.prototype.slice.call(avatarFileChooser.files);
+  var initializeAdvertForm = function (onAdvertFormResetClick, onAdvertFormSubmit) {
+    syncCheckInOutTime();
+    setMinPriceOnAccommodationChange();
+    validateCapacity();
 
-    window.file.createPreviews(files, renderAvatar);
-  });
+    advertFormDomObject.addEventListener('invalid', function (evt) {
+      addInvalidityStyle(evt.target);
+    }, true);
 
-  photoFileChooser.addEventListener('change', function () {
-    var files = Array.prototype.slice.call(photoFileChooser.files);
+    advertFormDomObject.addEventListener('input', function (evt) {
+      clearInvalidityStyle(evt.target);
+    });
 
-    window.file.createPreviews(files, renderPhotoPreviews);
-  });
+    avatarFileChooser.addEventListener('change', function () {
+      var files = Array.prototype.slice.call(avatarFileChooser.files);
+
+      window.file.createPreviews(files, function (avatarPreview) {
+        avatarDomObject.src = avatarPreview[0];
+      });
+    });
+
+    photoFileChooser.addEventListener('change', function () {
+      var files = Array.prototype.slice.call(photoFileChooser.files);
+
+      window.file.createPreviews(files, renderPhotoPreviews);
+    });
+
+    advertFormResetDomObject.addEventListener('click', onAdvertFormResetClick);
+    advertFormDomObject.addEventListener('submit', onAdvertFormSubmit);
+  };
+
+  window.form = {
+    enable: enableAdvertForm,
+    initialize: initializeAdvertForm,
+    getSendObject: getAdverFromSendObject,
+    reset: resetAdvertForm,
+    setAddress: setAdvertAddress,
+  };
 })();
