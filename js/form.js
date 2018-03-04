@@ -7,7 +7,8 @@
     house: 5000,
     palace: 10000
   };
-  var MAX_ROOMS_NUMBER = 100;
+  var MAX_ROOMS_NUMBER = 200;
+  var PHOTO_PREVIEW_WIDTH = 200;
 
   var advertFormDomObject = document.querySelector('.notice__form');
   var advertFormFieldsets = advertFormDomObject.querySelectorAll('fieldset');
@@ -20,6 +21,15 @@
   var advertFormCapacityDomObject = advertFormDomObject.querySelector('#capacity');
   var advertFormResetDomObject = advertFormDomObject.querySelector('button.form__reset');
   var advertFormAddressDomObject = advertFormDomObject.querySelector('#address');
+
+  var photoContainer = advertFormDomObject.querySelector('.form__photo-container');
+  var photoPreviewsDomObject = photoContainer.querySelector('.photo__previews');
+  var avatarFileChooser = document.querySelector('#avatar');
+  var photoFileChooser = document.querySelector('#images');
+  var avatarDomObject = document.querySelector('.notice__preview img');
+  var defaultAvatarImage = avatarDomObject.src;
+
+
 
   var disableAdvertForm = function () {
     advertFormFieldsets.forEach(function (fieldset) {
@@ -47,6 +57,7 @@
 
   var resetAdvertForm = function (initialAddress) {
     clearInvalidityStyleOnAllFields();
+    clearRenderedImages();
     advertFormDomObject.reset();
     setMinPrice();
     setAdvertAddress(initialAddress);
@@ -157,47 +168,43 @@
     setAddress: setAdvertAddress,
   };
 
-
-  var avatarFileChooser = document.querySelector('#avatar');
-  var avatar = document.querySelector('.notice__preview img');
-  var photoFileChooser = document.querySelector('#images');
-  var photoContainer = advertFormDomObject.querySelector('.form__photo-container');
-
   var renderAvatar = function (avatarPreview) {
-    avatar.src = avatarPreview[0];
+    avatarDomObject.src = avatarPreview[0];
   };
 
-  var renderPhotos = function(photoPreviews) {
+  var renderPhotoPreviews = function(photoPreviews) {
     var fragment = document.createDocumentFragment();
-    photoPreviews.forEach(function(photoPreview) {
-      var photoDomObject = document.createElement('img');
+    var templatePhotosElementDomObject = document.createElement('li');
+    var templatePhotoDomObject = document.createElement('img');
 
-      photoDomObject.src = photoPreview;
-      photoDomObject.width = 100;
-      fragment.append(photoDomObject);
+    templatePhotoDomObject.width = PHOTO_PREVIEW_WIDTH;
+    templatePhotosElementDomObject.appendChild(templatePhotoDomObject);
+
+    photoPreviews.forEach(function(photoPreview) {
+      var photosElementDomObject = templatePhotosElementDomObject.cloneNode(true);
+
+      photosElementDomObject.firstElementChild.src = photoPreview;
+      fragment.append(photosElementDomObject);
     });
 
-    photoContainer.appendChild(fragment);
+    photoPreviewsDomObject.innerHTML = '';
+    photoPreviewsDomObject.appendChild(fragment);
   };
 
-  var getPictuesLoadedNumber = function () {
-    return photoContainer.querySelectorAll('img').length;
+  var clearRenderedImages =  function () {
+    photoPreviewsDomObject.innerHTML = '';
+    avatarDomObject.src = defaultAvatarImage;
   };
-
 
   avatarFileChooser.addEventListener('change', function () {
-    // window.file.preview(avatarFileChooser, renderAvatar);
     var files = Array.prototype.slice.call(avatarFileChooser.files);
 
-    window.file.preview(files, renderAvatar);
-    console.log(files);
+    window.file.createPreviews(files, renderAvatar);
   });
 
   photoFileChooser.addEventListener('change', function () {
-    var loaded = photoContainer.querySelectorAll('img').length;
-    var files = Array.prototype.slice.call(photoFileChooser.files, loaded);
+    var files = Array.prototype.slice.call(photoFileChooser.files);
 
-    console.log(files);
-    window.file.preview(files, renderPhotos);
+    window.file.createPreviews(files, renderPhotoPreviews);
   });
 })();

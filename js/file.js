@@ -3,10 +3,6 @@
 (function () {
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
-  var matches = [];
-  var results = [];
-  var matched = 0;
-
   // var onPictureLoad = function (evt) {
   //   // console.log('in handler - results len before: ', results.length);
   //   // console.log('in handler - incrementing results');
@@ -41,7 +37,7 @@
 
   // };
 
-  var getScope = function (files) {
+  var defineScope = function (files, matches) {
     files.forEach(function (file) {
       var fileName = file.name.toLowerCase();
       var valid = FILE_TYPES.some(function (it) {
@@ -50,16 +46,18 @@
 
       console.log('valid: ', valid);
       if (valid) {
-        matched++;
         matches.push(file);
       }
     });
   };
 
-  var previewFile = function (files, onLoad) {
-  // var previewFile = function (fileChooser, onLoad) {
-    // var files = Array.prototype.slice.call(fileChooser.files);
-    getScope(files);
+  var createPreviewFiles = function (files, onLoad) {
+    var matches = [];
+    var results = [];
+    var matched;
+
+    defineScope(files, matches);
+    matched = matches.length;
 
     var onPictureLoad = function (evt) {
       results.push(evt.target.result);
@@ -80,6 +78,6 @@
   };
 
   window.file = {
-    preview: previewFile
+    createPreviews: createPreviewFiles
   };
 })();
