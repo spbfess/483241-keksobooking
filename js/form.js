@@ -203,8 +203,11 @@
   var onPhotoPreviewsDrop = function (evt) {
     if (evt.target.classList.contains('photo__preview')) {
       if (draggedPhotosElementDomObject !== evt.target) {
-        draggedPhotosElementDomObject.style.opacity = 1;
+        draggedPhotosElementDomObject.classList.remove('photo__preview--dragged');
         evt.target.classList.remove('photo__preview--dragover');
+        Array.prototype.forEach.call(photoPreviewsDomObject.children, function (child) {
+          child.classList.remove('photo__preview--dragging');
+        });
 
         var tempDragged = draggedPhotosElementDomObject.cloneNode(true);
         var tempDropped = evt.target.cloneNode(true);
@@ -220,7 +223,11 @@
   photoPreviewsDomObject.addEventListener('dragstart', function (evt) {
     if (evt.target.classList.contains('photo__preview')) {
       draggedPhotosElementDomObject = evt.target;
-      evt.target.style.opacity = '0.4';
+      evt.target.classList.add('photo__preview--dragging');
+
+      Array.prototype.forEach.call(photoPreviewsDomObject.children, function (child) {
+        child.classList.add('photo__preview--dragging');
+      });
     }
   });
 
@@ -240,10 +247,13 @@
   });
 
   photoPreviewsDomObject.addEventListener('dragend', function (evt) {
-    evt.target.classList.remove('photo__preview--dragover');
-    evt.target.style.opacity = 1;
+    evt.target.classList.remove('photo__preview--dragover', 'photo__preview--dragged');
 
+    Array.prototype.forEach.call(photoPreviewsDomObject.children, function (child) {
+      child.classList.remove('photo__preview--dragging');
+    });
   });
+
   photoPreviewsDomObject.addEventListener('drop', onPhotoPreviewsDrop);
 
   window.form = {

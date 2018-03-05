@@ -958,12 +958,23 @@ textarea:focus
     transform: scale(1);
     transition: transform 300ms ease-in;
 
-    border: 1px dashed rgba(0, 0, 0, .5);
+    border: 1px solid rgba(0, 0, 0, .5);
     border-radius: 5px;
     box-sizing: border-box;
     overflow: hidden;
+    opacity: 1;
 
     background-color: #fafafa;
+}
+
+.photo__preview.photo__preview--dragged
+{
+    opacity: .4;
+}
+
+.photo__preview.photo__preview--dragging
+{
+    border: 1px dashed rgba(0, 0, 0, .3);
 }
 
 .photo__preview.photo__preview--dragover
