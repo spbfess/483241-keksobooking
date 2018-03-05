@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var VALID_FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+  var VALID_FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png', 'bmp'];
 
   var definePreviewScope = function (files, matches) {
     files.forEach(function (file) {

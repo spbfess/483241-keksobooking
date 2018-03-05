@@ -169,7 +169,84 @@
     avatarDomObject.src = defaultAvatarImage;
   };
 
-  var initializeAdvertForm = function (onAdvertFormResetClick, onAdvertFormSubmit) {
+  var removePhotoPreviewsDragAndDropHandlers = function () {
+    photoPreviewsDomObject.removeEventListener('dragenter', onPhotoPreviewsDragEnter);
+    photoPreviewsDomObject.removeEventListener('dragover', onPhotoPreviewsDragOver);
+    photoPreviewsDomObject.removeEventListener('dragleave', onPhotoPreviewsDragLeave);
+    photoPreviewsDomObject.removeEventListener('dragend', onPhotoPreviewsDragEnd);
+    photoPreviewsDomObject.removeEventListener('drop', onPhotoPreviewsDrop);
+  };
+
+  var removePhotoPreviewsDragStyleEffects = function (target) {
+    target.classList.remove('photo__preview--dragover');
+    draggedPhotosElementDomObject.classList.remove('photo__preview--dragged');
+
+    Array.prototype.forEach.call(photoPreviewsDomObject.children, function (child) {
+      child.classList.remove('photo__preview--dragging');
+    });
+  };
+
+  var onPhotoPreviewsDragStart = function (evt) {
+    if (evt.target.classList.contains('photo__preview')) {
+      draggedPhotosElementDomObject = evt.target;
+      evt.target.classList.add('photo__preview--dragged');
+
+      Array.prototype.forEach.call(photoPreviewsDomObject.children, function (child) {
+        child.classList.add('photo__preview--dragging');
+      });
+
+      photoPreviewsDomObject.addEventListener('dragenter', onPhotoPreviewsDragEnter);
+      photoPreviewsDomObject.addEventListener('dragover', onPhotoPreviewsDragOver);
+      photoPreviewsDomObject.addEventListener('dragleave', onPhotoPreviewsDragLeave);
+      photoPreviewsDomObject.addEventListener('dragend', onPhotoPreviewsDragEnd);
+      photoPreviewsDomObject.addEventListener('drop', onPhotoPreviewsDrop);
+    }
+  };
+
+  var onPhotoPreviewsDragEnter = function (evt) {
+    evt.preventDefault();
+    evt.target.classList.add('photo__preview--dragover');
+  };
+
+  var onPhotoPreviewsDragOver = function (evt) {
+    evt.preventDefault();
+    evt.dataTransfer.dropEffect = 'move';
+
+    return false;
+  };
+
+  var onPhotoPreviewsDragLeave = function (evt) {
+    evt.preventDefault();
+    evt.target.classList.remove('photo__preview--dragover');
+  };
+
+  var onPhotoPreviewsDragEnd = function (evt) {
+    evt.preventDefault();
+    removePhotoPreviewsDragStyleEffects(evt.target);
+    removePhotoPreviewsDragAndDropHandlers();
+  };
+
+  var onPhotoPreviewsDrop = function (evt) {
+    evt.preventDefault();
+
+    if (evt.target.classList.contains('photo__preview')) {
+      if (draggedPhotosElementDomObject !== evt.target) {
+        removePhotoPreviewsDragStyleEffects(evt.target);
+
+        var cloneDraggedDomObject = draggedPhotosElementDomObject.cloneNode(true);
+        var cloneDroppedDomObject = evt.target.cloneNode(true);
+
+        photoPreviewsDomObject.replaceChild(cloneDraggedDomObject, evt.target);
+        photoPreviewsDomObject.replaceChild(cloneDroppedDomObject, draggedPhotosElementDomObject);
+        removePhotoPreviewsDragAndDropHandlers();
+        draggedPhotosElementDomObject = null;
+      }
+    }
+
+    return false;
+  };
+
+  var initializeAdvertFormHandlers = function (onAdvertFormResetClick, onAdvertFormSubmit) {
     syncCheckInOutTime();
     setMinPriceOnAccommodationChange();
     validateCapacity();
@@ -196,69 +273,14 @@
       window.file.createPreviews(files, renderPhotoPreviews);
     });
 
+    photoPreviewsDomObject.addEventListener('dragstart', onPhotoPreviewsDragStart);
     advertFormResetDomObject.addEventListener('click', onAdvertFormResetClick);
     advertFormDomObject.addEventListener('submit', onAdvertFormSubmit);
   };
 
-  var onPhotoPreviewsDrop = function (evt) {
-    if (evt.target.classList.contains('photo__preview')) {
-      if (draggedPhotosElementDomObject !== evt.target) {
-        draggedPhotosElementDomObject.classList.remove('photo__preview--dragged');
-        evt.target.classList.remove('photo__preview--dragover');
-        Array.prototype.forEach.call(photoPreviewsDomObject.children, function (child) {
-          child.classList.remove('photo__preview--dragging');
-        });
-
-        var tempDragged = draggedPhotosElementDomObject.cloneNode(true);
-        var tempDropped = evt.target.cloneNode(true);
-
-        photoPreviewsDomObject.replaceChild(tempDragged, evt.target);
-        photoPreviewsDomObject.replaceChild(tempDropped, draggedPhotosElementDomObject);
-      }
-    }
-
-    return false;
-  };
-
-  photoPreviewsDomObject.addEventListener('dragstart', function (evt) {
-    if (evt.target.classList.contains('photo__preview')) {
-      draggedPhotosElementDomObject = evt.target;
-      evt.target.classList.add('photo__preview--dragging');
-
-      Array.prototype.forEach.call(photoPreviewsDomObject.children, function (child) {
-        child.classList.add('photo__preview--dragging');
-      });
-    }
-  });
-
-  photoPreviewsDomObject.addEventListener('dragenter', function (evt) {
-    evt.target.classList.add('photo__preview--dragover');
-  });
-
-  photoPreviewsDomObject.addEventListener('dragover', function (evt) {
-    evt.preventDefault();
-    evt.dataTransfer.dropEffect = 'move';
-
-    return false;
-  });
-
-  photoPreviewsDomObject.addEventListener('dragleave', function (evt) {
-    evt.target.classList.remove('photo__preview--dragover');
-  });
-
-  photoPreviewsDomObject.addEventListener('dragend', function (evt) {
-    evt.target.classList.remove('photo__preview--dragover', 'photo__preview--dragged');
-
-    Array.prototype.forEach.call(photoPreviewsDomObject.children, function (child) {
-      child.classList.remove('photo__preview--dragging');
-    });
-  });
-
-  photoPreviewsDomObject.addEventListener('drop', onPhotoPreviewsDrop);
-
   window.form = {
     enable: enableAdvertForm,
-    initialize: initializeAdvertForm,
+    initializeHandlers: initializeAdvertFormHandlers,
     getSendObject: getAdverFromSendObject,
     reset: resetAdvertForm,
     setAddress: setAdvertAddress,

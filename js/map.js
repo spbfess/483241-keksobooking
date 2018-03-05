@@ -135,7 +135,7 @@
   var mainPinDefaultPosition = getMainPinPosition();
 
   resetPage();
-  window.form.initialize(onAdvertFormResetClick, onAdvertFormSubmit);
+  window.form.initializeHandlers(onAdvertFormResetClick, onAdvertFormSubmit);
 
   mainPinDomObject.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
