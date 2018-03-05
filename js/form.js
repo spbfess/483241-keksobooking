@@ -9,6 +9,7 @@
   };
   var MAX_ROOMS_NUMBER = 100;
   var PHOTO_PREVIEW_WIDTH = 200;
+  var ACCOMMODATION_PHOTO_TITLE = 'Фотография жилья №';
 
   var advertFormDomObject = document.querySelector('.notice__form');
   var advertFormFieldsets = advertFormDomObject.querySelectorAll('fieldset');
@@ -140,7 +141,7 @@
     return new FormData(advertFormDomObject);
   };
 
-  var renderPhotoPreviews = function(photoPreviews) {
+  var renderPhotoPreviews = function (photoPreviews) {
     var fragment = document.createDocumentFragment();
     var templatePhotosElementDomObject = document.createElement('li');
     var templatePhotoDomObject = document.createElement('img');
@@ -150,11 +151,11 @@
     templatePhotoDomObject.width = PHOTO_PREVIEW_WIDTH;
     templatePhotosElementDomObject.appendChild(templatePhotoDomObject);
 
-    photoPreviews.forEach(function(photoPreview, index) {
+    photoPreviews.forEach(function (photoPreview, index) {
       var photosElementDomObject = templatePhotosElementDomObject.cloneNode(true);
 
       photosElementDomObject.firstElementChild.src = photoPreview;
-      photosElementDomObject.firstElementChild.data_id = index;
+      photosElementDomObject.firstElementChild.alt = ACCOMMODATION_PHOTO_TITLE + index;
       fragment.append(photosElementDomObject);
     });
 
@@ -162,7 +163,7 @@
     photoPreviewsDomObject.appendChild(fragment);
   };
 
-  var clearRenderedImages =  function () {
+  var clearRenderedImages = function () {
     photoPreviewsDomObject.innerHTML = '';
     avatarDomObject.src = defaultAvatarImage;
   };
