@@ -28,6 +28,7 @@
   var photoContainerDomObject = advertFormDomObject.querySelector('.form__photo-container');
   var photoPreviewsDomObject = photoContainerDomObject.querySelector('.photo__previews');
   var photoFileChooserDomObject = photoContainerDomObject.querySelector('#images');
+  var draggedPhotosElementDomObject = null;
 
   var disableAdvertForm = function () {
     advertFormFieldsets.forEach(function (fieldset) {
@@ -199,9 +200,6 @@
     advertFormDomObject.addEventListener('submit', onAdvertFormSubmit);
   };
 
-
-  var draggedPhotosElementDomObject = null;
-
   var onPhotoPreviewsDrop = function (evt) {
     if (evt.target.classList.contains('photo__preview')) {
       if (draggedPhotosElementDomObject !== evt.target) {
@@ -225,18 +223,22 @@
       evt.target.style.opacity = '0.4';
     }
   });
+
   photoPreviewsDomObject.addEventListener('dragenter', function (evt) {
     evt.target.classList.add('photo__preview--dragover');
   });
+
   photoPreviewsDomObject.addEventListener('dragover', function (evt) {
     evt.preventDefault();
     evt.dataTransfer.dropEffect = 'move';
 
     return false;
   });
+
   photoPreviewsDomObject.addEventListener('dragleave', function (evt) {
     evt.target.classList.remove('photo__preview--dragover');
   });
+
   photoPreviewsDomObject.addEventListener('dragend', function (evt) {
     evt.target.classList.remove('photo__preview--dragover');
     evt.target.style.opacity = 1;
