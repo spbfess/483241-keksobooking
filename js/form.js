@@ -190,6 +190,7 @@
     if (evt.target.classList.contains('photo__preview')) {
       draggedPhotosElementDomObject = evt.target;
       evt.target.classList.add('photo__preview--dragged');
+      evt.dataTransfer.setData('text/plain', evt.target.alt);
 
       Array.prototype.forEach.call(photoPreviewsDomObject.children, function (child) {
         child.classList.add('photo__preview--dragging');
