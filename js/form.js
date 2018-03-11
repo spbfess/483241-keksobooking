@@ -138,8 +138,45 @@
     });
   };
 
+  var getPreviews = function () {
+    return Array.prototype.slice.call(photoPreviewsDomObject.querySelectorAll('img'), 0);
+  };
+
+  var dataURItoFile = function (dataURI, fileName) {
+    // convert base64/URLEncoded data component to raw binary data held in a string
+    var byteString;
+    if (dataURI.split(',')[0].indexOf('base64') >= 0) {
+      byteString = atob(dataURI.split(',')[1]);
+    } else {
+      byteString = unescape(dataURI.split(',')[1]);
+    }
+    // separate out the mime component
+    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+    // write the bytes of the string to a typed array
+    var dataTypedArray = new Uint8Array(byteString.length);
+    for (var i = 0; i < byteString.length; i++) {
+      dataTypedArray[i] = byteString.charCodeAt(i);
+    }
+
+    return new File([dataTypedArray], fileName, {type: mimeString, lastModified: new Date()});
+  };
+
   var getAdverFromSendObject = function () {
-    return new FormData(advertFormDomObject);
+    var sendData = new FormData(advertFormDomObject);
+    var previews = getPreviews();
+    var files = [];
+
+    sendData.delete('photos');
+
+    previews.forEach(function (preview) {
+      var file = dataURItoFile(preview.src, preview.dataset.fname);
+
+      files.push(file);
+    });
+
+    sendData.append('photos', files);
+    return sendData;
   };
 
   var renderPhotoPreviews = function (photoPreviews) {
@@ -157,6 +194,7 @@
 
       photosElementDomObject.firstElementChild.src = photoPreview;
       photosElementDomObject.firstElementChild.alt = ACCOMMODATION_PHOTO_TITLE + index;
+      photosElementDomObject.firstElementChild.dataset.fname = 'file_' + index;
       fragment.append(photosElementDomObject);
     });
 
@@ -262,6 +300,7 @@
 
     avatarFileChooserDomObject.addEventListener('change', function () {
       var files = Array.prototype.slice.call(avatarFileChooserDomObject.files);
+      // var files = avatarFileChooserDomObject.files;
 
       window.file.createPreviews(files, function (avatarPreview) {
         avatarDomObject.src = avatarPreview[0];
@@ -270,6 +309,7 @@
 
     photoFileChooserDomObject.addEventListener('change', function () {
       var files = Array.prototype.slice.call(photoFileChooserDomObject.files);
+      // var files = photoFileChooserDomObject.files;
 
       window.file.createPreviews(files, renderPhotoPreviews);
     });
